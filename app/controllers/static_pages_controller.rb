@@ -9,4 +9,7 @@ class StaticPagesController < ApplicationController
   def login
     render 'login'
   end
+  def user_page
+    render 'user_page'
+  end
 end

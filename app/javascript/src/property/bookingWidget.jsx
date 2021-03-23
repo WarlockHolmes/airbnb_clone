@@ -6,14 +6,23 @@ import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 import 'react-dates/lib/css/_datepicker.css';
 
 class BookingWidget extends React.Component {
-  state = {
-    authenticated: false,
-    existingBookings: [],
-    startDate: null,
-    endDate: null,
-    focusedInput: null,
-    loading: false,
-    error: false,
+  constructor (props) {
+    super(props)
+    this.state = {
+      authenticated: false,
+      existingBookings: [],
+      startDate: null,
+      endDate: null,
+      focusedInput: null,
+      loading: false,
+      error: false,
+    }
+    this.getPropertyBookings = this.getPropertyBookings.bind(this);
+    this.submitBooking = this.submitBooking.bind(this);
+    this.initiateStripeCheckout = this.initiateStripeCheckout.bind(this);
+    this.onDatesChange = this.onDatesChange.bind(this);
+    this.onFocusChange = this.onFocusChange.bind(this);
+    this.isDayBlocked = this.isDayBlocked.bind(this);
   }
 
   componentDidMount() {
@@ -62,7 +71,7 @@ class BookingWidget extends React.Component {
      })
  }
 
- initiateStripeCheckout = (booking_id) => {
+  initiateStripeCheckout = (booking_id) => {
    return fetch(`/api/charges?booking_id=${booking_id}&cancel_url=${window.location.pathname}`, safeCredentials({
      method: 'POST',
    }))
@@ -85,8 +94,7 @@ class BookingWidget extends React.Component {
      .catch(error => {
        console.log(error);
      })
- }
-
+   }
 
   onDatesChange = ({ startDate, endDate }) => this.setState({ startDate, endDate })
 
