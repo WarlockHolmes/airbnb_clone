@@ -8,6 +8,7 @@ import './property.scss';
 
 class Property extends React.Component {
   state = {
+    authenticated: false,
     property: {},
     loading: true,
   }
@@ -21,6 +22,31 @@ class Property extends React.Component {
           loading: false,
         })
       })
+    this.checkAuthenticated()
+  }
+
+  checkAuthenticated() {
+    fetch('/api/authenticated')
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          authenticated: data.authenticated,
+        })
+      })
+  }
+
+  handleLogOut() {
+    fetch(`/api/logout`, safeCredentials({
+      method: 'DELETE',
+    }))
+    .then(handleErrors)
+    .then(res => {
+      if(res.success){
+        this.setState({authenticated: false})
+      };
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   render () {
@@ -46,7 +72,7 @@ class Property extends React.Component {
     } = property
 
     return (
-      <Layout>
+      <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div className="property-image mb-3" style={{ backgroundImage: `url(${image_url})` }} />
         <div className="container">
           <div className="row">
@@ -69,7 +95,7 @@ class Property extends React.Component {
               <p>{description}</p>
             </div>
             <div className="col-12 col-lg-5">
-              <BookingWidget property_id={id} price_per_night={price_per_night} />
+              <BookingWidget property_id={id} price_per_night={price_per_night} authenticated={this.checkAuthenticated} />
             </div>
           </div>
         </div>

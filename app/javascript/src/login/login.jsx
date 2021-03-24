@@ -13,6 +13,10 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    this.checkAuthenticated();
+  }
+
+  checkAuthenticated() {
     fetch('/api/authenticated')
       .then(handleErrors)
       .then(data => {
@@ -20,6 +24,20 @@ class Login extends React.Component {
           authenticated: data.authenticated,
         })
       })
+  }
+
+  handleLogOut() {
+    fetch(`/api/logout`, safeCredentials({
+      method: 'DELETE',
+    }))
+    .then(handleErrors)
+    .then(res => {
+      if(res.success){
+        this.setState({authenticated: false})
+      };
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   toggle = () => {
@@ -47,7 +65,7 @@ class Login extends React.Component {
     };
 
     return (
-      <Layout>
+      <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-9 col-lg-6 mx-auto my-4">

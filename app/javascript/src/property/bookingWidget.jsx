@@ -6,10 +6,7 @@ import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 import 'react-dates/lib/css/_datepicker.css';
 
 class BookingWidget extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      authenticated: false,
+    state = {
       existingBookings: [],
       startDate: null,
       endDate: null,
@@ -17,22 +14,9 @@ class BookingWidget extends React.Component {
       loading: false,
       error: false,
     }
-    this.getPropertyBookings = this.getPropertyBookings.bind(this);
-    this.submitBooking = this.submitBooking.bind(this);
-    this.initiateStripeCheckout = this.initiateStripeCheckout.bind(this);
-    this.onDatesChange = this.onDatesChange.bind(this);
-    this.onFocusChange = this.onFocusChange.bind(this);
-    this.isDayBlocked = this.isDayBlocked.bind(this);
-  }
 
   componentDidMount() {
-    fetch('/api/authenticated')
-      .then(handleErrors)
-      .then(data => {
-        this.setState({
-          authenticated: data.authenticated,
-        })
-      })
+    props.authenticated();
     this.getPropertyBookings();
   }
 
@@ -103,7 +87,7 @@ class BookingWidget extends React.Component {
   isDayBlocked = day => this.state.existingBookings.filter(b => day.isBetween(b.start_date, b.end_date, null, '[)')).length > 0
 
   render () {
-    const { authenticated, startDate, endDate, focusedInput } = this.state;
+    const { startDate, endDate, focusedInput } = this.state;
     if (!authenticated) {
       return (
         <div className="border p-4 mb-4">
@@ -112,7 +96,7 @@ class BookingWidget extends React.Component {
       );
     };
 
-    const { price_per_night } = this.props;
+    const { price_per_night, authenticated } = this.props;
 
     let days;
     if (startDate && endDate) {

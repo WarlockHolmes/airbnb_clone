@@ -2,12 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Layout from '@src/layout';
-import { handleErrors } from '@utils/fetchHelper';
+import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 
 import './home.scss';
 
 class Home extends React.Component {
   state = {
+    authenticated: false,
     properties: [],
     total_pages: null,
     next_page: null,
@@ -15,6 +16,11 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    this.checkAuthenticated();
+    this.fetchProperties();
+  }
+
+  fetchProperties(){
     fetch('/api/properties?page=1')
       .then(handleErrors)
       .then(data => {
@@ -25,6 +31,30 @@ class Home extends React.Component {
           loading: false,
         })
       })
+  }
+
+  checkAuthenticated() {
+    fetch('/api/authenticated')
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          authenticated: data.authenticated,
+        })
+      })
+  }
+
+  handleLogOut = () => {
+    fetch(`/api/logout`, safeCredentials({
+      method: 'DELETE',
+    }))
+    .then(handleErrors)
+    .then(res => {
+      if(res.success){
+        this.setState({authenticated: false})
+      };
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   loadMore = () => {
@@ -45,9 +75,9 @@ class Home extends React.Component {
   }
 
   render () {
-    const { properties, next_page, loading } = this.state;
+    const { authenticated, properties, next_page, loading } = this.state;
     return (
-      <Layout>
+      <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div className="container pt-4">
           <h4 className="mb-1">Top-rated places to stay</h4>
           <p className="text-secondary mb-3">Explore some of the best-reviewed stays in the world</p>

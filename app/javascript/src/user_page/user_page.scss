@@ -1,0 +1,22 @@
+.user-bottom {
+  margin-left: -15px!important;
+  margin-right: -15px!important;
+  border-radius: 0px 0px 4px 4px;
+}
+
+.property {
+  .property-image {
+    padding-top: calc(2 / 3 * 100%); /* aspect ratio 3:2 */
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+.page-tab {
+  border-radius: 4px 4px 0px 0px!important;
+  border-bottom: none!important;
+}
+
+.content {
+  height: 80vh;
+}
