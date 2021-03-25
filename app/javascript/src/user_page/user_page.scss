@@ -3,20 +3,34 @@
   margin-right: -15px!important;
   border-radius: 0px 0px 4px 4px;
 }
-
-.property {
-  .property-image {
-    padding-top: calc(2 / 3 * 100%); /* aspect ratio 3:2 */
-    background-size: cover;
-    background-position: center;
-  }
-}
-
 .page-tab {
   border-radius: 4px 4px 0px 0px!important;
   border-bottom: none!important;
 }
 
+.btn-outline-danger:hover {
+  background-color: #c82333!important;
+}
+
+.btn-danger:hover {
+  background-color: #dc3545!important;
+  border-color: #dc3545!important;
+}
+
 .content {
-  height: 80vh;
+  min-height: 70vh;
+}
+
+.scrollable {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.property-image {
+  max-width: 100%;
+  &:hover {
+    cursor: pointer;
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+  }
 }

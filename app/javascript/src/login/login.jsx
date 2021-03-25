@@ -6,6 +6,8 @@ import LoginWidget from './loginWidget';
 import SignupWidget from './signupWidget';
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 
+import './login.scss';
+
 class Login extends React.Component {
   state = {
     authenticated: false,
@@ -66,7 +68,7 @@ class Login extends React.Component {
 
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
-        <div className="container">
+        <div className="container full-height">
           <div className="row">
             <div className="col-12 col-md-9 col-lg-6 mx-auto my-4">
               <div className="border p-4">

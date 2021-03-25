@@ -13,5 +13,20 @@ module Api
 
       render 'api/properties/show', status: :ok
     end
+
+    def index_by_user
+      user = User.find_by(username: params[:user])
+
+      if !user
+        return render json: { user: params[:user] }
+      end
+
+      if user
+        @properties = user.properties.order(created_at: :desc).page(params[:page]).per(6)
+        return render json: { error: 'not_found' }, status: :not_found if !@properties
+
+        render 'api/properties/index', status: :ok
+      end
+    end
   end
 end

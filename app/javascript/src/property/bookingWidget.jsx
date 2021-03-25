@@ -16,7 +16,7 @@ class BookingWidget extends React.Component {
     }
 
   componentDidMount() {
-    props.authenticated();
+    this.props.checkAuthenticated();
     this.getPropertyBookings();
   }
 
@@ -88,6 +88,7 @@ class BookingWidget extends React.Component {
 
   render () {
     const { startDate, endDate, focusedInput } = this.state;
+    const { authenticated, checkAuthenticated, price_per_night } = this.props;
     if (!authenticated) {
       return (
         <div className="border p-4 mb-4">
@@ -95,8 +96,6 @@ class BookingWidget extends React.Component {
         </div>
       );
     };
-
-    const { price_per_night, authenticated } = this.props;
 
     let days;
     if (startDate && endDate) {
