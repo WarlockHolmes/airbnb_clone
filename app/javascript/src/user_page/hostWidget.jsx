@@ -1,13 +1,257 @@
 import React from 'react';
-import { safeCredentials, handleErrors } from '@utils/fetchHelper';
+import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 
+
+
+class PropertyEditor extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      edit: false,
+      id: '',
+      title: '',
+      description: '',
+      image_url: '',
+      price: 0,
+      type: '',
+      city: '',
+      country: '',
+      image_text: false,
+      baths: 0,
+      bedrooms: 1,
+      beds: 1,
+      max_guests: 1
+    }
+    this.inputRef = React.createRef();
+  }
+
+
+  componentDidMount() {
+    let {property} = this.props;
+    this.setState({
+      id: property.id,
+      title: property.title,
+      description: property.description,
+      image_url: property.image_url,
+      price: property.price_per_night,
+      type: property.property_type,
+      city: property.city,
+      country: property.country,
+      baths: property.baths,
+      bedrooms: property.bedrooms,
+      beds: property.beds,
+      max: property.max_guests
+    })
+  }
+
+  editProperty() {
+    this.setState({edit: !this.state.edit});
+  }
+
+  handleChange () {
+    switch(event.target.name) {
+      case 'title': this.setState({title: event.target.value}); break;
+      case 'price': this.setState({price: event.target.value}); break;
+      case 'type': this.setState({type: event.target.value}); break;
+      case 'city': this.setState({city: event.target.value}); break;
+      case 'country': this.setState({country: event.target.value}); break;
+      case 'description': this.setState({description: event.target.value}); break;
+      case 'bedrooms': this.setState({bedrooms: event.target.value}); break;
+      case 'beds': this.setState({beds: event.target.value}); break;
+      case 'baths': this.setState({baths: event.target.value}); break;
+      case 'max': this.setState({max: event.target.value}); break;
+    }
+
+  }
+
+  handleImage() {
+    this.setState({image_url: URL.createObjectURL(event.target.files[0])})
+  }
+
+  saveChanges () {
+    let {id, title, image_url, description, price, type, city, country, baths, bedrooms, beds, max} = this.state;
+    let image = this.inputRef.current.files[0];
+
+    let formData = new FormData();
+
+    if (image) {
+      formData.append('property[image_url]', image, image.name);
+    } else {
+      formData.append('property[image_url]', image_url);
+    }
+
+    formData.append('property[title]', title);
+    formData.append('property[description]', description);
+    formData.append('property[price_per_night]', price);
+    formData.append('property[property_type]', type);
+    formData.append('property[beds]', beds);
+    formData.append('property[baths]', baths);
+    formData.append('property[bedrooms]', bedrooms)
+    formData.append('property[max_guests]', max)
+
+
+    fetch(`/api/properties/user/${id}`, {
+      method: 'PUT',
+      body: formData,
+      contentType: false,
+      credentials: 'include',
+      mode: 'same-origin',
+      headers: authenticityHeader()
+    })
+    .then(handleErrors)
+    .then(res => {
+      console.log(res)
+    }).catch((error) => {
+      console.log(error);
+    })
+
+    this.editProperty();
+
+  }
+
+  render () {
+
+    let {id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max} = this.state;
+
+    let toggle = this.editProperty.bind(this);
+    let save = this.saveChanges.bind(this);
+    let change = this.handleChange.bind(this);
+    let image_change = this.handleImage.bind(this);
+
+    let type_caps = type.split(" ").map(word => {
+      if (word == 'in') {return word}
+      return word.charAt(0).toUpperCase() + word.slice(1)
+    }).join(" ")
+
+    if (edit) {
+      return (
+        <div className="py-4 px-4 property row" key={id}>
+          <div className="col-12 col-md-4">
+            <div className="image-container rounded" onMouseOver={() => {this.setState({image_text: true})}} onMouseOut={() => {this.setState({image_text: false})}}>
+              <label className="mb-0">
+                <img src={image_url} className="property-image image-edit" alt="Image of Property"/>
+                {image_text && <span className="image-text">Change Image?</span>}
+                <input type="file" className="image-select" name="image" accept="image/*" ref={this.inputRef} onChange={image_change}/>
+              </label>
+            </div>
+          </div>
+          <div className="col-12 col-md-6">
+            <table className="w-100">
+              <tbody>
+                  <tr>
+                    <td className="text-white">Title:</td>
+                    <td className="text-white">
+                      <input type="text" name="title" className="px-2 w-100 rounded" value={title} onChange={change}/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-white">Type:</td>
+                    <td className="text-white">
+                    <select className="property-type" name="type" value={type} onChange={change}>
+                      <optgroup label="Apartment">
+                        <option value="entire apartment">Entire Apartment</option>
+                        <option value="private room in apartment">Private Room in Apartment</option>
+                        <option value="studio">Private Studio Apartment</option>
+                      </optgroup>
+                      <optgroup label="Condominium">
+                        <option value="entire condominium">Entire Condo</option>
+                        <option value="private room in condominium">Private Room in Condo</option>
+                      </optgroup>
+                      <optgroup label="House">
+                        <option value="entire house">Entire House</option>
+                        <option value="private room in house">Private Room in House</option>
+                      </optgroup>
+                    </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-white">Description:</td>
+                    <td className="text-white">
+                      <textarea name="description" className="px-2 w-100 rounded" value={description} onChange={change}/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-white">Price:</td>
+                    <td className="text-white">
+                      $  <input type="number" name="price" className="px-1 w-25 rounded" value={price} onChange={change}></input>  {country.toUpperCase()}D / night
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-white">Location:</td>
+                    <td className="text-white">
+                      <input type="text" name="city" className="px-2 rounded w-50" value={city} onChange={change}></input>
+                      <select className="ml-2" value={country} name="country" onChange={change}>
+                        <option value="us">U.S.A</option>
+                        <option value="ca">Canada</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-white">Beds:
+                      <input type="number" name="beds" className="px-1 w-25 rounded ml-5" value={beds} onChange={change}/>
+                    </td>
+                    <td className="text-white">Baths:
+                      <input type="number" name="baths" className="px-1 w-25 rounded ml-5" value={baths} onChange={change}/>
+                    </td>
+
+                  </tr>
+                  <tr>
+                    <td className="text-white">Bedrooms:
+                      <input type="number" name="bedrooms" className="px-1 w-25 rounded ml-2" value={bedrooms} onChange={change}/>
+                    </td>
+                    <td className="text-white">
+                    Max Guests:
+                      <input type="number" name="max" className="px-1 w-25 rounded ml-2" value={max} onChange={change}/>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="col-12 col-md-2">
+            <button className="btn btn-primary text-nowrap" href="" id={id} onClick={save}>Save Changes</button>
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className="py-4 px-4 property row" key={id}>
+          <div className="col-12 col-md-4">
+            <div className="image-container rounded">
+              <img src={image_url} className="property-image"/>
+            </div>
+            <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
+          </div>
+          <div className="col-12 col-md-6">
+            <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
+            <p className="text-white text-center font-italic">{type_caps}</p>
+            <p className="text-white px-3"> {description} </p>
+            <hr/>
+            <div className="col-6 d-inline-block">
+              <p className="text-white">
+                $ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small>
+              </p>
+              <p className="text-white">Baths: {baths}</p>
+              <p className="text-white">Bedrooms: {bedrooms}</p>
+            </div>
+            <div className="col-6 d-inline-block">
+              <p className="text-white"><strong>{city}</strong>, {country.toUpperCase()}</p>
+              <p className="text-white">Beds: {beds}</p>
+              <p className="text-white">Max Guests: {max}</p>
+            </div>
+          </div>
+          <div className="col-12 col-md-2">
+            <button className="btn btn-light" href="" id={id} onClick={toggle}>Edit</button>
+          </div>
+        </div>
+      )
+    }
+  }
+}
 
 class HostWidget extends React.Component {
 
   state = {
     properties: [],
-    total_pages: null,
-    next_page: null,
     loading: true,
   }
 
@@ -16,10 +260,9 @@ class HostWidget extends React.Component {
   }
 
   fetchUserProperties(){
-    fetch(`/api/properties/user/${this.props.user}`)
+    fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
-        console.log(data)
         this.setState({
           properties: data.properties,
           loading: false,
@@ -56,9 +299,9 @@ class HostWidget extends React.Component {
   }
 
   render() {
-    const {properties, total_pages, next_page, loading} = this.state;
+    const {properties, total_pages, next_page, loading, edit} = this.state;
     return (
-      <div className="container pt-1">
+      <div className="container py-3">
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-danger">
             <h4 className="text-center mb-1">Your Properties</h4>
@@ -70,20 +313,12 @@ class HostWidget extends React.Component {
         <div className="row bg-danger content py-3">
           <div className="col-12 scrollable">
             {properties.map(property => {
-              return (
-                <div className="mb-4 property row" key={property.id}>
-                  <div className="col-12 col-md-4">
-                    <img src={property.image_url} className="rounded property-image"/>
-                  </div>
-                  <div className="col-12 col-md-8">
-                    <p className="text-uppercase mb-0 text-secondary"><small><b>{property.city}</b></small></p>
-                    <h6 className="mb-0">{property.title}</h6>
-                    <p className="mb-0"><small>${property.price_per_night} USD/night</small></p>
-                  </div>
-                </div>
-              )
+              return <PropertyEditor property={property}/>
             })}
             {loading && <p className="d-block mx-auto my-auto text-center text-white">loading...</p>}
+            <div className="row justify-content-around my-5">
+              <button className="btn btn-primary">Add a <strong>New</strong> Property</button>
+            </div>
           </div>
         </div>
       </div>

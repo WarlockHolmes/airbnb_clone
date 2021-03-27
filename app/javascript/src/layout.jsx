@@ -7,7 +7,7 @@ const Layout = (props) => {
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand navbar-light bg-light w-100">
-        <a href="/"><span className="navbar-brand mb-0 h1 text-danger">Airbnb</span></a>
+        <a href="/"><span className="navbar-brand mb-0 h1 text-danger"><i className="fab fa-airbnb mr-1"></i>airbnb</span></a>
         <hr className="vr"></hr>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav">

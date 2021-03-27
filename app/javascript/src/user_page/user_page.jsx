@@ -37,32 +37,28 @@ class UserPage extends React.Component {
     this.state = {
       authenticated: false,
       host: true,
-      user: 'Tommy',
-      user_email: 'tommy@test.com',
       loading: true,
     }
     this.toggleService = this.toggleService.bind(this);
-    this.authenticateUser = this.authenticateUser.bind(this);
+    this.checkAuthenticated = this.checkAuthenticated.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
   }
 
   componentDidMount() {
-    this.authenticateUser()
+    this.checkAuthenticated()
   }
 
   toggleService() {
     this.setState({ host: !this.state.host })
   }
 
-  authenticateUser() {
+  checkAuthenticated() {
     fetch('/api/authenticated')
       .then(handleErrors)
       .then(data => {
         if (!data.authenticated) {window.location.pathname = '/'}
         this.setState({
           authenticated: data.authenticated,
-          //user: data.username,
-          //user_email: data.email,
           loading: false,
         })
       })
@@ -76,6 +72,7 @@ class UserPage extends React.Component {
     .then(res => {
       if(res.success){
         this.setState({authenticated: false})
+        {window.location.pathname = '/'}
       };
     }).catch((error) => {
       console.log(error);
@@ -91,8 +88,7 @@ class UserPage extends React.Component {
             host={host}
             authenticated={authenticated}
             toggle={this.toggleService}
-            email={user_email}
-            user={user}/> : <div className="container"><div className="row content"><h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5></div></div>}
+            /> : <div className="container"><div className="row content"><h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5></div></div>}
         </Layout>
       </React.Fragment>
     );

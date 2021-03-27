@@ -38,7 +38,7 @@ class GuestWidget extends React.Component {
   render () {
     const {startDate, endDate, focusedInput, onFocusChange, isDayBlocked, numberOfMonths } = this.state;
     return (
-      <div className="container pt-4">
+      <div className="container py-3">
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-outline-danger" onClick={this.props.toggle}>
             <h4 className="text-center mb-1">Your Properties</h4>
