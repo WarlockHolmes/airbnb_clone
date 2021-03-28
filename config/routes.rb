@@ -8,17 +8,15 @@ Rails.application.routes.draw do
   namespace :api do
     # Add routes below this line
     get '/properties/user' => 'properties#index_by_user'
-    post 'properties/user' => 'properties#create'
-    put '/properties/user/:id' => 'properties#update'
 
     resources :users, only: [:create]
     resources :sessions, only: [:create]
-    resources :properties, only: [:index, :show]
+    resources :properties, only: [:index, :show, :update, :create, :destroy]
     resources :bookings, only: [:create]
     resources :charges, only: [:create]
-
+    # bookings (by property)
     get '/properties/:id/bookings' => 'bookings#get_property_bookings'
-
+    # sessions (other)
     get '/authenticated' => 'sessions#authenticated'
     delete '/logout' => 'sessions#destroy'
     # stripe webhook

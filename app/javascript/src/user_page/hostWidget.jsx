@@ -1,17 +1,18 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
-
+import placeholder from '@src/placeholder.png';
 
 
 class PropertyEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      index: false,
       edit: false,
       id: '',
       title: '',
       description: '',
-      image_url: '',
+      image_url: null,
       price: 0,
       type: '',
       city: '',
@@ -27,7 +28,8 @@ class PropertyEditor extends React.Component {
 
 
   componentDidMount() {
-    let {property} = this.props;
+    let {property, index} = this.props;
+
     this.setState({
       id: property.id,
       title: property.title,
@@ -40,7 +42,8 @@ class PropertyEditor extends React.Component {
       baths: property.baths,
       bedrooms: property.bedrooms,
       beds: property.beds,
-      max: property.max_guests
+      max: property.max_guests,
+      index: index,
     })
   }
 
@@ -90,7 +93,7 @@ class PropertyEditor extends React.Component {
     formData.append('property[max_guests]', max)
 
 
-    fetch(`/api/properties/user/${id}`, {
+    fetch(`/api/properties/${id}`, {
       method: 'PUT',
       body: formData,
       contentType: false,
@@ -109,6 +112,22 @@ class PropertyEditor extends React.Component {
 
   }
 
+  deleteProperty () {
+    let {loading, refresh} = this.props;
+    if (confirm("Are you sure you want to delete this property?")) {
+      fetch(`/api/properties/${this.state.id}`, safeCredentials({
+        method: 'DELETE',
+      }))
+        .then(handleErrors)
+        .then(loading)
+        .then(refresh)
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+
+  }
+
   render () {
 
     let {id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max} = this.state;
@@ -117,6 +136,9 @@ class PropertyEditor extends React.Component {
     let save = this.saveChanges.bind(this);
     let change = this.handleChange.bind(this);
     let image_change = this.handleImage.bind(this);
+    let delete_property = this.deleteProperty.bind(this);
+
+    if(image_url == null) {image_url = placeholder}
 
     let type_caps = type.split(" ").map(word => {
       if (word == 'in') {return word}
@@ -128,12 +150,13 @@ class PropertyEditor extends React.Component {
         <div className="py-4 px-4 property row" key={id}>
           <div className="col-12 col-md-4">
             <div className="image-container rounded" onMouseOver={() => {this.setState({image_text: true})}} onMouseOut={() => {this.setState({image_text: false})}}>
-              <label className="mb-0">
+              <label className="my-0">
                 <img src={image_url} className="property-image image-edit" alt="Image of Property"/>
                 {image_text && <span className="image-text">Change Image?</span>}
                 <input type="file" className="image-select" name="image" accept="image/*" ref={this.inputRef} onChange={image_change}/>
               </label>
             </div>
+            <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
           </div>
           <div className="col-12 col-md-6">
             <table className="w-100">
@@ -196,10 +219,10 @@ class PropertyEditor extends React.Component {
 
                   </tr>
                   <tr>
-                    <td className="text-white">Bedrooms:
+                    <td className="text-white pb-1">Bedrooms:
                       <input type="number" name="bedrooms" className="px-1 w-25 rounded ml-2" value={bedrooms} onChange={change}/>
                     </td>
-                    <td className="text-white">
+                    <td className="text-white pb-1">
                     Max Guests:
                       <input type="number" name="max" className="px-1 w-25 rounded ml-2" value={max} onChange={change}/>
                     </td>
@@ -207,56 +230,78 @@ class PropertyEditor extends React.Component {
               </tbody>
             </table>
           </div>
-          <div className="col-12 col-md-2">
-            <button className="btn btn-primary text-nowrap" href="" id={id} onClick={save}>Save Changes</button>
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div className="py-4 px-4 property row" key={id}>
-          <div className="col-12 col-md-4">
-            <div className="image-container rounded">
-              <img src={image_url} className="property-image"/>
+          <div className="col-12 col-md-2 button_divs">
+            <div>
+              <button className="btn btn-primary text-nowrap" href="" onClick={save}>Save Changes</button>
             </div>
-            <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
-          </div>
-          <div className="col-12 col-md-6">
-            <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
-            <p className="text-white text-center font-italic">{type_caps}</p>
-            <p className="text-white px-3"> {description} </p>
-            <hr/>
-            <div className="col-6 d-inline-block">
-              <p className="text-white">
-                $ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small>
-              </p>
-              <p className="text-white">Baths: {baths}</p>
-              <p className="text-white">Bedrooms: {bedrooms}</p>
+            <div>
+              <button className="btn btn-dark font-weight-bold text-danger" href="" onClick={delete_property}>Delete</button>
             </div>
-            <div className="col-6 d-inline-block">
-              <p className="text-white"><strong>{city}</strong>, {country.toUpperCase()}</p>
-              <p className="text-white">Beds: {beds}</p>
-              <p className="text-white">Max Guests: {max}</p>
-            </div>
-          </div>
-          <div className="col-12 col-md-2">
-            <button className="btn btn-light" href="" id={id} onClick={toggle}>Edit</button>
           </div>
         </div>
       )
     }
+
+    return (
+      <div className="py-4 px-4 property row" key={id}>
+        <div className="col-12 col-md-4">
+          <div className="image-container rounded">
+            <img src={image_url} className="property-image"/>
+          </div>
+          <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
+        </div>
+        <div className="col-12 col-md-6">
+          <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
+          <p className="text-white text-center font-italic">{type_caps}</p>
+          <p className="text-white px-3"> {description} </p>
+          <hr/>
+          <div className="col-6 d-inline-block">
+            <p className="text-white">
+              $ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small>
+            </p>
+            <p className="text-white">Baths: {baths}</p>
+            <p className="text-white">Bedrooms: {bedrooms}</p>
+          </div>
+          <div className="col-6 d-inline-block">
+            <p className="text-white"><strong>{city}</strong>, {country.toUpperCase()}</p>
+            <p className="text-white">Beds: {beds}</p>
+            <p className="text-white">Max Guests: {max}</p>
+          </div>
+        </div>
+        <div className="col-12 col-md-2 button_divs">
+          <div>
+            <button className="btn btn-light" href="" id={id} onClick={toggle}>Edit</button>
+          </div>
+          <div>
+            <button className="btn btn-dark font-weight-bold text-danger" href="" onClick={delete_property}>Delete</button>
+          </div>
+
+        </div>
+      </div>
+    )
+
   }
 }
 
 class HostWidget extends React.Component {
-
-  state = {
-    properties: [],
-    loading: true,
+  constructor(props) {
+    super(props)
+    this.state = {
+      properties: [],
+      loading: true,
+    }
+    this.addProperty = this.addProperty.bind(this)
+    this.fetchUserProperties = this.fetchUserProperties.bind(this)
+    this.startLoading = this.startLoading.bind(this)
   }
+
 
   componentDidMount() {
     this.fetchUserProperties()
+  }
+
+  startLoading () {
+    this.setState({loading: true})
   }
 
   fetchUserProperties(){
@@ -268,6 +313,36 @@ class HostWidget extends React.Component {
           loading: false,
         })
       })
+  }
+
+  addProperty = () => {
+    let {properties} = this.state;
+
+    fetch(`/api/properties`, safeCredentials({
+      method: 'POST',
+      body: JSON.stringify({
+        property: {
+          title: "Title",
+          city: "City",
+          country: "n/a",
+          price_per_night: 50,
+          property_type: "private room in apartment",
+          bedrooms: 0,
+          beds: 0,
+          baths: 0,
+          image_url: false,
+          max_guests: 1,
+          description: "Enter your description here",
+        }
+      }),
+    }))
+      .then(handleErrors)
+      .then(this.startLoading())
+      .then(this.fetchUserProperties())
+      .catch((error) => {
+        console.log(error);
+      })
+
   }
 
   getPropertyBookings = () => {
@@ -299,7 +374,13 @@ class HostWidget extends React.Component {
   }
 
   render() {
-    const {properties, total_pages, next_page, loading, edit} = this.state;
+    let {properties, total_pages, next_page, loading, edit} = this.state;
+    let editors = <div></div>
+    if (properties.length !== undefined) {
+      editors = properties.map((property, index) => {
+      return <PropertyEditor property={property} index={index} loading={this.startLoading} refresh={this.fetchUserProperties}/>
+      })
+    }
     return (
       <div className="container py-3">
         <div className="row justify-content-around">
@@ -311,15 +392,14 @@ class HostWidget extends React.Component {
           </button>
         </div>
         <div className="row bg-danger content py-3">
-          <div className="col-12 scrollable">
-            {properties.map(property => {
-              return <PropertyEditor property={property}/>
-            })}
-            {loading && <p className="d-block mx-auto my-auto text-center text-white">loading...</p>}
-            <div className="row justify-content-around my-5">
-              <button className="btn btn-primary">Add a <strong>New</strong> Property</button>
-            </div>
+          <div className={loading ? "" : "col-12 scrollable"}>
+            {!loading && editors}
           </div>
+
+          {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> :
+          <div className="mx-auto my-auto">
+            <button className="btn btn-primary" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
+          </div>}
         </div>
       </div>
     );

@@ -1,2 +1,5 @@
 json.authenticated true
-json.username @user.username
+json.user do
+  json.id @user.id
+  json.username @user.username
+end

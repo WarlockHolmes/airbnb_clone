@@ -80,7 +80,7 @@ class UserPage extends React.Component {
   }
 
   render() {
-    const { authenticated, host, user, user_email, loading } = this.state;
+    const { authenticated, host, user, loading } = this.state;
     return (
       <React.Fragment>
         <Layout authenticated={authenticated} logout={this.handleLogOut}>

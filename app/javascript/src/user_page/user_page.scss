@@ -13,12 +13,13 @@
 }
 
 .content {
-  min-height: 75vh;
+  height: 75vh;
   border-radius: 0px 0px 10px 10px;
+
 }
 
 .scrollable {
-  max-height: 75vh;
+  max-height: 60vh;
   overflow-y: scroll;
 }
 
@@ -54,14 +55,16 @@ td {
   opacity: 0;
   position: absolute;
   z-index: -1;
+  height: 0px;
+  width: 0px;
 }
 
 .image-container {
   position: relative;
   display: inline-block;
   text-align: center;
-  max-height: 250px;
-  overflow-y: scroll;
+  max-height: 180px;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -76,4 +79,8 @@ td {
 
 hr {
   border-color: white!important;
+}
+
+.button_divs div:first-of-type {
+  height: 230px;
 }
