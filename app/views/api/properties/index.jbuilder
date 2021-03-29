@@ -15,6 +15,7 @@ json.properties do
     json.beds property.beds
     json.baths property.baths
     json.image_url property.image_url
+    json.image url_for(property.image) if property.image.attached?
 
     json.user do
       json.id property.user.id

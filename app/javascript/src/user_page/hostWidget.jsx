@@ -29,12 +29,13 @@ class PropertyEditor extends React.Component {
 
   componentDidMount() {
     let {property, index} = this.props;
-
+    let url = property.image_url;
+    if (property.image != null) {url = property.image};
     this.setState({
       id: property.id,
       title: property.title,
       description: property.description,
-      image_url: property.image_url,
+      image_url: url,
       price: property.price_per_night,
       type: property.property_type,
       city: property.city,
@@ -76,13 +77,13 @@ class PropertyEditor extends React.Component {
     let image = this.inputRef.current.files[0];
 
     let formData = new FormData();
-
-    if (image) {
-      formData.append('property[image_url]', image, image.name);
+    /*
+    if (image != null) {
+      formData.append('property[image]', image, image.name);
     } else {
       formData.append('property[image_url]', image_url);
-    }
-
+    }*/
+    formData.append('property[image]', image, image.name);
     formData.append('property[title]', title);
     formData.append('property[description]', description);
     formData.append('property[price_per_night]', price);
@@ -91,8 +92,7 @@ class PropertyEditor extends React.Component {
     formData.append('property[baths]', baths);
     formData.append('property[bedrooms]', bedrooms)
     formData.append('property[max_guests]', max)
-
-
+    console.log(...formData)
     fetch(`/api/properties/${id}`, {
       method: 'PUT',
       body: formData,
@@ -330,7 +330,7 @@ class HostWidget extends React.Component {
           bedrooms: 0,
           beds: 0,
           baths: 0,
-          image_url: false,
+          image_url: null,
           max_guests: 1,
           description: "Enter your description here",
         }

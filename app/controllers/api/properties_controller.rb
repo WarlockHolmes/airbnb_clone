@@ -46,7 +46,7 @@ module Api
 
       return render json: { error: 'not_found' }, status: :not_found if not @property
       return render json: { error: 'bad_request' }, status: :bad_request if not @property.update(property_params)
-      render 'api/properties/create', status: :ok
+      render json: { success: true }, status: :ok
     end
 
     def destroy
@@ -74,6 +74,8 @@ module Api
         :beds,
         :baths,
         :max_guests,
+        :image,
+        :image_url,
       )
     end
 
