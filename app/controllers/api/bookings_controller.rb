@@ -24,6 +24,20 @@ module Api
       render 'api/bookings/index'
     end
 
+    def get_user_bookings
+      token = cookies.signed[:airbnb_session_token]
+      session = Session.find_by(token: token)
+      user = session.user
+
+      if user
+        @bookings = user.bookings.order(created_at: :desc).page(params[:page]).per(6)
+        return render json: { error: 'not_found' }, status: :not_found if !@bookings
+
+        render 'api/bookings/user', status: :ok
+      end
+
+    end
+
     private
 
     def booking_params

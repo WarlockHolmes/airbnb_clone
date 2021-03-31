@@ -15,12 +15,13 @@
 .content {
   height: 75vh;
   border-radius: 0px 0px 10px 10px;
-
 }
 
-.scrollable {
-  max-height: 60vh;
+.property-scroll {
+  max-height: 75%;
   overflow-y: scroll;
+  border-bottom: 2px white dashed;
+  border-top: 2px white dashed;
 }
 
 .property {
@@ -83,4 +84,16 @@ hr {
 
 .button_divs div:first-of-type {
   height: 230px;
+}
+
+//Guest Widget
+
+.guest-view {
+  height: 60vh;
+  border: dashed 2px white;
+}
+
+.guest-scroll {
+  max-height: 135px;
+  overflow-y: scroll;
 }

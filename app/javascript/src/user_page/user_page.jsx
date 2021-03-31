@@ -16,15 +16,11 @@ const UserContent = (props) => {
       <HostWidget
         authenticated={props.authenticated}
         toggle={props.toggle}
-        email={props.email}
-        user={props.user}
       />
       :
       <GuestWidget
         authenticated={props.authenticated}
         toggle={props.toggle}
-        email={props.email}
-        user={props.user}
       />
     }
     </React.Fragment>

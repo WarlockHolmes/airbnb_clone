@@ -7,7 +7,6 @@ class PropertyEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      index: false,
       edit: false,
       id: '',
       title: '',
@@ -28,7 +27,7 @@ class PropertyEditor extends React.Component {
 
 
   componentDidMount() {
-    let {property, index} = this.props;
+    let {property} = this.props;
     let url = property.image_url;
     if (property.image != null) {url = property.image};
     this.setState({
@@ -44,7 +43,6 @@ class PropertyEditor extends React.Component {
       bedrooms: property.bedrooms,
       beds: property.beds,
       max: property.max_guests,
-      index: index,
     })
   }
 
@@ -77,13 +75,13 @@ class PropertyEditor extends React.Component {
     let image = this.inputRef.current.files[0];
 
     let formData = new FormData();
-    /*
+
     if (image != null) {
       formData.append('property[image]', image, image.name);
     } else {
       formData.append('property[image_url]', image_url);
-    }*/
-    formData.append('property[image]', image, image.name);
+    }
+
     formData.append('property[title]', title);
     formData.append('property[description]', description);
     formData.append('property[price_per_night]', price);
@@ -92,7 +90,7 @@ class PropertyEditor extends React.Component {
     formData.append('property[baths]', baths);
     formData.append('property[bedrooms]', bedrooms)
     formData.append('property[max_guests]', max)
-    console.log(...formData)
+
     fetch(`/api/properties/${id}`, {
       method: 'PUT',
       body: formData,
@@ -245,7 +243,7 @@ class PropertyEditor extends React.Component {
     return (
       <div className="py-4 px-4 property row" key={id}>
         <div className="col-12 col-md-4">
-          <div className="image-container rounded">
+          <div className="image-container rounded mx-5">
             <img src={image_url} className="property-image"/>
           </div>
           <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
@@ -301,10 +299,14 @@ class HostWidget extends React.Component {
   }
 
   startLoading () {
-    this.setState({loading: true})
+    this.setState({
+      loading: true,
+      properties: [],
+    })
   }
 
   fetchUserProperties(){
+    this
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
@@ -377,27 +379,27 @@ class HostWidget extends React.Component {
     let {properties, total_pages, next_page, loading, edit} = this.state;
     let editors = <div></div>
     if (properties.length !== undefined) {
-      editors = properties.map((property, index) => {
-      return <PropertyEditor property={property} index={index} loading={this.startLoading} refresh={this.fetchUserProperties}/>
+      editors = properties.map((property) => {
+      return <PropertyEditor property={property} loading={this.startLoading} refresh={this.fetchUserProperties}/>
       })
     }
     return (
       <div className="container py-3">
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-danger">
-            <h4 className="text-center mb-1">Your Properties</h4>
+            <h4 className="text-center mb-1">Properties</h4>
           </button>
           <button className="page-tab col-6 btn-outline-danger" onClick={this.props.toggle}>
-            <h4 className="text-center mb-1">Your Stays</h4>
+            <h4 className="text-center mb-1">Bookings</h4>
           </button>
         </div>
         <div className="row bg-danger content py-3">
-          <div className={loading ? "" : "col-12 scrollable"}>
+          <div className={loading ? "" : "col-12 property-scroll"}>
             {!loading && editors}
           </div>
 
           {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> :
-          <div className="mx-auto my-auto">
+          <div className="mx-auto mb-auto">
             <button className="btn btn-primary" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
           </div>}
         </div>
