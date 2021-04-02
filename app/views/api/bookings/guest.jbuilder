@@ -3,6 +3,7 @@ json.bookings do
     json.id booking.id
     json.start_date booking.start_date
     json.end_date booking.end_date
+    json.paid booking.charges.any? { |charge| charge.complete }
 
     json.property do
       json.id booking.property.id
@@ -16,6 +17,7 @@ json.bookings do
       json.bedrooms booking.property.bedrooms
       json.beds booking.property.beds
       json.baths booking.property.baths
+
       if booking.property.image.attached?
         json.image url_for(booking.property.image)
       else
@@ -23,6 +25,7 @@ json.bookings do
       end
 
       json.host booking.property.user.username
+
     end
   end
 end

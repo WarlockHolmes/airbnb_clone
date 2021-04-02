@@ -8,7 +8,6 @@ import HostWidget from "./hostWidget"
 
 import './user_page.scss';
 
-
 const UserContent = (props) => {
   return(
     <React.Fragment>
@@ -52,11 +51,12 @@ class UserPage extends React.Component {
     fetch('/api/authenticated')
       .then(handleErrors)
       .then(data => {
-        if (!data.authenticated) {window.location.pathname = '/'}
         this.setState({
           authenticated: data.authenticated,
           loading: false,
         })
+      }).catch((error) => {
+        window.location.pathname = '/'
       })
   }
 
@@ -84,7 +84,12 @@ class UserPage extends React.Component {
             host={host}
             authenticated={authenticated}
             toggle={this.toggleService}
-            /> : <div className="container"><div className="row content"><h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5></div></div>}
+            /> :
+            <div className="container">
+              <div className="row content">
+                <h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5>
+              </div>
+            </div>}
         </Layout>
       </React.Fragment>
     );

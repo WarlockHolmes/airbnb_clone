@@ -14,6 +14,7 @@ class Property extends React.Component {
   }
 
   componentDidMount() {
+    this.checkAuthenticated()
     fetch(`/api/properties/${this.props.property_id}`)
       .then(handleErrors)
       .then(data => {
@@ -22,7 +23,6 @@ class Property extends React.Component {
           loading: false,
         })
       })
-    this.checkAuthenticated()
   }
 
   checkAuthenticated() {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
+import BookingsCalendar from './bookingsCalendar'
 import placeholder from '@src/placeholder.png';
-
 
 class PropertyEditor extends React.Component {
   constructor(props) {
@@ -20,11 +20,12 @@ class PropertyEditor extends React.Component {
       baths: 0,
       bedrooms: 1,
       beds: 1,
-      max_guests: 1
+      max_guests: 1,
+      existingBookings: false,
+      selected: false,
     }
     this.inputRef = React.createRef();
   }
-
 
   componentDidMount() {
     let {property} = this.props;
@@ -126,15 +127,31 @@ class PropertyEditor extends React.Component {
 
   }
 
-  render () {
+  getPropertyBookings() {
+    this.setState({edit: false})
+    fetch(`/api/properties/${this.state.id}/host`)
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          existingBookings: data.bookings
+        })
+      })
+  }
 
-    let {id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max} = this.state;
+  passSelected(selected) {
+    this.setState({ selected: selected })
+  }
+
+  render () {
+    let {selected, existingBookings, id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max} = this.state;
 
     let toggle = this.editProperty.bind(this);
     let save = this.saveChanges.bind(this);
     let change = this.handleChange.bind(this);
     let image_change = this.handleImage.bind(this);
     let delete_property = this.deleteProperty.bind(this);
+    let current = this.getPropertyBookings.bind(this);
+    let passSelected = this.passSelected.bind(this)
 
     if(image_url == null) {image_url = placeholder}
 
@@ -149,15 +166,15 @@ class PropertyEditor extends React.Component {
           <div className="col-12 col-md-4">
             <div className="image-container rounded" onMouseOver={() => {this.setState({image_text: true})}} onMouseOut={() => {this.setState({image_text: false})}}>
               <label className="my-0">
-                <img src={image_url} className="property-image image-edit" alt="Image of Property"/>
+                <img src={image_url} className="property-image image-edit rounded" alt="Image of Property"/>
                 {image_text && <span className="image-text">Change Image?</span>}
                 <input type="file" className="image-select" name="image" accept="image/*" ref={this.inputRef} onChange={image_change}/>
               </label>
             </div>
-            <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
+            <button className="btn btn-danger d-block my-5 mx-auto border-white" onClick={current}>Current Bookings</button>
           </div>
           <div className="col-12 col-md-6">
-            <table className="w-100">
+            <table>
               <tbody>
                   <tr>
                     <td className="text-white">Title:</td>
@@ -240,41 +257,89 @@ class PropertyEditor extends React.Component {
       )
     }
 
-    return (
-      <div className="py-4 px-4 property row" key={id}>
-        <div className="col-12 col-md-4">
-          <div className="image-container rounded mx-5">
-            <img src={image_url} className="property-image"/>
+    let bookings;
+
+    if (existingBookings.length !== undefined) {
+
+      bookings = existingBookings.map((booking) => {
+        let bookingSelect = "booking py-2"
+        let notPaid = "text-white-50"
+        if (selected) {
+          if (selected.id == booking.id) {
+            bookingSelect += " booking-select";
+            notPaid = "text-black-50"
+          }
+
+        }
+
+        return(
+          <div className={bookingSelect} key={booking.id}>
+            <div className="col-6 d-inline-block" >
+              <p>Arrives on <strong>{new Date(booking.start_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong></p>
+              <p>Departs on <strong>{new Date(booking.end_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong></p>
+            </div>
+            <div className="col-2 d-inline-block">
+              <p>Guest:</p>
+              <p>Paid?</p>
+            </div>
+            <div className="col-4 d-inline-block">
+              <p className="font-weight-bold">{booking.guest}</p>
+              {booking.paid ? <p className="font-italic">All Paid!</p> : <p className={notPaid}>Not Paid</p>}
+            </div>
           </div>
-          <button className="btn btn-light d-block my-5 mx-auto text-danger font-weight-bold" href="">Current Bookings</button>
+        )
+      })
+    }
+
+    return (
+      <div className="py-4 px-4 property justify-content-around row">
+      { existingBookings ?
+        <React.Fragment>
+          <div className="col-7 text-white">
+            <h5 className="font-weight-bold w-100 mb-3 text-center">{title}</h5>
+            <div className="booking-scroll">
+              {bookings}
+            </div>
+            <button className="btn btn-light text-danger mt-3 d-block mx-auto" onClick={() => this.setState({existingBookings: false})}>Return to Property</button>
+          </div>
+          <div>
+            <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
+          </div>
+        </React.Fragment>
+        :
+        <React.Fragment>
+        <div className="col-12 col-md-4">
+          <div className="image-container rounded">
+            <img src={image_url} className="property-image rounded"/>
+          </div>
+          <button className="btn btn-danger border-white d-block my-5 mx-auto" onClick={current}>Current Bookings</button>
+
         </div>
-        <div className="col-12 col-md-6">
+        <div className="col-12 col-md-7 text-white">
           <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
-          <p className="text-white text-center font-italic">{type_caps}</p>
-          <p className="text-white px-3"> {description} </p>
+          <p className="text-center font-italic">{type_caps}</p>
+          <p className="px-3"> {description} </p>
           <hr/>
           <div className="col-6 d-inline-block">
-            <p className="text-white">
-              $ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small>
-            </p>
-            <p className="text-white">Baths: {baths}</p>
-            <p className="text-white">Bedrooms: {bedrooms}</p>
+            <p>$ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small></p>
+            <p>Baths: {baths}</p>
+            <p>Bedrooms: {bedrooms}</p>
           </div>
           <div className="col-6 d-inline-block">
-            <p className="text-white"><strong>{city}</strong>, {country.toUpperCase()}</p>
-            <p className="text-white">Beds: {beds}</p>
-            <p className="text-white">Max Guests: {max}</p>
+            <p><strong>{city}</strong>, {country.toUpperCase()}</p>
+            <p>Beds: {beds}</p>
+            <p>Max Guests: {max}</p>
           </div>
         </div>
-        <div className="col-12 col-md-2 button_divs">
+        <div className="col-12 col-md-1 button_divs">
           <div>
             <button className="btn btn-light" href="" id={id} onClick={toggle}>Edit</button>
           </div>
           <div>
             <button className="btn btn-dark font-weight-bold text-danger" href="" onClick={delete_property}>Delete</button>
           </div>
-
         </div>
+        </React.Fragment>}
       </div>
     )
 
@@ -287,15 +352,28 @@ class HostWidget extends React.Component {
     this.state = {
       properties: [],
       loading: true,
+      existingBookings: false,
+      selected: false,
     }
     this.addProperty = this.addProperty.bind(this)
-    this.fetchUserProperties = this.fetchUserProperties.bind(this)
+    this.getUserProperties = this.getUserProperties.bind(this)
     this.startLoading = this.startLoading.bind(this)
+    this.passSelected = this.passSelected.bind(this)
+    this.scrollRef = React.createRef()
   }
 
-
   componentDidMount() {
-    this.fetchUserProperties()
+    this.getUserProperties()
+  }
+
+  componentDidUpdate() {
+    if (this.scrollRef.current != null) {
+      this.scrollRef.current.scrollIntoView({
+        behaviour: 'smooth',
+        block: 'start',
+
+      })
+    }
   }
 
   startLoading () {
@@ -305,8 +383,7 @@ class HostWidget extends React.Component {
     })
   }
 
-  fetchUserProperties(){
-    this
+  getUserProperties(){
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
@@ -319,7 +396,6 @@ class HostWidget extends React.Component {
 
   addProperty = () => {
     let {properties} = this.state;
-
     fetch(`/api/properties`, safeCredentials({
       method: 'POST',
       body: JSON.stringify({
@@ -340,15 +416,15 @@ class HostWidget extends React.Component {
     }))
       .then(handleErrors)
       .then(this.startLoading())
-      .then(this.fetchUserProperties())
+      .then(this.getUserProperties())
       .catch((error) => {
         console.log(error);
       })
 
   }
 
-  getPropertyBookings = () => {
-    fetch(`/api/properties/${this.props.property_id}/bookings`)
+  getHostBookings = () => {
+    fetch(`/api/bookings/host`)
       .then(handleErrors)
       .then(data => {
         console.log(data);
@@ -358,50 +434,93 @@ class HostWidget extends React.Component {
       })
   }
 
-  loadMore = () => {
-    if (this.state.next_page === null) {
-      return;
-    }
-    this.setState({ loading: true });
-    fetch(`/api/properties?page=${this.state.next_page}`)
-      .then(handleErrors)
-      .then(data => {
-        this.setState({
-          properties: this.state.properties.concat(data.properties),
-          total_pages: data.total_pages,
-          next_page: data.next_page,
-          loading: false,
-        })
-      })
+  passSelected(selected) {
+    this.setState({ selected: selected })
   }
 
   render() {
-    let {properties, total_pages, next_page, loading, edit} = this.state;
+    let {properties, loading, existingBookings, selected} = this.state;
+
     let editors = <div></div>
     if (properties.length !== undefined) {
       editors = properties.map((property) => {
-      return <PropertyEditor property={property} loading={this.startLoading} refresh={this.fetchUserProperties}/>
+      return <PropertyEditor property={property} loading={this.startLoading} refresh={this.getUserProperties} key={property.id}/>
       })
     }
+
+    let bookings;
+    if (existingBookings) {
+      bookings = existingBookings.map(booking => {
+        let bookingSelect = "booking py-2"
+        let notPaid = "text-white-50"
+        let ref = null;
+        if (selected) {
+          if (selected.id == booking.id) {
+            ref = this.scrollRef;
+            bookingSelect += " booking-select";
+            notPaid = "text-black-50"
+          }
+        }
+        return(
+          <div className={bookingSelect} ref={ref} key={booking.id}>
+            <div className="col-6 d-inline-block" >
+              <p>Arrives on <strong>{new Date(booking.start_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong></p>
+              <p>Departs on <strong>{new Date(booking.end_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong></p>
+            </div>
+            <div className="col-2 d-inline-block">
+              <p>Guest:</p>
+              <p>Paid?</p>
+            </div>
+            <div className="col-4 d-inline-block">
+              <p className="font-weight-bold">{booking.guest}</p>
+              {booking.paid ? <p className="font-italic">All Paid!</p> : <p className={notPaid}>Not Paid</p>}
+            </div>
+          </div>
+        )
+      })
+    }
+
     return (
       <div className="container py-3">
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-danger">
-            <h4 className="text-center mb-1">Properties</h4>
+            <h4 className="text-center mb-1">Your Properties</h4>
           </button>
           <button className="page-tab col-6 btn-outline-danger" onClick={this.props.toggle}>
-            <h4 className="text-center mb-1">Bookings</h4>
+            <h4 className="text-center mb-1">Your Trips</h4>
           </button>
         </div>
-        <div className="row bg-danger content py-3">
-          <div className={loading ? "" : "col-12 property-scroll"}>
-            {!loading && editors}
+        <div className="row bg-danger content px-4 py-3">
+          <div className={loading ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
+            {!loading && (existingBookings ?
+              <div className="row my-4">
+                <div className="col-7 text-white">
+                  <h5 className="font-weight-bold w-100 mb-3 text-center">All Bookings:</h5>
+                  <div className="booking-scroll">
+                    {bookings}
+                  </div>
+                </div>
+                <div className="mx-auto">
+                  <BookingsCalendar bookings={existingBookings} passSelected={this.passSelected}/>
+                </div>
+              </div>
+            : editors)}
           </div>
 
           {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> :
-          <div className="mx-auto mb-auto">
-            <button className="btn btn-primary" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
-          </div>}
+          <React.Fragment>
+            <div className="mx-auto mb-auto">
+            {existingBookings ?
+              <button className="btn btn-light text-danger mx-auto" onClick={() => this.setState({existingBookings: false})}>Return to Properties</button>
+              :
+              <React.Fragment>
+                <button className="btn btn-primary mr-2" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
+                <button className="btn btn-light text-danger ml-2" onClick={this.getHostBookings}>See All Bookings</button>
+              </React.Fragment>
+            }
+            </div>
+          </React.Fragment>
+          }
         </div>
       </div>
     );

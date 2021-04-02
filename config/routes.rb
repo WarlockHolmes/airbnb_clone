@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     # properties (other)
     get '/properties/user' => 'properties#index_by_user'
     # bookings (other)
-    get '/bookings/user' => 'bookings#get_user_bookings'
+    get '/bookings/guest' => 'bookings#get_guest_bookings'
+    get '/bookings/host' => 'bookings#get_host_bookings'
+    get '/properties/:id/host' => 'bookings#get_property_bookings_host'
     get '/properties/:id/bookings' => 'bookings#get_property_bookings'
     # sessions (other)
     get '/authenticated' => 'sessions#authenticated'
@@ -20,7 +22,7 @@ Rails.application.routes.draw do
     resources :properties, only: [:index, :show, :update, :create, :destroy]
     resources :bookings, only: [:create]
     resources :charges, only: [:create]
-    
+
     # stripe webhook
     post '/charges/mark_complete' => 'charges#mark_complete'
 
