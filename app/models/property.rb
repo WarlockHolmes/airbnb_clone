@@ -14,4 +14,7 @@ class Property < ApplicationRecord
   validates :beds, presence: true, numericality: { only_integer: true, less_than: 20 }
   validates :baths, presence: true, numericality: { only_integer: true, less_than: 20 }
   validates :user, presence: true
+
+  validates :notes, length: { maximum: 2000 }
+  validates :notes, length: { maximum: 1000 }
 end

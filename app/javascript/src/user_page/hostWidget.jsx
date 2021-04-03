@@ -21,10 +21,22 @@ class PropertyEditor extends React.Component {
       bedrooms: 1,
       beds: 1,
       max_guests: 1,
+      parking: null,
+      enchanced_clean: null,
+      parties: null,
+      smoking: null,
+      pets: null,
+      laundry: null,
+      internet: null,
+      kitchen: null,
+      hair_dryer: null,
+      notes: null,
       existingBookings: false,
       selected: false,
     }
-    this.inputRef = React.createRef();
+    this.imageRef = React.createRef();
+    this.petRef = React.createRef();
+    this.readPetRules = this.readPetRules.bind(this);
   }
 
   componentDidMount() {
@@ -44,7 +56,19 @@ class PropertyEditor extends React.Component {
       bedrooms: property.bedrooms,
       beds: property.beds,
       max: property.max_guests,
+      parking: property.parking,
+      enhanced_clean: property.enhanced_clean,
+      parties: property.parties,
+      smoking: property.smoking,
+      pets: property.pets,
+      laundry: property.laundry,
+      internet: property.internet,
+      tv: property.tv,
+      kitchen: property.kitchen,
+      hair_dryer: property.hair_dryer,
+      notes: property.notes,
     })
+
   }
 
   editProperty() {
@@ -62,7 +86,17 @@ class PropertyEditor extends React.Component {
       case 'bedrooms': this.setState({bedrooms: event.target.value}); break;
       case 'beds': this.setState({beds: event.target.value}); break;
       case 'baths': this.setState({baths: event.target.value}); break;
-      case 'max': this.setState({max: event.target.value}); break;
+      case 'max_guests': this.setState({max_guests: event.target.value}); break;
+      case 'parking': this.setState({parking: event.target.value}); break;
+      case 'enhanced_clean': this.setState({enhanced_clean: event.target.value}); break;
+      case 'parties': this.setState({parties: event.target.value}); break;
+      case 'smoking': this.setState({smoking: event.target.value}); break;
+      case 'laundry': this.setState({laundry: event.target.value}); break;
+      case 'internet': this.setState({internet: event.target.value}); break;
+      case 'tv': this.setState({tv: event.target.value}); break;
+      case 'kitchen': this.setState({kitchen: event.target.value}); break;
+      case 'hair_dryer': this.setState({hair_dryer: event.target.value}); break;
+      case 'notes': this.setState({notes: event.target.value}); break;
     }
 
   }
@@ -71,9 +105,63 @@ class PropertyEditor extends React.Component {
     this.setState({image_url: URL.createObjectURL(event.target.files[0])})
   }
 
+  handlePetForm () {
+    let animal, rule, notes;
+    let delimiter = ";";
+    let current = this.readPetRules()
+    if (event.target.type == "checkbox") {
+      switch (event.target.name) {
+        case 'dogs': animal = event.target.name; break;
+        case 'cats': animal = event.target.name; break;
+        case 'other': animal = event.target.name; break;
+        case 'small': rule = event.target.name; break;
+        case 'outdoor': rule = event.target.name; break;
+        case 'hypoallergenic': rule = event.target.name; break;
+      }
+      if (animal != undefined) {
+        if (!current.animals.includes(animal)) {current.animals.push(animal)} else {current.animals.pop(animal)}
+      }
+      else if (rule != undefined) {
+        if (!current.rules.includes(rule)) {current.rules.push(rule)} else {current.rules.pop(rule)}
+      }
+    } else {
+      notes = event.target.value;
+      if (notes != undefined) {current.notes = notes}
+    }
+    if (current.notes == undefined) {current.notes = ""}
+
+    this.setState({pets: current.animals.join(',')+delimiter+current.rules.join(',')+delimiter+current.notes+delimiter})
+
+  }
+
+  readPetRules() {
+    let {pets} = this.state;
+    let animals = []
+    let rules = []
+    let notes, object;
+    let sections = pets.split(';')
+    sections.pop()
+    sections.forEach((v, i) => {
+      if (v) {
+        switch(i) {
+          case 0: animals = v.split(','); break;
+          case 1: rules = v.split(','); break;
+          case 2: notes = v; break;
+        }
+      }
+    })
+
+    return {
+      animals: animals.map(v => {return v}),
+      rules: rules.map(v => {return v}),
+      notes: notes,
+    }
+
+  }
+
   saveChanges () {
-    let {id, title, image_url, description, price, type, city, country, baths, bedrooms, beds, max} = this.state;
-    let image = this.inputRef.current.files[0];
+    let {id, title, image_url, description, price, type, city, country, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let image = this.imageRef.current.files[0];
 
     let formData = new FormData();
 
@@ -91,6 +179,17 @@ class PropertyEditor extends React.Component {
     formData.append('property[baths]', baths);
     formData.append('property[bedrooms]', bedrooms)
     formData.append('property[max_guests]', max)
+    formData.append('property[parking]', parking);
+    formData.append('property[enhanced_clean]', enhanced_clean);
+    formData.append('property[parties]', parties);
+    formData.append('property[smoking]', smoking);
+    formData.append('property[pets]', pets);
+    formData.append('property[laundry]', laundry);
+    formData.append('property[internet]', internet);
+    formData.append('property[tv]', tv);
+    formData.append('property[kitchen]', kitchen);
+    formData.append('property[hair_dryer]', hair_dryer);
+    formData.append('property[notes]', notes);
 
     fetch(`/api/properties/${id}`, {
       method: 'PUT',
@@ -142,8 +241,48 @@ class PropertyEditor extends React.Component {
     this.setState({ selected: selected })
   }
 
+  addAmenity() {
+    event.preventDefault()
+    switch(event.target.value) {
+      case 'parking': this.setState({parking: 1}); break;
+      case 'enhanced_clean': this.setState({enhanced_clean: true}); break;
+      case 'parties': this.setState({parties: false}); break;
+      case 'smoking': this.setState({smoking: false}); break;
+      case 'pets': this.setState({pets: ';;;'}); break;
+      case 'laundry': this.setState({laundry: 'washer only'}); break;
+      case 'internet': this.setState({internet: 'dial-up'}); break;
+      case 'tv': this.setState({tv: true}); break;
+      case 'kitchen': this.setState({kitchen: 'kitchen'}); break;
+      case 'hair_dryer': this.setState({hair_dryer: true}); break;
+      case 'notes': this.setState({notes: ""}); break;
+    }
+    event.target.value = ""
+  }
+
   render () {
-    let {selected, existingBookings, id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max} = this.state;
+
+    let {selected, existingBookings, id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+
+    const addAmenityOptions = () => {
+      let amenities = [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes]
+      let options = [<option value="parking">Parking</option>,
+       <option value="enhanced_clean">Enhanced Clean</option>,
+       <option value="parties">Parties</option>,
+       <option value="smoking">Smoking</option>,
+       <option value="pets">Pets</option>,
+       <option value="laundry">Laundry</option>,
+       <option value="internet">Internet</option>,
+       <option value="tv">Television</option>,
+       <option value="kitchen">Kitchen</option>,
+       <option value="hair_dryer">Hair Dryer</option>,
+       <option value="notes">Additional Notes</option>];
+       let list = options.map((opt, i) => {
+         if (amenities[i] == null) {
+           return opt
+         }
+       })
+       return list;
+    }
 
     let toggle = this.editProperty.bind(this);
     let save = this.saveChanges.bind(this);
@@ -151,7 +290,9 @@ class PropertyEditor extends React.Component {
     let image_change = this.handleImage.bind(this);
     let delete_property = this.deleteProperty.bind(this);
     let current = this.getPropertyBookings.bind(this);
-    let passSelected = this.passSelected.bind(this)
+    let passSelected = this.passSelected.bind(this);
+    let addAmenity = this.addAmenity.bind(this);
+    let petForm = this.handlePetForm.bind(this);
 
     if(image_url == null) {image_url = placeholder}
 
@@ -159,6 +300,19 @@ class PropertyEditor extends React.Component {
       if (word == 'in') {return word}
       return word.charAt(0).toUpperCase() + word.slice(1)
     }).join(" ")
+
+    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
+
+    if (pets) {
+      let current_pets = this.readPetRules();
+      dogs = current_pets.animals.includes('dogs');
+      cats = current_pets.animals.includes('cats');
+      other = current_pets.animals.includes('other');
+      small = current_pets.rules.includes('small');
+      hypoallergenic = current_pets.rules.includes('hypoallergenic');
+      outdoor = current_pets.rules.includes('outdoor');
+      pet_notes = current_pets.notes;
+    }
 
     if (edit) {
       return (
@@ -168,24 +322,24 @@ class PropertyEditor extends React.Component {
               <label className="my-0">
                 <img src={image_url} className="property-image image-edit rounded" alt="Image of Property"/>
                 {image_text && <span className="image-text">Change Image?</span>}
-                <input type="file" className="image-select" name="image" accept="image/*" ref={this.inputRef} onChange={image_change}/>
+                <input type="file" className="image-select" name="image" accept="image/*" ref={this.imageRef} onChange={image_change}/>
               </label>
             </div>
             <button className="btn btn-danger d-block my-5 mx-auto border-white" onClick={current}>Current Bookings</button>
           </div>
-          <div className="col-12 col-md-6">
+          <div className="col-12 col-md-7 text-white py-2 editor-scroll">
             <table>
               <tbody>
                   <tr>
-                    <td className="text-white">Title:</td>
-                    <td className="text-white">
-                      <input type="text" name="title" className="px-2 w-100 rounded" value={title} onChange={change}/>
+                    <td>Title:</td>
+                    <td>
+                      <input type="text" name="title" className="w-100 property-input" value={title} onChange={change}/>
                     </td>
                   </tr>
                   <tr>
-                    <td className="text-white">Type:</td>
-                    <td className="text-white">
-                    <select className="property-type" name="type" value={type} onChange={change}>
+                    <td>Type:</td>
+                    <td>
+                    <select className="property-input w-100" name="type" value={type} onChange={change}>
                       <optgroup label="Apartment">
                         <option value="entire apartment">Entire Apartment</option>
                         <option value="private room in apartment">Private Room in Apartment</option>
@@ -203,55 +357,221 @@ class PropertyEditor extends React.Component {
                     </td>
                   </tr>
                   <tr>
-                    <td className="text-white">Description:</td>
-                    <td className="text-white">
-                      <textarea name="description" className="px-2 w-100 rounded" value={description} onChange={change}/>
+                    <td>Description:</td>
+                    <td>
+                      <textarea name="description" className="w-100 property-input" value={description} onChange={change}/>
                     </td>
                   </tr>
                   <tr>
-                    <td className="text-white">Price:</td>
-                    <td className="text-white">
-                      $  <input type="number" name="price" className="px-1 w-25 rounded" value={price} onChange={change}></input>  {country.toUpperCase()}D / night
+                    <td>Price:</td>
+                    <td>
+                      $  <input type="number" name="price" className="property-input" value={price} onChange={change}></input>  {country.toUpperCase()}D / night
                     </td>
                   </tr>
                   <tr>
-                    <td className="text-white">Location:</td>
-                    <td className="text-white">
-                      <input type="text" name="city" className="px-2 rounded w-50" value={city} onChange={change}></input>
-                      <select className="ml-2" value={country} name="country" onChange={change}>
+                    <td>Location:</td>
+                    <td>
+                      <input type="text" name="city" className="property-input" value={city} onChange={change}></input>
+                      <select className="ml-2 property-input" value={country} name="country" onChange={change}>
                         <option value="us">U.S.A</option>
                         <option value="ca">Canada</option>
                       </select>
                     </td>
                   </tr>
-                  <tr>
-                    <td className="text-white">Beds:
-                      <input type="number" name="beds" className="px-1 w-25 rounded ml-5" value={beds} onChange={change}/>
-                    </td>
-                    <td className="text-white">Baths:
-                      <input type="number" name="baths" className="px-1 w-25 rounded ml-5" value={baths} onChange={change}/>
-                    </td>
+                </tbody>
+            </table>
+            <hr/>
+            <table className="amenities">
+              <tbody>
+                <tr>
+                  <td>Beds:</td>
+                  <td>
+                    <input type="number" name="beds" className="property-input" value={beds} onChange={change}/>
+                  </td>
+                  <td>Baths:</td>
+                  <td>
+                    <input type="number" name="baths" className="property-input" value={baths} onChange={change}/>
+                  </td>
 
-                  </tr>
-                  <tr>
-                    <td className="text-white pb-1">Bedrooms:
-                      <input type="number" name="bedrooms" className="px-1 w-25 rounded ml-2" value={bedrooms} onChange={change}/>
+                </tr>
+                <tr>
+                  <td>Bedrooms:</td>
+                  <td>
+                    <input type="number" name="bedrooms" className="property-input" value={bedrooms} onChange={change}/>
+                  </td>
+                  <td>
+                  Max Guests:</td>
+                  <td>
+                    <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
+                  </td>
+                </tr>
+                { (parking || enhanced_clean)  &&
+                <tr>
+                  {parking !== null && <React.Fragment>
+                  <td>Parking Spots:</td>
+                  <td>
+                    <input type="number" name="parking" className="property-input" value={parking} onChange={change}/>
+                  </td>
+                  </React.Fragment>}
+                  {enhanced_clean !== null && <React.Fragment>
+                  <td><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a>:</td>
+                  <td>
+                    <input type="checkbox" name="enhanced_clean" className="property-input mx-2" value={enhanced_clean} onChange={change}/><br/>
+                  </td>
+                    </React.Fragment>}
+                </tr>}
+                { (parties !== null || smoking !== null) &&
+                <tr>
+                  {parties !== null && <React.Fragment>
+                  <td>Parties:</td>
+                  <td>
+                    <select name="parties" className="property-input mr-2" value={parties} onChange={change}>
+                      <option value={true}>Allowed</option>
+                      <option value={false}>Not Allowed</option>
+                    </select>
+                  </td>
+                  </React.Fragment>}
+                  {smoking !== null && <React.Fragment>
+                  <td>Smoking:</td>
+                  <td>
+                    <select name="smoking" className="property-input" value={smoking} onChange={change}>
+                      <option value={true}>Allowed</option>
+                      <option value={false}>Not Allowed</option>
+                    </select>
+                  </td>
+                  </React.Fragment>}
+                </tr>}
+                { (laundry || internet) && <tr>
+                  {laundry !== null && <React.Fragment>
+                  <td>Laundry:</td>
+                  <td>
+                    <select name="laundry" className="property-input" value={laundry} onChange={change}>
+                      <option value="washer only">Washer Only</option>
+                      <option value="dryer only">Dryer Only</option>
+                      <option value="washer and dryer">Washer & Dryer</option>
+                      <option value="coin op">Coin Operated</option>
+                      <option value="laundromat">Laundromat</option>
+                      <option value="none">None</option>
+                    </select>
+                  </td>
+                    </React.Fragment>}
+                    {internet !== null && <React.Fragment>
+                    <td>Internet:</td>
+                    <td>
+                      <select name="internet" className="property-input" value={internet} onChange={change}>
+                        <option value="wifi">Wifi</option>
+                        <option value="dial-up">Dial-Up</option>
+                        <option value="ethernet">Ethernet</option>
+                        <option value="none">None</option>
+                      </select>
                     </td>
-                    <td className="text-white pb-1">
-                    Max Guests:
-                      <input type="number" name="max" className="px-1 w-25 rounded ml-2" value={max} onChange={change}/>
-                    </td>
-                  </tr>
+                      </React.Fragment>}
+                </tr>}
+                { (tv || kitchen ) && <tr>
+                  {tv !== null && <React.Fragment>
+                  <td>TV:</td>
+                  <td>
+                    <input name="tv" type="checkbox" className="property-input" checked={tv} onChange={change}/>
+                  </td>
+                    </React.Fragment>}
+                  {kitchen !== null && <React.Fragment>
+                  <td>Kitchen:</td>
+                  <td>
+                    <select name="internet" className="property-input" value={kitchen} onChange={change}>
+                      <option value="kitchen">Kitchen</option>
+                      <optgroup label="Only">
+                        <option value="fridge only">Refrig. Only</option>
+                        <option value="stove only">Stove Only</option>
+                        <option value="oven only">Oven Only</option>
+                      </optgroup>
+                      <optgroup label="Omit">
+                        <option value="no fridge">No Refrig.</option>
+                        <option value="no stove">No Stove</option>
+                        <option value="no oven">No Oven</option>
+                      </optgroup>
+                      <option value="none">None</option>
+                    </select>
+                  </td>
+                    </React.Fragment>}
+                </tr>}
+                { (hair_dryer || notes !=null ) && <tr>
+                  {hair_dryer !== null && <React.Fragment>
+                  <td>Hair Dryer:</td>
+                  <td>
+                    <input type="checkbox" name="hair_dryer" className="property-input" checked={hair_dryer} onChange={change}/>
+                  </td>
+                    </React.Fragment>}
+                  {notes !== null && <React.Fragment>
+                  <td>Additional Notes:</td>
+                  <td>
+                    <textarea name="notes" className="property-input" value={notes} onChange={change}/>
+                  </td>
+                    </React.Fragment>}
+                </tr>}
               </tbody>
             </table>
+            { pets !== null &&
+            <form name="pets" className="pl-0 row ml-0" ref={this.petRef}>
+              <div className="col-2 pl-1 d-inline-block">Pets:</div>
+              <table className="col-5 pets">
+                <tbody>
+                  <tr>
+                    <td>
+                      <label>
+                        <input className="property-input" name="dogs" type="checkbox" checked={dogs} onChange={petForm}/>
+                        <small>Dogs</small>
+                      </label>
+                    </td>
+                    <td>
+                      <label>
+                        <input className="property-input" name="small" type="checkbox" checked={small} onChange={petForm}/>
+                        <small>Small Pets Only</small>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>
+                        <input className="property-input" name="cats" type="checkbox" checked={cats} onChange={petForm}/>
+                        <small>Cats</small>
+                      </label>
+                    </td>
+                    <td>
+                      <label>
+                        <input className="property-input" name="hypoallergenic" type="checkbox" checked={hypoallergenic} onChange={petForm}/>
+                        <small>Hypoallergenic Only</small>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>
+                        <input className="property-input" name="other" type="checkbox" checked={other} onChange={petForm}/>
+                        <small>Other</small>
+                      </label>
+                    </td>
+                    <td>
+                      <label>
+                        <input className="property-input" name="outdoor" type="checkbox" checked={outdoor} onChange={petForm}/>
+                        <small>Outdoor Only</small>
+                      </label>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="col-5 pr-0 d-inline-block">
+                <textarea placeholder="Notes..." className="property-input pet-notes" value={pet_notes} onChange={petForm}/>
+              </div>
+            </form>}
+            { [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes].includes(null) &&
+            <select className="add-amenity property-input" name="add-amenity" onChange={addAmenity}>
+              <option value="">--Specify Amenities--</option>
+              {addAmenityOptions()}
+            </select>}
           </div>
-          <div className="col-12 col-md-2 button_divs">
-            <div>
-              <button className="btn btn-primary text-nowrap" href="" onClick={save}>Save Changes</button>
-            </div>
-            <div>
-              <button className="btn btn-dark font-weight-bold text-danger" href="" onClick={delete_property}>Delete</button>
-            </div>
+          <div className="col-12 col-md-1 edit-buttons">
+            <button className="btn btn-primary text-nowrap font-weight-bold mb-2" href="" onClick={save}>Save</button>
+            <button className="btn btn-dark text-danger" href="" onClick={delete_property}>Delete</button>
           </div>
         </div>
       )
@@ -313,7 +633,6 @@ class PropertyEditor extends React.Component {
             <img src={image_url} className="property-image rounded"/>
           </div>
           <button className="btn btn-danger border-white d-block my-5 mx-auto" onClick={current}>Current Bookings</button>
-
         </div>
         <div className="col-12 col-md-7 text-white">
           <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
@@ -331,12 +650,12 @@ class PropertyEditor extends React.Component {
             <p>Max Guests: {max}</p>
           </div>
         </div>
-        <div className="col-12 col-md-1 button_divs">
+        <div className="col-12 col-md-1 edit-buttons">
           <div>
-            <button className="btn btn-light" href="" id={id} onClick={toggle}>Edit</button>
+            <button className="btn btn-light text-primary font-weight-bold mb-2" href="" id={id} onClick={toggle}>Edit</button>
           </div>
           <div>
-            <button className="btn btn-dark font-weight-bold text-danger" href="" onClick={delete_property}>Delete</button>
+            <button className="btn btn-dark text-danger" href="" onClick={delete_property}>Delete</button>
           </div>
         </div>
         </React.Fragment>}

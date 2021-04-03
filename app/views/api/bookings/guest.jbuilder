@@ -17,6 +17,17 @@ json.bookings do
       json.bedrooms booking.property.bedrooms
       json.beds booking.property.beds
       json.baths booking.property.baths
+      json.parking property.parking
+      json.enhanced_clean property.enhanced_clean
+      json.parties property.parties
+      json.smoking property.smoking
+      json.pets property.pets
+      json.laundry property.laundry
+      json.internet property.internet
+      json.tv property.tv
+      json.kitchen property.kitchen
+      json.hair_dryer property.hair_dryer
+      json.notes property.notes
 
       if booking.property.image.attached?
         json.image url_for(booking.property.image)

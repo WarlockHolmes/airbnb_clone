@@ -12,6 +12,17 @@ json.property do
   json.baths @property.baths
   json.image_url @property.image_url
   json.image url_for(@property.image) if @property.image.attached?
+  json.parking @property.parking
+  json.enhanced_clean @property.enhanced_clean
+  json.parties @property.parties
+  json.smoking @property.smoking
+  json.pets @property.pets
+  json.laundry @property.laundry
+  json.internet @property.internet
+  json.tv @property.tv
+  json.kitchen @property.kitchen
+  json.hair_dryer @property.hair_dryer
+  json.notes @property.notes
 
   json.user do
     json.id @property.user.id

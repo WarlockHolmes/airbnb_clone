@@ -50,6 +50,22 @@ table {
 
 //Property Editor
 
+.editor-scroll {
+  max-height: 45vh;
+  overflow-y: scroll;
+  border: 2px dotted white;
+}
+
+.property-input {
+  border-radius: 10px;
+  padding: 5px 5px 5px 5px;
+  border: none;
+}
+
+input[type="number"].property-input {
+  width: 50px;
+}
+
 .image-edit {
   display: block;
   margin: none;
@@ -63,6 +79,45 @@ table {
 
 td {
   padding-bottom: 1rem;
+}
+
+.amenities td:nth-of-type(2), .amenities td:nth-of-type(4) {
+  width: 30%;
+}
+
+.amenities td:nth-of-type(1), .amenities td:nth-of-type(3) {
+  width: 20%;
+  padding-left: .25rem;
+}
+
+.pets td:first-of-type {
+  width: 5%;
+  padding-bottom: .25rem;
+}
+
+.pets td:last-of-type {
+  width: 10%;
+  padding-bottom: .25rem;
+}
+
+.amenities textarea {
+  	width: 90%;
+}
+
+.pet-notes {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+  font-size: 12px;
+  height: 90%;
+  width: 90%;
+}
+
+[type="checkbox"]
+{
+    vertical-align:middle;
+    margin-right: 5px;
 }
 
 .image-select {
@@ -95,12 +150,12 @@ hr {
   border-color: white!important;
 }
 
-.button_divs div {
-  &:first-of-type {
-    height: 230px;
-  }
+.edit-buttons {
+  margin-left: -5px;
+}
 
-  margin-left: -15px;
+.edit-buttons button {
+  width: 75px;
 }
 
 .booking-scroll {
@@ -118,6 +173,13 @@ hr {
 .booking-select {
   background-color: white;
   color: rgb(220, 53, 69);
+}
+
+.add-amenity {
+  width: 100%;
+  font-weight: bold;
+  text-align-last: center;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 //Guest Widget

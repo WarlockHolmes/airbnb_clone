@@ -68,6 +68,17 @@ class Property extends React.Component {
       beds,
       baths,
       image_url,
+      parking,
+      enhanced_clean,
+      parties,
+      smoking,
+      pets,
+      laundry,
+      internet,
+      tv,
+      kitchen,
+      hair_dryer,
+      notes,
       user,
     } = property
 
@@ -89,6 +100,10 @@ class Property extends React.Component {
                   <span className="mr-3">{bedrooms} bedroom</span>
                   <span className="mr-3">{beds} bed</span>
                   <span className="mr-3">{baths} bath</span>
+                  {parking && <span className="mr-3">Parking for {parking} cars</span>}
+                  {internet && <span className="mr-3">{internet} connection</span>}
+                  {kitchen && <span className="mr-3">{kitchen} available</span>}
+                  {laundry && <span className="mr-3">{laundry} available</span>}
                 </p>
               </div>
               <hr />
