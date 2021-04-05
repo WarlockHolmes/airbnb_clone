@@ -7,7 +7,7 @@ class AddAmenitiesToProperties < ActiveRecord::Migration[5.2]
     add_column :properties, :pets, :string
     add_column :properties, :laundry, :string
     add_column :properties, :internet, :string
-    add_column :properties, :tv, :string
+    add_column :properties, :tv, :boolean
     add_column :properties, :kitchen, :string
     add_column :properties, :hair_dryer, :boolean
     add_column :properties, :notes, :string

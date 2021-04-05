@@ -76,6 +76,17 @@ module Api
         :max_guests,
         :image,
         :image_url,
+        :parking,
+        :enhanced_clean,
+        :parties,
+        :smoking,
+        :pets,
+        :laundry,
+        :internet,
+        :tv,
+        :kitchen,
+        :hair_dryer,
+        :notes,
       )
     end
 

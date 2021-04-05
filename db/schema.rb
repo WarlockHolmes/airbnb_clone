@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_143746) do
     t.string "pets"
     t.string "laundry"
     t.string "internet"
-    t.string "tv"
+    t.boolean "tv"
     t.string "kitchen"
     t.boolean "hair_dryer"
     t.string "notes"

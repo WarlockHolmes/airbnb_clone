@@ -48,6 +48,12 @@ table {
   border-top: 2px white dashed;
 }
 
+[type="checkbox"]
+{
+    vertical-align:middle;
+    margin-right: 5px;
+}
+
 //Property Editor
 
 .editor-scroll {
@@ -78,16 +84,16 @@ input[type="number"].property-input {
 }
 
 td {
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
-.amenities td:nth-of-type(2), .amenities td:nth-of-type(4) {
-  width: 30%;
+.amenities select.property-input {
+  max-width: 130px;
 }
 
-.amenities td:nth-of-type(1), .amenities td:nth-of-type(3) {
-  width: 20%;
-  padding-left: .25rem;
+.amenities .property-input {
+  margin-left: .75rem;
+  margin-right: .75em;
 }
 
 .pets td:first-of-type {
@@ -100,24 +106,14 @@ td {
   padding-bottom: .25rem;
 }
 
-.amenities textarea {
-  	width: 90%;
-}
-
 .pet-notes {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 
   font-size: 12px;
-  height: 90%;
   width: 90%;
-}
-
-[type="checkbox"]
-{
-    vertical-align:middle;
-    margin-right: 5px;
+  height: 90%;
 }
 
 .image-select {
@@ -182,14 +178,15 @@ hr {
   color: rgba(0, 0, 0, 0.5);
 }
 
+.no-properties {
+  height: 60vh;
+}
+
 //Guest Widget
 
 .guest-view {
   height: 60vh;
   border: dashed 2px white;
-}
-
-.guest-scroll {
-  max-height: 135px;
   overflow-y: scroll;
+
 }

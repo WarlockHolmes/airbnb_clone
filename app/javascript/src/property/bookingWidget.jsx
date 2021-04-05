@@ -24,7 +24,6 @@ class BookingWidget extends React.Component {
     fetch(`/api/properties/${this.props.property_id}/bookings`)
       .then(handleErrors)
       .then(data => {
-        console.log(data);
         this.setState({
           existingBookings: data.bookings,
         })

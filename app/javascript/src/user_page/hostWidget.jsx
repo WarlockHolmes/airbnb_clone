@@ -1,5 +1,6 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
+import { phraseCaps } from '@utils/utils';
 import BookingsCalendar from './bookingsCalendar'
 import placeholder from '@src/placeholder.png';
 
@@ -37,9 +38,14 @@ class PropertyEditor extends React.Component {
     this.imageRef = React.createRef();
     this.petRef = React.createRef();
     this.readPetRules = this.readPetRules.bind(this);
+    this.loadProperty = this.loadProperty.bind(this);
   }
 
   componentDidMount() {
+    this.loadProperty();
+  }
+
+  loadProperty() {
     let {property} = this.props;
     let url = property.image_url;
     if (property.image != null) {url = property.image};
@@ -68,7 +74,6 @@ class PropertyEditor extends React.Component {
       hair_dryer: property.hair_dryer,
       notes: property.notes,
     })
-
   }
 
   editProperty() {
@@ -119,10 +124,12 @@ class PropertyEditor extends React.Component {
         case 'hypoallergenic': rule = event.target.name; break;
       }
       if (animal != undefined) {
-        if (!current.animals.includes(animal)) {current.animals.push(animal)} else {current.animals.pop(animal)}
+        if (!current.animals.includes(animal)) {current.animals.push(animal)}
+        else {current.animals = current.animals.filter(a => a != animal)}
       }
       else if (rule != undefined) {
-        if (!current.rules.includes(rule)) {current.rules.push(rule)} else {current.rules.pop(rule)}
+        if (!current.rules.includes(rule)) {current.rules.push(rule)}
+        else {current.rules = current.rules.filter(r => r != rule)}
       }
     } else {
       notes = event.target.value;
@@ -263,44 +270,6 @@ class PropertyEditor extends React.Component {
 
     let {selected, existingBookings, id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
-    const addAmenityOptions = () => {
-      let amenities = [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes]
-      let options = [<option value="parking">Parking</option>,
-       <option value="enhanced_clean">Enhanced Clean</option>,
-       <option value="parties">Parties</option>,
-       <option value="smoking">Smoking</option>,
-       <option value="pets">Pets</option>,
-       <option value="laundry">Laundry</option>,
-       <option value="internet">Internet</option>,
-       <option value="tv">Television</option>,
-       <option value="kitchen">Kitchen</option>,
-       <option value="hair_dryer">Hair Dryer</option>,
-       <option value="notes">Additional Notes</option>];
-       let list = options.map((opt, i) => {
-         if (amenities[i] == null) {
-           return opt
-         }
-       })
-       return list;
-    }
-
-    let toggle = this.editProperty.bind(this);
-    let save = this.saveChanges.bind(this);
-    let change = this.handleChange.bind(this);
-    let image_change = this.handleImage.bind(this);
-    let delete_property = this.deleteProperty.bind(this);
-    let current = this.getPropertyBookings.bind(this);
-    let passSelected = this.passSelected.bind(this);
-    let addAmenity = this.addAmenity.bind(this);
-    let petForm = this.handlePetForm.bind(this);
-
-    if(image_url == null) {image_url = placeholder}
-
-    let type_caps = type.split(" ").map(word => {
-      if (word == 'in') {return word}
-      return word.charAt(0).toUpperCase() + word.slice(1)
-    }).join(" ")
-
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     if (pets) {
@@ -313,6 +282,44 @@ class PropertyEditor extends React.Component {
       outdoor = current_pets.rules.includes('outdoor');
       pet_notes = current_pets.notes;
     }
+
+    if(image_url == null) {image_url = placeholder}
+
+    let type_caps = phraseCaps(type);
+
+    const addAmenityOptions = () => {
+      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
+      let options = [
+       <option value="enhanced_clean">Enhanced Clean</option>,
+       <option value="tv">Television</option>,
+       <option value="hair_dryer">Hair Dryer</option>,
+       <option value="parties">Parties</option>,
+       <option value="smoking">Smoking</option>,
+       <option value="internet">Internet</option>,
+       <option value="parking">Parking</option>,
+       <option value="laundry">Laundry</option>,
+       <option value="kitchen">Kitchen</option>,
+       <option value="pets">Pets</option>,
+       <option value="notes">Additional Notes</option>
+     ];
+       let list = options.map((opt, i) => {
+         if (amenities[i] == null) {
+           return opt
+         }
+       })
+       return list;
+    }
+
+    let toggleEdit = this.editProperty.bind(this);
+    let save = this.saveChanges.bind(this);
+    let change = this.handleChange.bind(this);
+    let image_change = this.handleImage.bind(this);
+    let delete_property = this.deleteProperty.bind(this);
+    let current = this.getPropertyBookings.bind(this);
+    let passSelected = this.passSelected.bind(this);
+    let addAmenity = this.addAmenity.bind(this);
+    let petForm = this.handlePetForm.bind(this);
+
 
     if (edit) {
       return (
@@ -381,138 +388,94 @@ class PropertyEditor extends React.Component {
                 </tbody>
             </table>
             <hr/>
-            <table className="amenities">
-              <tbody>
-                <tr>
-                  <td>Beds:</td>
-                  <td>
-                    <input type="number" name="beds" className="property-input" value={beds} onChange={change}/>
-                  </td>
-                  <td>Baths:</td>
-                  <td>
-                    <input type="number" name="baths" className="property-input" value={baths} onChange={change}/>
-                  </td>
-
-                </tr>
-                <tr>
-                  <td>Bedrooms:</td>
-                  <td>
-                    <input type="number" name="bedrooms" className="property-input" value={bedrooms} onChange={change}/>
-                  </td>
-                  <td>
-                  Max Guests:</td>
-                  <td>
-                    <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
-                  </td>
-                </tr>
-                { (parking || enhanced_clean)  &&
-                <tr>
-                  {parking !== null && <React.Fragment>
-                  <td>Parking Spots:</td>
-                  <td>
-                    <input type="number" name="parking" className="property-input" value={parking} onChange={change}/>
-                  </td>
-                  </React.Fragment>}
-                  {enhanced_clean !== null && <React.Fragment>
-                  <td><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a>:</td>
-                  <td>
-                    <input type="checkbox" name="enhanced_clean" className="property-input mx-2" value={enhanced_clean} onChange={change}/><br/>
-                  </td>
-                    </React.Fragment>}
-                </tr>}
-                { (parties !== null || smoking !== null) &&
-                <tr>
-                  {parties !== null && <React.Fragment>
-                  <td>Parties:</td>
-                  <td>
-                    <select name="parties" className="property-input mr-2" value={parties} onChange={change}>
-                      <option value={true}>Allowed</option>
-                      <option value={false}>Not Allowed</option>
-                    </select>
-                  </td>
-                  </React.Fragment>}
-                  {smoking !== null && <React.Fragment>
-                  <td>Smoking:</td>
-                  <td>
-                    <select name="smoking" className="property-input" value={smoking} onChange={change}>
-                      <option value={true}>Allowed</option>
-                      <option value={false}>Not Allowed</option>
-                    </select>
-                  </td>
-                  </React.Fragment>}
-                </tr>}
-                { (laundry || internet) && <tr>
-                  {laundry !== null && <React.Fragment>
-                  <td>Laundry:</td>
-                  <td>
-                    <select name="laundry" className="property-input" value={laundry} onChange={change}>
-                      <option value="washer only">Washer Only</option>
-                      <option value="dryer only">Dryer Only</option>
-                      <option value="washer and dryer">Washer & Dryer</option>
-                      <option value="coin op">Coin Operated</option>
-                      <option value="laundromat">Laundromat</option>
-                      <option value="none">None</option>
-                    </select>
-                  </td>
-                    </React.Fragment>}
-                    {internet !== null && <React.Fragment>
-                    <td>Internet:</td>
-                    <td>
-                      <select name="internet" className="property-input" value={internet} onChange={change}>
-                        <option value="wifi">Wifi</option>
-                        <option value="dial-up">Dial-Up</option>
-                        <option value="ethernet">Ethernet</option>
-                        <option value="none">None</option>
-                      </select>
-                    </td>
-                      </React.Fragment>}
-                </tr>}
-                { (tv || kitchen ) && <tr>
-                  {tv !== null && <React.Fragment>
-                  <td>TV:</td>
-                  <td>
-                    <input name="tv" type="checkbox" className="property-input" checked={tv} onChange={change}/>
-                  </td>
-                    </React.Fragment>}
-                  {kitchen !== null && <React.Fragment>
-                  <td>Kitchen:</td>
-                  <td>
-                    <select name="internet" className="property-input" value={kitchen} onChange={change}>
-                      <option value="kitchen">Kitchen</option>
-                      <optgroup label="Only">
-                        <option value="fridge only">Refrig. Only</option>
-                        <option value="stove only">Stove Only</option>
-                        <option value="oven only">Oven Only</option>
-                      </optgroup>
-                      <optgroup label="Omit">
-                        <option value="no fridge">No Refrig.</option>
-                        <option value="no stove">No Stove</option>
-                        <option value="no oven">No Oven</option>
-                      </optgroup>
-                      <option value="none">None</option>
-                    </select>
-                  </td>
-                    </React.Fragment>}
-                </tr>}
-                { (hair_dryer || notes !=null ) && <tr>
-                  {hair_dryer !== null && <React.Fragment>
-                  <td>Hair Dryer:</td>
-                  <td>
-                    <input type="checkbox" name="hair_dryer" className="property-input" checked={hair_dryer} onChange={change}/>
-                  </td>
-                    </React.Fragment>}
-                  {notes !== null && <React.Fragment>
-                  <td>Additional Notes:</td>
-                  <td>
-                    <textarea name="notes" className="property-input" value={notes} onChange={change}/>
-                  </td>
-                    </React.Fragment>}
-                </tr>}
-              </tbody>
-            </table>
+            <div className="amenities row">
+              <div className="col-6 mb-2">Beds:
+                <input type="number" name="beds" className="property-input" value={beds} onChange={change}/>
+              </div>
+              <div className="col-6 mb-2">Baths:
+                <input type="number" name="baths" className="property-input" value={baths} onChange={change}/>
+              </div>
+              <div className="col-6 mb-2">Bedrooms:
+                <input type="number" name="bedrooms" className="property-input" value={bedrooms} onChange={change}/>
+              </div>
+              {parking !==null &&
+              <div className="col-6 mb-2">
+              Parking Spots:
+                <input type="number" name="parking" className="property-input" value={parking} onChange={change}/>
+              </div>}
+              {tv !== null &&
+              <div className="col-6 mb-2">TV:
+                <input name="tv" type="checkbox" className="property-input" checked={tv} onChange={change}/>
+              </div>}
+              {hair_dryer !== null &&
+              <div className="col-6 mb-2">Hair Dryer:
+                <input type="checkbox" name="hair_dryer" className="property-input" checked={hair_dryer} onChange={change}/>
+              </div>}
+              {laundry !== null &&
+              <div className="col-6 mb-2">Laundry:
+                <select name="laundry" className="property-input" value={laundry} onChange={change}>
+                  <option value="washer only">Washer Only</option>
+                  <option value="dryer only">Dryer Only</option>
+                  <option value="washer and dryer">Washer & Dryer</option>
+                  <option value="coin op">Coin Operated</option>
+                  <option value="laundromat">Laundromat</option>
+                  <option value="none">None</option>
+                </select>
+              </div>}
+              {internet !== null &&
+              <div className="col-6 mb-2">Internet:
+                <select name="internet" className="property-input" value={internet} onChange={change}>
+                  <option value="wifi">Wifi</option>
+                  <option value="dial-up">Dial-Up</option>
+                  <option value="ethernet">Ethernet</option>
+                  <option value="none">None</option>
+                </select>
+              </div>}
+              {kitchen !== null &&
+              <div className="col-6 mb-2">Kitchen:
+                <select name="kitchen" className="property-input" value={kitchen} onChange={change}>
+                  <option value="kitchen">Kitchen</option>
+                  <optgroup label="Only">
+                    <option value="fridge only">Refrig. Only</option>
+                    <option value="stove only">Stove Only</option>
+                    <option value="oven only">Oven Only</option>
+                  </optgroup>
+                  <optgroup label="Omit">
+                    <option value="no fridge">No Refrig.</option>
+                    <option value="no stove">No Stove</option>
+                    <option value="no oven">No Oven</option>
+                  </optgroup>
+                  <option value="none">None</option>
+                </select>
+              </div>}
+            </div>
+            <hr/>
+            <div className="row">
+              <div className="col-6 mb-2">Max Guests
+                <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
+              </div>
+              {enhanced_clean !== null &&
+              <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean*</a>:
+                <input type="checkbox" name="enhanced_clean" className="property-input" checked={enhanced_clean} onChange={change}/><br/>
+              </div>}
+              {parties !== null &&
+              <div className="col-6 mb-2">Parties:
+                <select name="parties" className="property-input" value={parties} onChange={change}>
+                  <option value={true}>Allowed</option>
+                  <option value={false}>Not Allowed</option>
+                </select>
+              </div>}
+              {smoking !== null &&
+              <div className="col-6 mb-2">Smoking:
+                <select name="smoking" className="property-input" value={smoking} onChange={change}>
+                  <option value={true}>Allowed</option>
+                  <option value={false}>Not Allowed</option>
+                </select>
+              </div>}
+            </div>
             { pets !== null &&
             <form name="pets" className="pl-0 row ml-0" ref={this.petRef}>
-              <div className="col-2 pl-1 d-inline-block">Pets:</div>
+              <div className="col-2 px-0 d-inline-block">Pets:</div>
               <table className="col-5 pets">
                 <tbody>
                   <tr>
@@ -563,14 +526,19 @@ class PropertyEditor extends React.Component {
                 <textarea placeholder="Notes..." className="property-input pet-notes" value={pet_notes} onChange={petForm}/>
               </div>
             </form>}
+            { notes !== null &&
+            <div>Additional Notes:
+              <textarea name="notes" className="property-input w-100" value={notes} onChange={change}/>
+            </div>}
             { [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes].includes(null) &&
             <select className="add-amenity property-input" name="add-amenity" onChange={addAmenity}>
-              <option value="">--Specify Amenities--</option>
+              <option value="">--Add Amenity or Policy--</option>
               {addAmenityOptions()}
             </select>}
           </div>
           <div className="col-12 col-md-1 edit-buttons">
-            <button className="btn btn-primary text-nowrap font-weight-bold mb-2" href="" onClick={save}>Save</button>
+            <button className="btn btn-primary font-weight-bold mb-2" href="" onClick={save}>Save</button>
+            <button className="btn btn-light mb-2" href="" onClick={() => {this.loadProperty(); toggleEdit()}}>Cancel</button>
             <button className="btn btn-dark text-danger" href="" onClick={delete_property}>Delete</button>
           </div>
         </div>
@@ -634,25 +602,55 @@ class PropertyEditor extends React.Component {
           </div>
           <button className="btn btn-danger border-white d-block my-5 mx-auto" onClick={current}>Current Bookings</button>
         </div>
-        <div className="col-12 col-md-7 text-white">
+        <div className="col-12 col-md-7 editor-scroll py-2 text-white">
           <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
           <p className="text-center font-italic">{type_caps}</p>
           <p className="px-3"> {description} </p>
+          <p className="col-6 d-inline-block mb-0">$ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small></p>
+          <p className="col-6 d-inline-block mb-0"><strong>{city}</strong>, {country.toUpperCase()}</p>
           <hr/>
-          <div className="col-6 d-inline-block">
-            <p>$ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small></p>
-            <p>Baths: {baths}</p>
-            <p>Bedrooms: {bedrooms}</p>
-          </div>
-          <div className="col-6 d-inline-block">
-            <p><strong>{city}</strong>, {country.toUpperCase()}</p>
-            <p>Beds: {beds}</p>
-            <p>Max Guests: {max}</p>
-          </div>
+          <h6 className="w-100 text-center mb-2"><u>Amenities:</u></h6>
+          <p className="col-6 d-inline-block">{baths} Bath(s)</p>
+          <p className="col-6 d-inline-block">{bedrooms} Bedroom(s)</p>
+          <p className="col-6 d-inline-block">{beds} Bed(s)</p>
+          {parking !== null && <p className="col-6 d-inline-block">{parking ? parking : <strong>No</strong>} Parking Spots</p>}
+          {hair_dryer !== null && <p className="col-6 d-inline-block">{!hair_dryer && <strong>No </strong>}Hair Dryer Offered</p>}
+          {tv !== null && <p className="col-6 d-inline-block">{!tv && <strong>No </strong>}TV</p>}
+          {kitchen !== null && <p className="col-6 d-inline-block">Kitchen: {phraseCaps(kitchen)}</p>}
+          {laundry !== null && <p className="col-6 d-inline-block">Laundry: {phraseCaps(laundry)}</p>}
+          <hr/>
+          <h6 className="w-100 text-center mb-2"><u>Policies:</u></h6>
+          <p className="col-6 d-inline-block">{max}-Guest Maximum</p>
+          {enhanced_clean !== null && <p className="col-6 d-inline-block"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a> {enhanced_clean ? "Offered" : <span className="text-white-50">Not Offered</span>}</p>}
+          {parties !== null && <p className="col-6 d-inline-block">{!parties && <strong>No </strong>}Parties Allowed</p>}
+          {smoking !== null && <p className="col-6 d-inline-block">{!smoking && <strong>Non-</strong>}Smoking</p>}
+          {pets !== null &&
+          <div className="row pl-3">
+              <p className="col-2 d-inline-block">Pets:</p>
+              <div className="col-2 d-inline-block">
+                {dogs && <small>Dogs</small>}
+                {cats && <React.Fragment>, <br/><small>Cats</small></React.Fragment>}
+                {other && <React.Fragment>, <br/><small>Other</small></React.Fragment>}
+              </div>
+              <div className="col-4 d-inline-block">
+                {small && <small>Small Pets Only</small>}
+                {hypoallergenic && <React.Fragment>, <br/><small>Hypoallergenic Only</small></React.Fragment>}
+                {outdoor && <React.Fragment>, <br/><small>Outdoor Only</small></React.Fragment>}
+              </div>
+              {pet_notes &&
+              <div className="col-4 d-inline-block">
+                <div className="row">
+                  <div className="col-3 px-0 d-inline-block"><small>Notes: </small></div>
+                  <div className="col-9 pr-0 d-inline-block"><small>{pet_notes}{![".", "!", "?", "..."].includes(pet_notes.slice(-1)) && "."}</small></div>
+                </div>
+              </div>}
+          </div>}
+          <hr/>
+          <div className="row col-12"><div className="col-5 pr-0 d-inline-block">Additional Notes:</div><div className="col-7 px-0 d-inline-block">{notes !== null ? <p>{notes}</p> : <p className="font-italic text-white-50">No notes recorded...</p>}</div></div>
         </div>
         <div className="col-12 col-md-1 edit-buttons">
           <div>
-            <button className="btn btn-light text-primary font-weight-bold mb-2" href="" id={id} onClick={toggle}>Edit</button>
+            <button className="btn btn-light text-primary font-weight-bold mb-2" href="" id={id} onClick={toggleEdit}>Edit</button>
           </div>
           <div>
             <button className="btn btn-dark text-danger" href="" onClick={delete_property}>Delete</button>
@@ -711,6 +709,7 @@ class HostWidget extends React.Component {
           loading: false,
         })
       })
+      .catch(error => {console.log(error)})
   }
 
   addProperty = () => {
@@ -761,6 +760,7 @@ class HostWidget extends React.Component {
     let {properties, loading, existingBookings, selected} = this.state;
 
     let editors = <div></div>
+
     if (properties.length !== undefined) {
       editors = properties.map((property) => {
       return <PropertyEditor property={property} loading={this.startLoading} refresh={this.getUserProperties} key={property.id}/>
@@ -810,8 +810,8 @@ class HostWidget extends React.Component {
           </button>
         </div>
         <div className="row bg-danger content px-4 py-3">
-          <div className={loading ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
-            {!loading && (existingBookings ?
+          <div className={(loading || properties.length == 0) ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
+            {!loading && (properties.length > 0 && (existingBookings ?
               <div className="row my-4">
                 <div className="col-7 text-white">
                   <h5 className="font-weight-bold w-100 mb-3 text-center">All Bookings:</h5>
@@ -823,10 +823,10 @@ class HostWidget extends React.Component {
                   <BookingsCalendar bookings={existingBookings} passSelected={this.passSelected}/>
                 </div>
               </div>
-            : editors)}
+            : editors))}
           </div>
 
-          {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> :
+          {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> : (properties.length > 0 ?
           <React.Fragment>
             <div className="mx-auto mb-auto">
             {existingBookings ?
@@ -838,7 +838,13 @@ class HostWidget extends React.Component {
               </React.Fragment>
             }
             </div>
-          </React.Fragment>
+          </React.Fragment> :
+          <React.Fragment>
+            <h3 className="w-100 text-center text-white-50 mt-auto">You aren't hosting any properties right now!</h3>
+            <div className="my-auto mx-auto">
+              <button className="btn btn-light text-danger" onClick={this.addProperty}>Become a <strong>Host!</strong></button>
+            </div>
+          </React.Fragment>)
           }
         </div>
       </div>
