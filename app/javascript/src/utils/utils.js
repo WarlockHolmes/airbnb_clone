@@ -5,3 +5,7 @@ export function phraseCaps(phrase) {
             return word.charAt(0).toUpperCase() + word.slice(1)
           }).join(" ")
 }
+
+export const random = (max) => {
+  return Math.floor(Math.random() * Math.floor(max));
+};

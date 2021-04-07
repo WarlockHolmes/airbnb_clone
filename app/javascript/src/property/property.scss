@@ -12,10 +12,23 @@
   border-color: rgba(0,0,0,0.1)
 }
 
+.pets .vr {
+  height: 50px;
+  border-style: inset;
+  border-top: none;
+  border-left: solid 1px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .fa-smoking-ban {
   font-size: 1.25rem;
 }
 
 .ban {
   color: #dc3545;
+}
+
+i {
+  margin-right: 8px;
 }

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/property/:id' => 'static_pages#property'
   get '/login' => 'static_pages#login'
   get '/user_page' => 'static_pages#user_page'
+  get '/booking/:id/success' => 'static_pages#success'
 
   namespace :api do
     # properties (other)
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
     # bookings (other)
     get '/bookings/guest' => 'bookings#get_guest_bookings'
     get '/bookings/host' => 'bookings#get_host_bookings'
+    get '/bookings/:id' => 'bookings#successful_booking'
     get '/properties/:id/host' => 'bookings#get_property_bookings_host'
     get '/properties/:id/bookings' => 'bookings#get_property_bookings'
     # sessions (other)

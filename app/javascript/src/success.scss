@@ -1,0 +1,76 @@
+.image-div {
+  background-size: cover;
+  background-position: center;
+  background-clip: border-box;
+  height: 120%;
+  width: 100%;
+  padding-bottom: 5%;
+  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+  filter: blur(5px);
+}
+
+.image-container {
+  position: absolute;
+  width: 100%;
+  height: 83vh;
+  overflow: hidden;
+}
+
+#background-container {
+  height: 83vh;
+  position: relative;
+}
+
+.content {
+  color: #f8f9fa;
+  background: linear-gradient( rgba(220, 53, 69, 0.7), rgba(220, 53, 69, 0.7) ), no-repeat center center scroll;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  max-height: 70vh;
+}
+
+.guest-view {
+  padding-top: 10px;
+  position: relative;
+  max-height: 80%;
+  border: dashed 2px white;
+  overflow-y: scroll;
+
+}
+
+.pet-scroll {
+  overflow-y: scroll;
+}
+
+
+.pets .vr {
+  height: 50px;
+  border-style: inset;
+  border-top: none;
+  border-left: solid 1px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+i {
+  margin-right: 8px;
+}
+
+hr {
+  border-color: #f8f9fa !important;
+}
+
+.point_of_interest {
+  overflow: hidden;
+}
+
+.point_of_interest .image-container {
+  max-width: 90%;
+  max-height: 40%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.point_of_interest img {
+  max-width: 100%;
+}

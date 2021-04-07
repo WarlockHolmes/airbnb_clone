@@ -106,6 +106,15 @@ td {
   padding-bottom: .25rem;
 }
 
+.pets .vr {
+  height: 50px;
+  border-style: inset;
+  border-top: none;
+  border-left: solid 1px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .pet-notes {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -144,6 +153,15 @@ td {
 
 hr {
   border-color: white!important;
+}
+
+.pets .vr {
+  height: 50px;
+  border-style: inset;
+  border-top: none;
+  border-left: solid 1px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .edit-buttons {

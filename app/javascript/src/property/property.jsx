@@ -140,8 +140,6 @@ class Property extends React.Component {
 
     }
 
-    /**/
-
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div className="property-view">
@@ -160,14 +158,7 @@ class Property extends React.Component {
                 </div>
                 <hr />
                 <p>{description}</p>
-              </div>
-              <div className="col-12 col-lg-5">
-                <BookingWidget property_id={id} price_per_night={price_per_night} checkAuthenticated={this.checkAuthenticated} authenticated={authenticated}/>
-              </div>
-            </div>
-            <hr/>
-            <div className="row mb-3">
-              <div className="col-6 row">
+                <hr/>
                 <p className="col-6 d-inline-block"><i className="fas fa-door-closed"></i> {bedrooms} Bedroom(s)</p>
                 <p className="col-6 d-inline-block"><i className="fas fa-bed"></i> {beds} Bed(s)</p>
                 <p className="col-6 d-inline-block"><i className="fas fa-bath"></i> {baths} Bath(s)</p>
@@ -178,37 +169,40 @@ class Property extends React.Component {
                 {kitchenOptions()}
                 </div>}
                 {laundry !== null && <div className="col-6 d-inline-block"><i className="fas fa-tshirt"></i> {phraseCaps(laundry)}</div>}
-              </div>
-              <hr className="vr my-auto"/>
-              <div className="col-6 row">
+                <hr/>
                 <p className="col-6 d-inline-block">{max_guests} - Guest Maximum</p>
                 {enhanced_clean !== null ? <p className="col-6 d-inline-block"><a href="https://www.airbnb.ca/d/enhancedclean" className="font-weight-bold" target="_blank">Enhanced Clean</a></p> : <a href="https://www.airbnb.ca/d/enhancedclean" className="text-black-50" target="_blank">Enhanced Clean Not Offered</a>}
                 {parties !== null && <p className="col-6 d-inline-block">{parties ? <i className="fas fa-users mr-2"></i> : <React.Fragment><i className="fas fa-users-slash mr-2 ban"></i><strong className="ban">No </strong></React.Fragment>}Parties Allowed</p>}
-                {smoking !== null && <p className="col-6 d-inline-block">{smoking ? <i className="fas fa-smoking mr-2"></i> : <React.Fragment><i className="fas fa-smoking-ban mr-2 ban"></i><strong className="ban">Non-</strong></React.Fragment>}Smoking</p>}
+                {smoking !== null && <p className="col-6 d-inline-block">{smoking ? <i className="fas fa-smoking mr-2"></i> : <React.Fragment><i className="fas fa-smoking-ban mr-2 ban"></i><strong className="ban">Non</strong>-</React.Fragment>}Smoking</p>}
                 {pets !== null &&
-                <div className="row pl-3">
-                    <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
-                    <div className="col-2 d-inline-block">
-                      {dogs && <small>Dogs</small>}
-                      {cats && <React.Fragment>, <br/><small>Cats</small></React.Fragment>}
-                      {other && <React.Fragment>, <br/><small>Other</small></React.Fragment>}
+                <div className="row mb-3 pl-3 pets">
+                  <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
+                  <div className="col-2 d-inline-block">
+                    {dogs && <small>Dogs</small>}
+                    {cats && <React.Fragment>, <br/><small>Cats</small></React.Fragment>}
+                    {other && <React.Fragment>, <br/><small>Other</small></React.Fragment>}
+                  </div>
+                  <hr className="vr"/>
+                  <div className="col-3 px-0 d-inline-block">
+                    {small && <small>Small Pets Only</small>}
+                    {hypoallergenic && <React.Fragment>, <br/><small>Hypoallergenic</small></React.Fragment>}
+                    {outdoor && <React.Fragment>, <br/><small>Outdoor Only</small></React.Fragment>}
+                  </div>
+                  <hr className="vr"/>
+                  {pet_notes &&
+                  <div className="col-4 d-inline-block">
+                    <div className="row">
+                      <div className="col-3 px-0 d-inline-block"><small className="font-weight-bold">Notes: </small></div>
+                      <div className="col-9 pr-0 d-inline-block"><small>{pet_notes}{![".", "!", "?", "..."].includes(pet_notes.slice(-1)) && "."}</small></div>
                     </div>
-                    <hr className="vr my-auto ml-0 h-50"/>
-                    <div className="col-3 px-0 d-inline-block">
-                      {small && <small>Small Pets Only</small>}
-                      {hypoallergenic && <React.Fragment>, <br/><small>Hypoallergenic</small></React.Fragment>}
-                      {outdoor && <React.Fragment>, <br/><small>Outdoor Only</small></React.Fragment>}
-                    </div>
-                    <hr className="vr my-auto ml-0 h-50"/>
-                    {pet_notes &&
-                    <div className="col-4 d-inline-block">
-                      <div className="row">
-                        <div className="col-3 px-0 d-inline-block"><small className="font-weight-bold">Notes: </small></div>
-                        <div className="col-9 pr-0 d-inline-block"><small>{pet_notes}{![".", "!", "?", "..."].includes(pet_notes.slice(-1)) && "."}</small></div>
-                      </div>
-                    </div>}
+                  </div>}
                 </div>}
               </div>
+              <div className="col-12 col-lg-5">
+                <BookingWidget property_id={id} price_per_night={price_per_night} checkAuthenticated={this.checkAuthenticated} authenticated={authenticated}/>
+              </div>
+
+
             </div>
           </div>
         </div>

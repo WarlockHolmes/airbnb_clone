@@ -455,7 +455,7 @@ class PropertyEditor extends React.Component {
                 <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
               </div>
               {enhanced_clean !== null &&
-              <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean*</a>:
+              <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean</a>:
                 <input type="checkbox" name="enhanced_clean" className="property-input" checked={enhanced_clean} onChange={change}/><br/>
               </div>}
               {parties !== null &&
@@ -621,7 +621,7 @@ class PropertyEditor extends React.Component {
           <hr/>
           <h6 className="w-100 text-center mb-2"><u>Policies:</u></h6>
           <p className="col-6 d-inline-block">{max}-Guest Maximum</p>
-          {enhanced_clean !== null && <p className="col-6 d-inline-block"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a> {enhanced_clean ? "Offered" : <span className="text-white-50">Not Offered</span>}</p>}
+          {enhanced_clean !== null && <p className="col-6 d-inline-block">*<a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a> {enhanced_clean ? "Offered" : <span className="text-white-50">Not Offered</span>}</p>}
           {parties !== null && <p className="col-6 d-inline-block">{!parties && <strong>No </strong>}Parties Allowed</p>}
           {smoking !== null && <p className="col-6 d-inline-block">{!smoking && <strong>Non-</strong>}Smoking</p>}
           {pets !== null &&

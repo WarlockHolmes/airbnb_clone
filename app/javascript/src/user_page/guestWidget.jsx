@@ -12,6 +12,31 @@ class GuestWidget extends React.Component {
     selected: false,
   }
 
+  initiateStripeCheckout = (booking_id) => {
+   return fetch(`/api/charges?booking_id=${booking_id}&cancel_url=${window.location.pathname}`, safeCredentials({
+     method: 'POST',
+   }))
+     .then(handleErrors)
+     .then(response => {
+       const stripe = Stripe(process.env.STRIPE_PUBLISHABLE_KEY);
+
+       stripe.redirectToCheckout({
+         // Make the id field from the Checkout Session creation API response
+         // available to this file, so you can provide it as parameter here
+         // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+         sessionId: response.charge.checkout_session_id,
+       }).then((result) => {
+         // If `redirectToCheckout` fails due to a browser or network
+         // error, display the localized error message to your customer
+         // using `result.error.message`.
+
+       });
+     })
+     .catch(error => {
+       console.log(error);
+     })
+   }
+
   componentDidMount() {
     this.getGuestBookings()
   }
@@ -37,9 +62,11 @@ class GuestWidget extends React.Component {
 
     let passSelected = this.passSelected.bind(this);
 
-    let {property, start_date, end_date} = selected;
+    let {property, start_date, end_date, paid} = selected;
 
-    let days, type_caps, country_caps, id, image_url, title, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, host, paid, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes, dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
+    console.log(selected)
+
+    let days, type_caps, country_caps, id, image_url, title, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, host, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes, dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     if (start_date && end_date) {
       days = moment(end_date).diff(moment(start_date), 'days');
@@ -64,7 +91,7 @@ class GuestWidget extends React.Component {
       beds = property.beds
       max_guests = property.max_guests
       host = property.host
-      paid = property.paid
+      //paid = property.paid
       parking = property.parking
       enhanced_clean = property.enhanced_clean
       parties = property.parties
@@ -144,7 +171,7 @@ class GuestWidget extends React.Component {
         </div>
         <div className="row justify-content-around content bg-danger py-3">
           <div className="my-auto">
-            {loading ? <p className="mx-auto my-auto text-center ">loading...</p> :
+            {loading ? <p className="mx-auto my-auto text-white text-center ">loading...</p> :
             <React.Fragment>
               <h5 className="text-white text-center mb-3">Select Booking:</h5>
               <div className="mb-5">
@@ -171,13 +198,13 @@ class GuestWidget extends React.Component {
             <div className="col-6 d-inline-block">
               <p className=""><strong>{city}</strong>, {country_caps}</p>
               <p className="">Depart: <strong>{new Date(end_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong></p>
-              {paid ? <button className="btn btn-light text-primary px-5">Pay Now</button> : <button className="btn btn-light px-5 text-black-50" disabled>Paid</button>}
+              {paid ? <button className="btn btn-light px-5 text-black-50" disabled>Paid</button> : <button className="btn btn-light text-primary px-5" onClick={() => {this.initiateStripeCheckout(selected.id)}}>Pay Now</button> }
 
             </div>
             <hr/>
             <p className=" px-3">{description}</p>
             <hr/>
-            <div className="row">
+            <div className="col-12">
               <p className="col-6 d-inline-block"><i className="fas fa-door-closed"></i> {bedrooms} Bedroom(s)</p>
               <p className="col-6 d-inline-block"><i className="fas fa-bed"></i> {beds} Bed(s)</p>
               <p className="col-6 d-inline-block"><i className="fas fa-bath"></i> {baths} Bath(s)</p>
@@ -190,26 +217,26 @@ class GuestWidget extends React.Component {
               {laundry !== null && <div className="col-6 d-inline-block"><i className="fas fa-tshirt"></i> {phraseCaps(laundry)}</div>}
             </div>
             <hr/>
-            <div className="row">
+            <div className="col-12">
               <p className="col-6 d-inline-block">{max_guests} - Guest Maximum</p>
-              {enhanced_clean !== null ? <p className="col-6 d-inline-block"><a href="https://www.airbnb.ca/d/enhancedclean" className="font-weight-bold text-white" target="_blank">Enhanced Clean</a></p> : <a href="https://www.airbnb.ca/d/enhancedclean" className="text-white-50" target="_blank">Enhanced Clean Not Offered</a>}
+              {enhanced_clean !== null ? <p className="col-6 d-inline-block">*<a href="https://www.airbnb.ca/d/enhancedclean" className="font-weight-bold text-white" target="_blank">Enhanced Clean</a></p> : <p className="col-6 d-inline-block">*<strong>No</strong><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white-50" target="_blank">Enhanced Clean</a></p>}
               {parties !== null && <p className="col-6 d-inline-block">{parties ? <i className="fas fa-users mr-2"></i> : <React.Fragment><i className="fas fa-users-slash mr-2 ban"></i><strong className="ban">No </strong></React.Fragment>}Parties Allowed</p>}
               {smoking !== null && <p className="col-6 d-inline-block">{smoking ? <i className="fas fa-smoking mr-2"></i> : <React.Fragment><i className="fas fa-smoking-ban mr-2 ban"></i><strong className="ban">Non-</strong></React.Fragment>}Smoking</p>}
               {pets !== null &&
-              <div className="row pl-3">
+              <div className="row pl-3 pets">
                   <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
                   <div className="col-2 d-inline-block">
                     {dogs && <small>Dogs</small>}
                     {cats && <React.Fragment>, <br/><small>Cats</small></React.Fragment>}
                     {other && <React.Fragment>, <br/><small>Other</small></React.Fragment>}
                   </div>
-                  <hr className="vr my-auto ml-0 h-50"/>
+                  <hr className="vr"/>
                   <div className="col-3 px-0 d-inline-block">
                     {small && <small>Small Pets Only</small>}
                     {hypoallergenic && <React.Fragment>, <br/><small>Hypoallergenic</small></React.Fragment>}
                     {outdoor && <React.Fragment>, <br/><small>Outdoor Only</small></React.Fragment>}
                   </div>
-                  <hr className="vr my-auto ml-0 h-50"/>
+                  <hr className="vr"/>
                   {pet_notes &&
                   <div className="col-4 d-inline-block">
                     <div className="row">

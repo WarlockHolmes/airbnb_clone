@@ -4,6 +4,7 @@ import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 import 'react-dates/lib/css/_datepicker.css';
+import moment from 'moment';
 
 class BookingWidget extends React.Component {
     state = {
@@ -83,7 +84,13 @@ class BookingWidget extends React.Component {
 
   onFocusChange = (focusedInput) => this.setState({ focusedInput })
 
-  isDayBlocked = day => this.state.existingBookings.filter(b => day.isBetween(b.start_date, b.end_date, null, '[]')).length > 0
+  isDayBlocked = day => {
+    if (this.state.focusedInput == "startDate"){
+      return this.state.existingBookings.filter(b => day.isBetween(b.start_date, b.end_date, null, '[)')).length > 0
+    } else {
+      return this.state.existingBookings.filter(b => day.isBetween(moment(b.start_date).add(1, 'days'), b.end_date, null, '[]')).length > 0
+    }
+  }
 
   render () {
     const { startDate, endDate, focusedInput } = this.state;
