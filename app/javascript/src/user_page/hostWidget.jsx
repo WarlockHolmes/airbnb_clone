@@ -1,8 +1,9 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import { phraseCaps } from '@utils/utils';
+import Amenities from '@src/templates/amenities'
 import BookingsCalendar from './bookingsCalendar'
-import placeholder from '@src/placeholder.png';
+import placeholder from '@utils/placeholder.png';
 
 class PropertyEditor extends React.Component {
   constructor(props) {
@@ -13,8 +14,8 @@ class PropertyEditor extends React.Component {
       title: '',
       description: '',
       image_url: null,
-      price: 0,
-      type: '',
+      price_per_night: 0,
+      property_type: '',
       city: '',
       country: '',
       image_text: false,
@@ -54,8 +55,8 @@ class PropertyEditor extends React.Component {
       title: property.title,
       description: property.description,
       image_url: url,
-      price: property.price_per_night,
-      type: property.property_type,
+      price_per_night: property.price_per_night,
+      property_type: property.property_type,
       city: property.city,
       country: property.country,
       baths: property.baths,
@@ -83,8 +84,8 @@ class PropertyEditor extends React.Component {
   handleChange () {
     switch(event.target.name) {
       case 'title': this.setState({title: event.target.value}); break;
-      case 'price': this.setState({price: event.target.value}); break;
-      case 'type': this.setState({type: event.target.value}); break;
+      case 'price_per_night': this.setState({price_per_night: event.target.value}); break;
+      case 'property_type': this.setState({property_type: event.target.value}); break;
       case 'city': this.setState({city: event.target.value}); break;
       case 'country': this.setState({country: event.target.value}); break;
       case 'description': this.setState({description: event.target.value}); break;
@@ -103,7 +104,6 @@ class PropertyEditor extends React.Component {
       case 'hair_dryer': this.setState({hair_dryer: event.target.value}); break;
       case 'notes': this.setState({notes: event.target.value}); break;
     }
-
   }
 
   handleImage() {
@@ -167,7 +167,7 @@ class PropertyEditor extends React.Component {
   }
 
   saveChanges () {
-    let {id, title, image_url, description, price, type, city, country, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let {id, title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
     let image = this.imageRef.current.files[0];
 
     let formData = new FormData();
@@ -180,8 +180,8 @@ class PropertyEditor extends React.Component {
 
     formData.append('property[title]', title);
     formData.append('property[description]', description);
-    formData.append('property[price_per_night]', price);
-    formData.append('property[property_type]', type);
+    formData.append('property[price_per_night]', price_per_night);
+    formData.append('property[property_type]', property_type);
     formData.append('property[beds]', beds);
     formData.append('property[baths]', baths);
     formData.append('property[bedrooms]', bedrooms)
@@ -209,11 +209,13 @@ class PropertyEditor extends React.Component {
     .then(handleErrors)
     .then(res => {
       console.log(res)
-    }).catch((error) => {
+    }).then(this.editProperty())
+    .then(this.props.loading())
+    .then(this.props.refresh())
+    .then(this.loadProperty())
+    .catch((error) => {
       console.log(error);
     })
-
-    this.editProperty();
 
   }
 
@@ -268,9 +270,9 @@ class PropertyEditor extends React.Component {
 
   render () {
 
-    let {selected, existingBookings, id, image_url, title, description, price, type, city, country, edit, image_text, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
-    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
+    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, bookings;
 
     if (pets) {
       let current_pets = this.readPetRules();
@@ -285,22 +287,20 @@ class PropertyEditor extends React.Component {
 
     if(image_url == null) {image_url = placeholder}
 
-    let type_caps = phraseCaps(type);
-
     const addAmenityOptions = () => {
       let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
       let options = [
-       <option value="enhanced_clean">Enhanced Clean</option>,
-       <option value="tv">Television</option>,
-       <option value="hair_dryer">Hair Dryer</option>,
-       <option value="parties">Parties</option>,
-       <option value="smoking">Smoking</option>,
-       <option value="internet">Internet</option>,
-       <option value="parking">Parking</option>,
-       <option value="laundry">Laundry</option>,
-       <option value="kitchen">Kitchen</option>,
-       <option value="pets">Pets</option>,
-       <option value="notes">Additional Notes</option>
+       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
+       <option key="tv" value="tv">Television</option>,
+       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
+       <option key="parties" value="parties">Parties</option>,
+       <option key="smoking" value="smoking">Smoking</option>,
+       <option key="internet" value="internet">Internet</option>,
+       <option key="parking" value="parking">Parking</option>,
+       <option key="laundry" value="laundry">Laundry</option>,
+       <option key="kitchen" value="kitchen">Kitchen</option>,
+       <option key="pets" value="pets">Pets</option>,
+       <option key="notes" value="notes">Additional Notes</option>
      ];
        let list = options.map((opt, i) => {
          if (amenities[i] == null) {
@@ -319,7 +319,6 @@ class PropertyEditor extends React.Component {
     let passSelected = this.passSelected.bind(this);
     let addAmenity = this.addAmenity.bind(this);
     let petForm = this.handlePetForm.bind(this);
-
 
     if (edit) {
       return (
@@ -346,7 +345,7 @@ class PropertyEditor extends React.Component {
                   <tr>
                     <td>Type:</td>
                     <td>
-                    <select className="property-input w-100" name="type" value={type} onChange={change}>
+                    <select className="property-input w-100" name="property_type" value={property_type} onChange={change}>
                       <optgroup label="Apartment">
                         <option value="entire apartment">Entire Apartment</option>
                         <option value="private room in apartment">Private Room in Apartment</option>
@@ -372,7 +371,7 @@ class PropertyEditor extends React.Component {
                   <tr>
                     <td>Price:</td>
                     <td>
-                      $  <input type="number" name="price" className="property-input" value={price} onChange={change}></input>  {country.toUpperCase()}D / night
+                      $  <input type="number" name="price_per_night" className="property-input" value={price_per_night} onChange={change}></input>  {country.toUpperCase()}D / night
                     </td>
                   </tr>
                   <tr>
@@ -450,7 +449,7 @@ class PropertyEditor extends React.Component {
               </div>}
             </div>
             <hr/>
-            <div className="row">
+            <div className="policies row">
               <div className="col-6 mb-2">Max Guests
                 <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
               </div>
@@ -526,10 +525,11 @@ class PropertyEditor extends React.Component {
                 <textarea placeholder="Notes..." className="property-input pet-notes" value={pet_notes} onChange={petForm}/>
               </div>
             </form>}
-            { notes !== null &&
-            <div>Additional Notes:
+            { notes !== null &&  <React.Fragment>
+              <hr/>
+              <p className="mb-2">Additional Notes:</p>
               <textarea name="notes" className="property-input w-100" value={notes} onChange={change}/>
-            </div>}
+            </React.Fragment>}
             { [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes].includes(null) &&
             <select className="add-amenity property-input" name="add-amenity" onChange={addAmenity}>
               <option value="">--Add Amenity or Policy--</option>
@@ -545,8 +545,6 @@ class PropertyEditor extends React.Component {
       )
     }
 
-    let bookings;
-
     if (existingBookings.length !== undefined) {
 
       bookings = existingBookings.map((booking) => {
@@ -557,7 +555,6 @@ class PropertyEditor extends React.Component {
             bookingSelect += " booking-select";
             notPaid = "text-black-50"
           }
-
         }
 
         return(
@@ -571,7 +568,7 @@ class PropertyEditor extends React.Component {
               <p>Paid?</p>
             </div>
             <div className="col-4 d-inline-block">
-              <p className="font-weight-bold">{booking.guest}</p>
+              <p className="font-weight-bold">{booking.guest.name}</p>
               {booking.paid ? <p className="font-italic">All Paid!</p> : <p className={notPaid}>Not Paid</p>}
             </div>
           </div>
@@ -590,9 +587,7 @@ class PropertyEditor extends React.Component {
             </div>
             <button className="btn btn-light text-danger mt-3 d-block mx-auto" onClick={() => this.setState({existingBookings: false})}>Return to Property</button>
           </div>
-          <div>
-            <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
-          </div>
+          <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
         </React.Fragment>
         :
         <React.Fragment>
@@ -603,50 +598,7 @@ class PropertyEditor extends React.Component {
           <button className="btn btn-danger border-white d-block my-5 mx-auto" onClick={current}>Current Bookings</button>
         </div>
         <div className="col-12 col-md-7 editor-scroll py-2 text-white">
-          <h5 className="font-weight-bold w-100 mx-auto mb-1 text-center text-white">{title}</h5>
-          <p className="text-center font-italic">{type_caps}</p>
-          <p className="px-3"> {description} </p>
-          <p className="col-6 d-inline-block mb-0">$ <strong>{price}</strong> <small>{country.toUpperCase()}D / night</small></p>
-          <p className="col-6 d-inline-block mb-0"><strong>{city}</strong>, {country.toUpperCase()}</p>
-          <hr/>
-          <h6 className="w-100 text-center mb-2"><u>Amenities:</u></h6>
-          <p className="col-6 d-inline-block">{baths} Bath(s)</p>
-          <p className="col-6 d-inline-block">{bedrooms} Bedroom(s)</p>
-          <p className="col-6 d-inline-block">{beds} Bed(s)</p>
-          {parking !== null && <p className="col-6 d-inline-block">{parking ? parking : <strong>No</strong>} Parking Spots</p>}
-          {hair_dryer !== null && <p className="col-6 d-inline-block">{!hair_dryer && <strong>No </strong>}Hair Dryer Offered</p>}
-          {tv !== null && <p className="col-6 d-inline-block">{!tv && <strong>No </strong>}TV</p>}
-          {kitchen !== null && <p className="col-6 d-inline-block">Kitchen: {phraseCaps(kitchen)}</p>}
-          {laundry !== null && <p className="col-6 d-inline-block">Laundry: {phraseCaps(laundry)}</p>}
-          <hr/>
-          <h6 className="w-100 text-center mb-2"><u>Policies:</u></h6>
-          <p className="col-6 d-inline-block">{max}-Guest Maximum</p>
-          {enhanced_clean !== null && <p className="col-6 d-inline-block">*<a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">Enhanced Clean</a> {enhanced_clean ? "Offered" : <span className="text-white-50">Not Offered</span>}</p>}
-          {parties !== null && <p className="col-6 d-inline-block">{!parties && <strong>No </strong>}Parties Allowed</p>}
-          {smoking !== null && <p className="col-6 d-inline-block">{!smoking && <strong>Non-</strong>}Smoking</p>}
-          {pets !== null &&
-          <div className="row pl-3">
-              <p className="col-2 d-inline-block">Pets:</p>
-              <div className="col-2 d-inline-block">
-                {dogs && <small>Dogs</small>}
-                {cats && <React.Fragment>, <br/><small>Cats</small></React.Fragment>}
-                {other && <React.Fragment>, <br/><small>Other</small></React.Fragment>}
-              </div>
-              <div className="col-4 d-inline-block">
-                {small && <small>Small Pets Only</small>}
-                {hypoallergenic && <React.Fragment>, <br/><small>Hypoallergenic Only</small></React.Fragment>}
-                {outdoor && <React.Fragment>, <br/><small>Outdoor Only</small></React.Fragment>}
-              </div>
-              {pet_notes &&
-              <div className="col-4 d-inline-block">
-                <div className="row">
-                  <div className="col-3 px-0 d-inline-block"><small>Notes: </small></div>
-                  <div className="col-9 pr-0 d-inline-block"><small>{pet_notes}{![".", "!", "?", "..."].includes(pet_notes.slice(-1)) && "."}</small></div>
-                </div>
-              </div>}
-          </div>}
-          <hr/>
-          <div className="row col-12"><div className="col-5 pr-0 d-inline-block">Additional Notes:</div><div className="col-7 px-0 d-inline-block">{notes !== null ? <p>{notes}</p> : <p className="font-italic text-white-50">No notes recorded...</p>}</div></div>
+          <Amenities property={this.props.property} />
         </div>
         <div className="col-12 col-md-1 edit-buttons">
           <div>
@@ -758,7 +710,7 @@ class HostWidget extends React.Component {
 
   render() {
     let {properties, loading, existingBookings, selected} = this.state;
-
+    let bookings;
     let editors = <div></div>
 
     if (properties.length !== undefined) {
@@ -767,7 +719,6 @@ class HostWidget extends React.Component {
       })
     }
 
-    let bookings;
     if (existingBookings) {
       bookings = existingBookings.map(booking => {
         let bookingSelect = "booking py-2"
@@ -791,7 +742,7 @@ class HostWidget extends React.Component {
               <p>Paid?</p>
             </div>
             <div className="col-4 d-inline-block">
-              <p className="font-weight-bold">{booking.guest}</p>
+              <p className="font-weight-bold">{booking.guest.name}</p>
               {booking.paid ? <p className="font-italic">All Paid!</p> : <p className={notPaid}>Not Paid</p>}
             </div>
           </div>

@@ -1,3 +1,5 @@
+//Background Image
+
 .image-div {
   background-size: cover;
   background-position: center;
@@ -21,25 +23,23 @@
   position: relative;
 }
 
+// General
+
 .content {
   color: #f8f9fa;
   background: linear-gradient( rgba(220, 53, 69, 0.7), rgba(220, 53, 69, 0.7) ), no-repeat center center scroll;
   padding: 0.5rem 1.25rem;
   border-radius: 10px;
-  max-height: 70vh;
+  height: 75vh;
 }
 
-.guest-view {
+.info {
   padding-top: 10px;
   position: relative;
   max-height: 80%;
   border: dashed 2px white;
   overflow-y: scroll;
 
-}
-
-.pet-scroll {
-  overflow-y: scroll;
 }
 
 
@@ -60,17 +60,30 @@ hr {
   border-color: #f8f9fa !important;
 }
 
+.link-text {
+  color: #f8f9fa
+}
+
+.link-text-muted {
+  color: rgba(255,255,255,0.7)
+}
+
+//Point of Interest
+
 .point_of_interest {
   overflow: hidden;
 }
 
 .point_of_interest .image-container {
+  height: auto;
+  width: auto;
+  max-height: 50%;
   max-width: 90%;
-  max-height: 40%;
   border-radius: 10px;
   overflow: hidden;
 }
 
 .point_of_interest img {
-  max-width: 100%;
+  margin: 0 auto auto auto;
+  border-radius: 10px;
 }

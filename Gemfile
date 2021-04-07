@@ -30,6 +30,7 @@ gem 'bcrypt', '~> 3.1.7'
 # Use Stripe for receiving payments
 gem 'stripe'
 
+gem 'aws-sdk', '~> 3.0'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

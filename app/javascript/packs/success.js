@@ -1,1 +1,1 @@
-import '@src/success';
+import '@src/static_pages/success';

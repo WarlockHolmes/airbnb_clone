@@ -28,9 +28,9 @@ json.properties do
     json.hair_dryer property.hair_dryer
     json.notes property.notes
 
-    json.user do
+    json.host do
       json.id property.user.id
-      json.username property.user.username
+      json.name property.user.username
     end
 
   end

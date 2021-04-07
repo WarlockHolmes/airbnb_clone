@@ -4,7 +4,10 @@ json.bookings do
     json.start_date booking.start_date
     json.end_date booking.end_date
     json.paid booking.charges.any? { |charge| charge.complete }
-    json.guest booking.user.username
+    json.guest do
+      json.name booking.user.username
+      json.id booking.user.id
+    end
 
     json.property do
       json.id booking.property.id

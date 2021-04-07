@@ -1,13 +1,15 @@
+//---- General
+
 .page-tab {
   border-radius: 10px 10px 0px 0px!important;
   border-bottom: none!important;
 }
 
-.btn-outline-danger:hover {
+.page-tap.btn-outline-danger:hover {
   background-color: #c82333!important;
 }
 
-.btn-danger:hover {
+.page-tab.btn-danger:hover {
   background-color: #dc3545!important;
   border-color: #dc3545!important;
 }
@@ -15,6 +17,24 @@
 .content {
   height: 75vh;
   border-radius: 0px 0px 10px 10px;
+}
+
+hr {
+  border-color: white!important;
+}
+
+.pets .vr {
+  height: 50px;
+  border-style: inset;
+  border-top: none;
+  border-left: solid 1px;
+  margin: 0 5px 0 5px;
+}
+
+//---- Host Widget
+
+.no-properties {
+  height: 60vh;
 }
 
 .property-scroll {
@@ -37,24 +57,7 @@
   background-position: center;
 }
 
-table {
-  width: 100%;
-}
-
-.bookings-all {
-  max-height: 75%;
-  overflow-y: hidden;
-  border-bottom: 2px white dashed;
-  border-top: 2px white dashed;
-}
-
-[type="checkbox"]
-{
-    vertical-align:middle;
-    margin-right: 5px;
-}
-
-//Property Editor
+// Property Editor
 
 .editor-scroll {
   max-height: 45vh;
@@ -68,61 +71,21 @@ table {
   border: none;
 }
 
-input[type="number"].property-input {
-  width: 50px;
+[type="checkbox"] {
+    vertical-align:middle;
+    margin-right: 5px;
 }
 
-.image-edit {
-  display: block;
-  margin: none;
-  padding: none;
-  &:hover {
-    cursor: pointer;
-    -webkit-filter: grayscale(100%) blur(2px) brightness(70%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%) blur(2px) brightness(70%);
-  }
+table {
+  width: 100%;
 }
 
 td {
   padding-bottom: 0.5rem;
 }
 
-.amenities select.property-input {
-  max-width: 130px;
-}
-
-.amenities .property-input {
-  margin-left: .75rem;
-  margin-right: .75em;
-}
-
-.pets td:first-of-type {
-  width: 5%;
-  padding-bottom: .25rem;
-}
-
-.pets td:last-of-type {
-  width: 10%;
-  padding-bottom: .25rem;
-}
-
-.pets .vr {
-  height: 50px;
-  border-style: inset;
-  border-top: none;
-  border-left: solid 1px;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.pet-notes {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-
-  font-size: 12px;
-  width: 90%;
-  height: 90%;
+input[type="number"].property-input {
+  width: 50px;
 }
 
 .image-select {
@@ -151,17 +114,44 @@ td {
   color: white;
 }
 
-hr {
-  border-color: white!important;
+.image-edit {
+  display: block;
+  margin: none;
+  padding: none;
+  &:hover {
+    cursor: pointer;
+    -webkit-filter: grayscale(100%) blur(2px) brightness(70%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%) blur(2px) brightness(70%);
+  }
 }
 
-.pets .vr {
-  height: 50px;
-  border-style: inset;
-  border-top: none;
-  border-left: solid 1px;
-  margin-top: 0;
-  margin-bottom: 0;
+.amenities select.property-input {
+  max-width: 130px;
+}
+
+.amenities .property-input, .policies .property-input {
+  margin-left: .75rem;
+  margin-right: .75em;
+}
+
+.pets td:first-of-type {
+  width: 5%;
+  padding-bottom: .25rem;
+}
+
+.pets td:last-of-type {
+  width: 10%;
+  padding-bottom: .25rem;
+}
+
+.pet-notes {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+  font-size: 12px;
+  width: 90%;
+  height: 90%;
 }
 
 .edit-buttons {
@@ -171,6 +161,15 @@ hr {
 .edit-buttons button {
   width: 75px;
 }
+
+.add-amenity {
+  width: 100%;
+  font-weight: bold;
+  text-align-last: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+// Viewing Bookings (Host)
 
 .booking-scroll {
   height: 200px;
@@ -189,22 +188,25 @@ hr {
   color: rgb(220, 53, 69);
 }
 
-.add-amenity {
-  width: 100%;
-  font-weight: bold;
-  text-align-last: center;
-  color: rgba(0, 0, 0, 0.5);
+.bookings-all {
+  max-height: 75%;
+  overflow-y: hidden;
+  border-bottom: 2px white dashed;
+  border-top: 2px white dashed;
 }
 
-.no-properties {
-  height: 60vh;
-}
-
-//Guest Widget
+//---- Guest Widget
 
 .guest-view {
   height: 60vh;
   border: dashed 2px white;
   overflow-y: scroll;
+}
 
+.link-text-muted {
+  color: rgba(255,255,255,0.7)
+}
+
+.link-text {
+  color: white;
 }

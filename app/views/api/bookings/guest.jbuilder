@@ -35,8 +35,10 @@ json.bookings do
         json.image_url booking.property.image_url
       end
 
-      json.host booking.property.user.username
-
+      json.host do 
+        json.name booking.property.user.username
+        json.id booking.property.user.id
+      end
     end
   end
 end
