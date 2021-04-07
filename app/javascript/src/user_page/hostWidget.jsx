@@ -1,6 +1,6 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
-import { phraseCaps } from '@utils/utils';
+import { phraseCaps, varToString } from '@utils/utils';
 import Amenities from '@src/templates/amenities'
 import BookingsCalendar from './bookingsCalendar'
 import placeholder from '@utils/placeholder.png';
@@ -167,36 +167,25 @@ class PropertyEditor extends React.Component {
   }
 
   saveChanges () {
-    let {id, title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let { id, title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes } = this.state;
+
+    let edits = {
+      title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes
+    }
+
     let image = this.imageRef.current.files[0];
 
     let formData = new FormData();
 
     if (image != null) {
       formData.append('property[image]', image, image.name);
-    } else {
-      formData.append('property[image_url]', image_url);
     }
 
-    formData.append('property[title]', title);
-    formData.append('property[description]', description);
-    formData.append('property[price_per_night]', price_per_night);
-    formData.append('property[property_type]', property_type);
-    formData.append('property[beds]', beds);
-    formData.append('property[baths]', baths);
-    formData.append('property[bedrooms]', bedrooms)
-    formData.append('property[max_guests]', max)
-    formData.append('property[parking]', parking);
-    formData.append('property[enhanced_clean]', enhanced_clean);
-    formData.append('property[parties]', parties);
-    formData.append('property[smoking]', smoking);
-    formData.append('property[pets]', pets);
-    formData.append('property[laundry]', laundry);
-    formData.append('property[internet]', internet);
-    formData.append('property[tv]', tv);
-    formData.append('property[kitchen]', kitchen);
-    formData.append('property[hair_dryer]', hair_dryer);
-    formData.append('property[notes]', notes);
+    Object.entries(edits).forEach(edit => {
+      if (edit[1] != null) {
+        formData.append(`property[${edit[0]}]`, edit[1])
+      }
+    })
 
     fetch(`/api/properties/${id}`, {
       method: 'PUT',
@@ -270,7 +259,7 @@ class PropertyEditor extends React.Component {
 
   render () {
 
-    let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, bookings;
 
@@ -389,18 +378,18 @@ class PropertyEditor extends React.Component {
             <hr/>
             <div className="amenities row">
               <div className="col-6 mb-2">Beds:
-                <input type="number" name="beds" className="property-input" value={beds} onChange={change}/>
+                <input type="number" name="beds" className="property-input" min="0" value={beds} onChange={change}/>
               </div>
               <div className="col-6 mb-2">Baths:
-                <input type="number" name="baths" className="property-input" value={baths} onChange={change}/>
+                <input type="number" name="baths" className="property-input" min="0" value={baths} onChange={change}/>
               </div>
               <div className="col-6 mb-2">Bedrooms:
-                <input type="number" name="bedrooms" className="property-input" value={bedrooms} onChange={change}/>
+                <input type="number" name="bedrooms" className="property-input" min="0" value={bedrooms} onChange={change}/>
               </div>
               {parking !==null &&
               <div className="col-6 mb-2">
               Parking Spots:
-                <input type="number" name="parking" className="property-input" value={parking} onChange={change}/>
+                <input type="number" name="parking" className="property-input" min="0" value={parking} onChange={change}/>
               </div>}
               {tv !== null &&
               <div className="col-6 mb-2">TV:
@@ -451,7 +440,7 @@ class PropertyEditor extends React.Component {
             <hr/>
             <div className="policies row">
               <div className="col-6 mb-2">Max Guests
-                <input type="number" name="max_guests" className=" property-input" value={max} onChange={change}/>
+                <input type="number" name="max_guests" className=" property-input" min="0" value={max_guests} onChange={change}/>
               </div>
               {enhanced_clean !== null &&
               <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean</a>:

@@ -9,3 +9,5 @@ export function phraseCaps(phrase) {
 export const random = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
 };
+
+export const varToString = varObj => Object.keys(varObj)[0];
