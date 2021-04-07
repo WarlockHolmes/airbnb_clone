@@ -1,6 +1,5 @@
 // user_page.jsx
 import React from 'react';
-import {BrowserRouter as Router,Switch,Route,Link} from "react-router-dom";
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 import Layout from "@src/templates/layout";
 import GuestWidget from "./guestWidget"

@@ -1,7 +1,7 @@
 import React from 'react';
+import { DayPickerSingleDateController } from 'react-dates';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import 'react-dates/initialize';
-import { DayPickerSingleDateController } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
 

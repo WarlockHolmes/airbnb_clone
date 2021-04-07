@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Layout from '@src/templates/layout';
 import Amenities from '@src/templates/amenities';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
-import { phraseCaps, random} from '@utils/utils';
+import { random } from '@utils/utils';
 import './success.scss';
 
 const map_key = process.env.MAP_KEY;

@@ -4,7 +4,6 @@ import Layout from '@src/templates/layout';
 import BookingWidget from './bookingWidget';
 import Amenities from '@src/templates/amenities';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
-import { phraseCaps } from '@utils/utils';
 import './property.scss';
 
 class Property extends React.Component {
