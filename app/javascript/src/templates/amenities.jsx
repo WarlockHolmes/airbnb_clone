@@ -246,7 +246,7 @@ const Amenities = (props) => {
       <hr/>
       <p className="col-6 d-inline-block">{max_guests} - Guest Maximum</p>
       {enhanced_clean !== null && (enhanced_clean ? <p className="col-6 d-inline-block">*<a href="https://www.airbnb.ca/d/enhancedclean" className="font-weight-bold link-text" target="_blank">Enhanced Clean</a></p> : <p className="col-6 d-inline-block link-text-muted"><strong>No</strong> *<a href="https://www.airbnb.ca/d/enhancedclean" className="link-text-muted" target="_blank">Enhanced Clean</a></p>)}
-      {parties !== null && <p className="col-6 d-inline-block">{parties ? <i className="fas fa-users mr-2"></i> : <React.Fragment><i className="fas fa-users-slash mr-2 ban"></i><strong className="ban">No </strong></React.Fragment>}Parties Allowed</p>)}
+      {parties !== null && <p className="col-6 d-inline-block">{parties ? <i className="fas fa-users mr-2"></i> : <React.Fragment><i className="fas fa-users-slash mr-2 ban"></i><strong className="ban">No </strong></React.Fragment>}Parties Allowed</p>}
       {smoking !== null && <p className="col-6 d-inline-block">{smoking ? <i className="fas fa-smoking mr-2"></i> : <React.Fragment><i className="fas fa-smoking-ban mr-2 ban"></i><strong className="ban">Non</strong>-</React.Fragment>}Smoking</p>}
       <Pets pets={pets}/>
       <hr/>
