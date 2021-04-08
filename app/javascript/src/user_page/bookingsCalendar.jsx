@@ -44,7 +44,8 @@ class BookingsCalendar extends React.Component {
   isDayHighlighted = day => this.props.bookings.filter(b =>  day.isBetween(b.start_date, moment(b.end_date).add(1, 'days'), null, '[]')).length > 0
 
   render() {
-    let {date, focused} = this.state
+    let {date, focused} = this.state;
+
     return (
       <React.Fragment>
         <DayPickerSingleDateController

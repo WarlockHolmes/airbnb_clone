@@ -111,9 +111,9 @@ class BookingWidget extends React.Component {
     return (
       <div className="border p-4 mb-4">
         <form onSubmit={this.submitBooking}>
-          <h5>${price_per_night} <small>per night</small></h5>
+          <h5 className="w-100 text-center">${price_per_night} <small>per night</small></h5>
           <hr/>
-          <div style={{ marginBottom: focusedInput ? '400px': '2rem' }}>
+          <div className="row justify-content-center" style={{ marginBottom: focusedInput ? '400px': '2rem' }}>
             <DateRangePicker
               startDate={startDate} // momentPropTypes.momentObj or null,
               startDateId="start_date" // PropTypes.string.isRequired,

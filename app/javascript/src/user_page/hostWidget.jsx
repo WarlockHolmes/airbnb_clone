@@ -73,6 +73,7 @@ class PropertyEditor extends React.Component {
       title: '',
       description: '',
       image_url: null,
+      images: null,
       price_per_night: 0,
       property_type: '',
       city: '',
@@ -97,6 +98,7 @@ class PropertyEditor extends React.Component {
     }
     this.imageRef = React.createRef();
     this.petRef = React.createRef();
+    this.carouselRef = React.createRef();
     this.readPetRules = this.readPetRules.bind(this);
     this.loadProperty = this.loadProperty.bind(this);
   }
@@ -108,12 +110,12 @@ class PropertyEditor extends React.Component {
   loadProperty() {
     let {property} = this.props;
     let url = property.image_url;
-    if (property.image != null) {url = property.image};
     this.setState({
       id: property.id,
       title: property.title,
       description: property.description,
       image_url: url,
+      images: property.images,
       price_per_night: property.price_per_night,
       property_type: property.property_type,
       city: property.city,
@@ -145,7 +147,7 @@ class PropertyEditor extends React.Component {
   }
 
   handleImage() {
-    this.setState({image_url: URL.createObjectURL(event.target.files[0])})
+    this.setState({images: Array.from(event.target.files)})
   }
 
   handlePetForm () {
@@ -211,12 +213,14 @@ class PropertyEditor extends React.Component {
       title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes
     }
 
-    let image = this.imageRef.current.files[0];
-
     let formData = new FormData();
 
-    if (image != null) {
-      formData.append('property[image]', image, image.name);
+    let images = this.imageRef.current.files;
+
+    if (images != null) {
+      for (let i = 0; i < images.length; i++) {
+        formData.append('property[images][]', images[i]);
+      }
     }
 
     Object.entries(edits).forEach(edit => {
@@ -297,7 +301,7 @@ class PropertyEditor extends React.Component {
 
   render () {
 
-    let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
+    let {selected, existingBookings, id, image_url, images, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
     const addAmenityOptions = () => {
       let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
@@ -530,6 +534,39 @@ class PropertyEditor extends React.Component {
       </React.Fragment>)
     }
 
+    const ImageViewer = () => {
+      return(<React.Fragment>
+        {images !== null && images !== undefined ?
+          <React.Fragment>
+          <div className="carousel slide" id="image-preview" data-ride="carousel">
+            <div className="carousel-inner" role="listbox">
+              {images.map((image, index) => {
+                let url = image;
+                if (image.image_url) {url = image.image_url}
+                let carouselClass = "carousel-item"
+                if (index == 0) {carouselClass += " active"}
+                return <div className={carouselClass} key={index}>
+                  <img className="d-block h-100 rounded" src={url}/>
+                </div>
+              })}
+            </div>
+            <a className="carousel-control-prev" href="#image-preview" role="button" data-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="sr-only">Previous</span>
+            </a>
+            <a className="carousel-control-next" href="#image-preview" role="button" data-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="sr-only">Next</span>
+            </a>
+          </div>
+        </React.Fragment>
+        :
+        <div className="image-container rounded">
+          <img src={image_url} className="property-image rounded"/>
+        </div>}
+      </React.Fragment>)
+    }
+
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     let toggleEdit = this.editProperty.bind(this);
@@ -564,28 +601,19 @@ class PropertyEditor extends React.Component {
               <ul className="col-11 dropdown-menu text-black text-center">
                 <li><a className="dropdown-item" onClick={current}>See Current Bookings</a></li>
                 <hr/>
-                <li><a className="dropdown-item" onClick={() => {this.loadProperty(); toggleEdit()}}>Cancel Changes</a></li>
+                <li><a className="dropdown-item" onClick={() => {this.loadProperty(); toggleEdit(); this.setState({upload: false});}}>Cancel Changes</a></li>
                 <hr/>
                 <li><a className="dropdown-item" onClick={delete_property}><span className="font-weight-bold text-danger">Delete</span> Property</a></li>
                 <hr/>
                 <li><a className="dropdown-item" onClick={save}><strong className="text-primary">Save Changes</strong></a></li>
               </ul>
             </div>
-            <div className="d-none d-lg-block image-container rounded" onMouseOver={() => {this.setState({image_text: true})}} onMouseOut={() => {this.setState({image_text: false})}}>
-              <label className="my-0">
-                <img src={image_url} className="property-image image-edit rounded" alt="Image of Property"/>
-                {image_text && <span className="image-text">Change Image?</span>}
-                <input type="file" className="image-select" name="image" accept="image/*" ref={this.imageRef} onChange={image_change}/>
+            <ImageViewer/>
+            <div className="row col-12 mx-0">
+              <label className="btn btn-light text-primary mx-auto my-5">Change Images
+                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
               </label>
             </div>
-            <div className="d-block d-lg-none image-container rounded">
-              <label className="my-0">
-                <img src={image_url} className="property-image image-edit-mobile rounded" alt="Image of Property"/>
-                <span className="image-text">Click to Change Image</span>
-                <input type="file" className="image-select" name="image" accept="image/*" ref={this.imageRef} onChange={image_change}/>
-              </label>
-            </div>
-            <button className="btn btn-danger d-none d-lg-block my-5 mx-auto border-white" onClick={current}>Current Bookings</button>
           </div>
           <div className="d-lg-none d-inline-block text-white py-2">
             <PropertyInputs/>
@@ -595,7 +623,7 @@ class PropertyEditor extends React.Component {
           </div>
           <div className="d-none d-lg-inline-block col-lg-1 edit-buttons">
             <button className="btn btn-primary font-weight-bold mb-2" href="" onClick={save}>Save</button>
-            <button className="btn btn-light mb-2" href="" onClick={() => {this.loadProperty(); toggleEdit()}}>Cancel</button>
+            <button className="btn btn-light mb-2" href="" onClick={() => {this.loadProperty(); toggleEdit(); this.setState({upload: false})}}>Cancel</button>
             <button className="btn btn-dark text-danger" href="" onClick={delete_property}>Delete</button>
           </div>
         </div>
@@ -621,9 +649,7 @@ class PropertyEditor extends React.Component {
               <li><a className="dropdown-item" onClick={delete_property}><span className="font-weight-bold text-danger">Delete</span> Property</a></li>
             </ul>
           </div>
-          <div className="image-container rounded">
-            <img src={image_url} className="property-image rounded"/>
-          </div>
+          <ImageViewer/>
           <button className="btn btn-danger border-white d-none d-lg-block mb-2 my-lg-5 mx-auto" onClick={current}>Current Bookings</button>
         </div>
         <div className="d-lg-none col-12 text-white">
@@ -763,7 +789,7 @@ class HostWidget extends React.Component {
         <div className="row bg-danger content px-4 py-3">
           <div className={(loading || properties.length == 0) ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
             {!loading && (properties.length > 0 && (existingBookings ?
-              <BookingsViewer existingBookings={existingBookings} selected={selected} all={true} scrollRef={this.scrollRef} passSelected={this.passSelected} title={false}/>
+              <BookingsViewer return={() => {this.setState({existingBookings: false})}} existingBookings={existingBookings} selected={selected} all={true} scrollRef={this.scrollRef} passSelected={this.passSelected} title={false}/>
             : editors))}
           </div>
 

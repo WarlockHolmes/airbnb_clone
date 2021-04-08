@@ -74,8 +74,6 @@ module Api
         :beds,
         :baths,
         :max_guests,
-        :image,
-        :image_url,
         :parking,
         :enhanced_clean,
         :parties,
@@ -87,6 +85,8 @@ module Api
         :kitchen,
         :hair_dryer,
         :notes,
+        :image_url,
+        images: []
       )
     end
 

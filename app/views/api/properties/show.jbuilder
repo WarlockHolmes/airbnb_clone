@@ -10,8 +10,6 @@ json.property do
   json.bedrooms @property.bedrooms
   json.beds @property.beds
   json.baths @property.baths
-  json.image_url @property.image_url
-  json.image url_for(@property.image) if @property.image.attached?
   json.parking @property.parking
   json.enhanced_clean @property.enhanced_clean
   json.parties @property.parties
@@ -23,6 +21,16 @@ json.property do
   json.kitchen @property.kitchen
   json.hair_dryer @property.hair_dryer
   json.notes @property.notes
+
+  if @property.images.attached?
+    json.images do
+      json.array! @property.images do |image|
+        json.image_url url_for(image)
+      end
+    end
+  else
+    json.image_url @property.image_url
+  end
 
   json.host do
     json.id @property.user.id

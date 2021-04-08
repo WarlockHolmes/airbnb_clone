@@ -39,6 +39,11 @@ class GuestWidget extends React.Component {
 
     let {property, start_date, end_date, paid} = selected;
 
+    const load_text = <div className="container h-100">
+      <div className="row h-100">
+        <p className="d-block mx-auto my-auto text-center text-white">loading...</p>
+      </div></div>;
+
     return (
       <div className="container py-3">
         <div className="row justify-content-around">
@@ -50,24 +55,43 @@ class GuestWidget extends React.Component {
           </button>
         </div>
         <div className="row justify-content-around content bg-danger py-3">
-          <div className="my-auto">
-            {loading ? <p className="mx-auto my-auto text-white text-center ">loading...</p> :
+          <div className="d-none d-lg-block my-auto">
+            {loading ? load_text :
             <React.Fragment>
               <h5 className="text-white text-center mb-3">Select Booking:</h5>
               <div className="mb-5">
                 <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
               </div>
-            </React.Fragment>
-            }
+            </React.Fragment>}
           </div>
-          {property && <div className="guest-view text-white col-12 col-md-6 my-auto py-3">
+          {!selected && <div className="d-block d-lg-none my-auto mx-auto">
+            {loading ? load_text :
+              <React.Fragment>
+                <h5 className="text-white text-center mb-3">Select Booking:</h5>
+                <div className="mb-5">
+                  <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
+                </div>
+              </React.Fragment>}
+          </div>}
+          {property && <React.Fragment>
+          <div className="guest-view text-white d-none d-lg-inline-block col-lg-6 my-auto py-3">
             <div className="row justify-content-around">
               <div className="mb-2 image-container rounded">
                 <img src={property.image_url} className="property-image"/>
               </div>
             </div>
             <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
-          </div>}
+          </div>
+          <div className="guest-view bg-danger text-white d-lg-none col-11 d-inline-block my-auto py-3">
+            <div className="row justify-content-around">
+              <div className="mb-2 image-container rounded">
+                <img src={property.image_url} className="property-image"/>
+              </div>
+            </div>
+            <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
+          </div>
+          <button className="btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
+          </React.Fragment>}
         </div>
       </div>
     );

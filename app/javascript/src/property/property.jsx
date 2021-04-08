@@ -4,6 +4,7 @@ import Layout from '@src/templates/layout';
 import BookingWidget from './bookingWidget';
 import Amenities from '@src/templates/amenities';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
+import { random } from '@utils/utils';
 import './property.scss';
 
 class Property extends React.Component {
@@ -77,14 +78,22 @@ class Property extends React.Component {
 
   render () {
     const { property, loading, authenticated } = this.state;
+    let image = property.image_url;
+    if (property.images !== null && property.images !== undefined) {
+      image = property.images[random(property.images.length)].image_url
+    }
     if (loading) {
-      return <p className="text-center">loading...</p>;
+      return <div className="container">
+        <div className="row loading">
+          <h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5>
+        </div>
+      </div>;
     };
 
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div className="property-view">
-          <div className="property-image mb-3" style={{ backgroundImage: `url(${property.image_url})` }} />
+          <div className="property-image mb-3" style={{ backgroundImage: `url(${image})` }} />
           <div className="container">
             <div className="row">
               <div className="col-12 col-lg-7">
@@ -93,8 +102,6 @@ class Property extends React.Component {
               <div className="col-12 col-lg-5">
                 <BookingWidget property_id={property.id} price_per_night={property.price_per_night} checkAuthenticated={this.checkAuthenticated} authenticated={authenticated}/>
               </div>
-
-
             </div>
           </div>
         </div>

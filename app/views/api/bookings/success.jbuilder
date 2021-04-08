@@ -26,8 +26,12 @@ json.booking do
     json.pets @booking.property.pets
     json.notes @booking.property.notes
 
-    if @booking.property.image.attached?
-      json.image url_for(@booking.property.image)
+    if @booking.property.images.attached?
+      json.images do
+        json.array! @booking.property.images do |image|
+          json.image_url url_for(image)
+        end
+      end
     else
       json.image_url @booking.property.image_url
     end
