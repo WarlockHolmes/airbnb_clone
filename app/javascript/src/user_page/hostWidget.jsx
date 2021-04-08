@@ -261,7 +261,19 @@ class PropertyEditor extends React.Component {
 
     let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
-    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, bookings;
+    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
+
+    let toggleEdit = this.editProperty.bind(this);
+    let save = this.saveChanges.bind(this);
+    let change = this.handleChange.bind(this);
+    let image_change = this.handleImage.bind(this);
+    let delete_property = this.deleteProperty.bind(this);
+    let current = this.getPropertyBookings.bind(this);
+    let passSelected = this.passSelected.bind(this);
+    let addAmenity = this.addAmenity.bind(this);
+    let petForm = this.handlePetForm.bind(this);
+
+    let bookings = <div className="row justify-content-center align-content-center h-100"><h4 className="text-white-50 text-center font-italic">No bookings!</h4></div>;
 
     if (pets) {
       let current_pets = this.readPetRules();
@@ -275,39 +287,6 @@ class PropertyEditor extends React.Component {
     }
 
     if(image_url == null) {image_url = placeholder}
-
-    const addAmenityOptions = () => {
-      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
-      let options = [
-       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
-       <option key="tv" value="tv">Television</option>,
-       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
-       <option key="parties" value="parties">Parties</option>,
-       <option key="smoking" value="smoking">Smoking</option>,
-       <option key="internet" value="internet">Internet</option>,
-       <option key="parking" value="parking">Parking</option>,
-       <option key="laundry" value="laundry">Laundry</option>,
-       <option key="kitchen" value="kitchen">Kitchen</option>,
-       <option key="pets" value="pets">Pets</option>,
-       <option key="notes" value="notes">Additional Notes</option>
-     ];
-       let list = options.map((opt, i) => {
-         if (amenities[i] == null) {
-           return opt
-         }
-       })
-       return list;
-    }
-
-    let toggleEdit = this.editProperty.bind(this);
-    let save = this.saveChanges.bind(this);
-    let change = this.handleChange.bind(this);
-    let image_change = this.handleImage.bind(this);
-    let delete_property = this.deleteProperty.bind(this);
-    let current = this.getPropertyBookings.bind(this);
-    let passSelected = this.passSelected.bind(this);
-    let addAmenity = this.addAmenity.bind(this);
-    let petForm = this.handlePetForm.bind(this);
 
     if (edit) {
       return (
@@ -534,7 +513,7 @@ class PropertyEditor extends React.Component {
       )
     }
 
-    if (existingBookings.length !== undefined) {
+    if (existingBookings.length > 0) {
 
       bookings = existingBookings.map((booking) => {
         let bookingSelect = "booking py-2"
@@ -563,6 +542,29 @@ class PropertyEditor extends React.Component {
           </div>
         )
       })
+    }
+
+    const addAmenityOptions = () => {
+      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
+      let options = [
+       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
+       <option key="tv" value="tv">Television</option>,
+       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
+       <option key="parties" value="parties">Parties</option>,
+       <option key="smoking" value="smoking">Smoking</option>,
+       <option key="internet" value="internet">Internet</option>,
+       <option key="parking" value="parking">Parking</option>,
+       <option key="laundry" value="laundry">Laundry</option>,
+       <option key="kitchen" value="kitchen">Kitchen</option>,
+       <option key="pets" value="pets">Pets</option>,
+       <option key="notes" value="notes">Additional Notes</option>
+     ];
+       let list = options.map((opt, i) => {
+         if (amenities[i] == null) {
+           return opt
+         }
+       })
+       return list;
     }
 
     return (
@@ -629,7 +631,6 @@ class HostWidget extends React.Component {
       this.scrollRef.current.scrollIntoView({
         behaviour: 'smooth',
         block: 'start',
-
       })
     }
   }
@@ -667,14 +668,16 @@ class HostWidget extends React.Component {
           bedrooms: 0,
           beds: 0,
           baths: 0,
-          image_url: null,
           max_guests: 1,
           description: "Enter your description here",
         }
-      }),
-    }))
-      .then(handleErrors)
-      .then(this.startLoading())
+      })
+    })).then(handleErrors)
+      .then(data => {
+        if (data.success) {
+          this.startLoading();
+        }
+      })
       .then(this.getUserProperties())
       .catch((error) => {
         console.log(error);
@@ -690,6 +693,8 @@ class HostWidget extends React.Component {
         this.setState({
           existingBookings: data.bookings,
         })
+      }).catch(error => {
+        alert('Your properties have no bookings!')
       })
   }
 
@@ -699,7 +704,7 @@ class HostWidget extends React.Component {
 
   render() {
     let {properties, loading, existingBookings, selected} = this.state;
-    let bookings;
+    let bookings = <div className="row justify-content-center align-content-center h-100"><h4 className="text-white-50 text-center font-italic">No bookings!</h4></div>;
     let editors = <div></div>
 
     if (properties.length !== undefined) {
@@ -708,7 +713,7 @@ class HostWidget extends React.Component {
       })
     }
 
-    if (existingBookings) {
+    if (existingBookings.length > 0) {
       bookings = existingBookings.map(booking => {
         let bookingSelect = "booking py-2"
         let notPaid = "text-white-50"
@@ -737,6 +742,7 @@ class HostWidget extends React.Component {
           </div>
         )
       })
+
     }
 
     return (

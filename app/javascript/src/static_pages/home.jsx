@@ -17,10 +17,6 @@ class Home extends React.Component {
 
   componentDidMount() {
     this.checkAuthenticated();
-    this.fetchProperties();
-  }
-
-  fetchProperties(){
     fetch('/api/properties?page=1')
       .then(handleErrors)
       .then(data => {
