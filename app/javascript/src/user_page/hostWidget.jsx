@@ -261,6 +261,29 @@ class PropertyEditor extends React.Component {
 
     let {selected, existingBookings, id, image_url, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
+    const addAmenityOptions = () => {
+      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
+      let options = [
+       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
+       <option key="tv" value="tv">Television</option>,
+       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
+       <option key="parties" value="parties">Parties</option>,
+       <option key="smoking" value="smoking">Smoking</option>,
+       <option key="internet" value="internet">Internet</option>,
+       <option key="parking" value="parking">Parking</option>,
+       <option key="laundry" value="laundry">Laundry</option>,
+       <option key="kitchen" value="kitchen">Kitchen</option>,
+       <option key="pets" value="pets">Pets</option>,
+       <option key="notes" value="notes">Additional Notes</option>
+     ];
+       let list = options.map((opt, i) => {
+         if (amenities[i] == null) {
+           return opt
+         }
+       })
+       return list;
+    }
+
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     let toggleEdit = this.editProperty.bind(this);
@@ -542,29 +565,6 @@ class PropertyEditor extends React.Component {
           </div>
         )
       })
-    }
-
-    const addAmenityOptions = () => {
-      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
-      let options = [
-       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
-       <option key="tv" value="tv">Television</option>,
-       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
-       <option key="parties" value="parties">Parties</option>,
-       <option key="smoking" value="smoking">Smoking</option>,
-       <option key="internet" value="internet">Internet</option>,
-       <option key="parking" value="parking">Parking</option>,
-       <option key="laundry" value="laundry">Laundry</option>,
-       <option key="kitchen" value="kitchen">Kitchen</option>,
-       <option key="pets" value="pets">Pets</option>,
-       <option key="notes" value="notes">Additional Notes</option>
-     ];
-       let list = options.map((opt, i) => {
-         if (amenities[i] == null) {
-           return opt
-         }
-       })
-       return list;
     }
 
     return (
