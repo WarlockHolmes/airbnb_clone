@@ -31,7 +31,16 @@
   padding: 0.5rem 1.25rem;
   border-radius: 10px;
   height: 75vh;
+  overflow: hidden;
 }
+
+.content-main {
+  overflow-y: scroll;
+  max-height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 
 .info {
   padding-top: 10px;
@@ -39,7 +48,6 @@
   max-height: 80%;
   border: dashed 2px white;
   overflow-y: scroll;
-
 }
 
 

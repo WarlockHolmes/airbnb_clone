@@ -108,25 +108,30 @@ class SuccessPage extends React.Component {
           <div className="container h-100">
             <div className="row h-100 justify-content-center align-content-center">
               {!loading ? (authenticated &&
-              <div className="content row col-12 col-md-11 mx-auto">
-                <h1 className="row w-100 justify-content-center font-weight-bold mb-4">You're All Set!</h1>
-                <div className="col-12 col-md-5 h-100 d-inline-block">
-                    <h5 className="text-center w-100 font-italic">Booking #{booking_id} has been made.</h5>
-                  <hr/>
-                  <div className="my-auto point_of_interest">
-                    {point_of_interest != null && <div className="text-center">
-                      <p className="w-100 link-text-muted mb-1">While you're visiting, why not check out...</p>
-                      <h6 className="mb-3"><b><a className="text-white" href={point_of_interest.wikipedia} target="_blank">{point_of_interest.name}</a></b></h6>
-                      <div className="row justify-content-center align-content-center">
-                        <div className="image-container">
-                          <img src={point_of_interest.preview.source}/>
+              <div className="content mh-100 row justify-content-around col-12 col-lg-11 mx-auto">
+                <h1 className="mx-auto row w-100 justify-content-center font-weight-bold mb-4">You're All Set!</h1>
+                <div className="content-main row justify-content-around align-content-top">
+                  <div className="col-12 col-md-5 h-100 d-inline-block">
+                      <h5 className="text-center w-100 font-italic">Booking #{booking_id} has been made.</h5>
+                    <hr/>
+                    <div className="my-auto point_of_interest">
+                      {point_of_interest != null && <div className="text-center">
+                        <p className="w-100 link-text-muted mb-1">While you're visiting, why not check out...</p>
+                        <h6 className="mb-3"><b><a className="text-white" href={point_of_interest.wikipedia} target="_blank">{point_of_interest.name}</a></b></h6>
+                        <div className="row justify-content-center align-content-center">
+                          <div className="image-container">
+                            <img src={point_of_interest.preview.source}/>
+                          </div>
                         </div>
-                      </div>
-                    </div>}
+                      </div>}
+                    </div>
                   </div>
-                </div>
-                <div className="col-12 col-md-7 d-inline-block info">
-                  <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id}/>
+                  <div className="d-none col-md-7 d-md-inline-block info">
+                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id}/>
+                  </div>
+                  <div className="d-inline-block col-12 d-md-none">
+                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id}/>
+                  </div>
                 </div>
               </div>) : <p className="text-center text-danger">loading...</p>}
             </div>

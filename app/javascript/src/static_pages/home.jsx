@@ -94,7 +94,7 @@ class Home extends React.Component {
               )
             })}
           </div>
-          {loading && <p>loading...</p>}
+          {loading && <p className="w-100 text-danger text-center">loading...</p>}
           {(loading || next_page === null) ||
             <div className="text-center">
               <button

@@ -65,6 +65,12 @@ hr {
   border: 2px dotted white;
 }
 
+.dropdown-menu hr {
+  margin: 5px auto;
+  border-top: solid rgba(0,0,0,0.1) 1px !important;
+  width: 90%;
+}
+
 .property-input {
   border-radius: 10px;
   padding: 5px 5px 5px 5px;
@@ -72,8 +78,10 @@ hr {
 }
 
 [type="checkbox"] {
-    vertical-align:middle;
+    vertical-align: middle;
     margin-right: 5px;
+    width: 20px;
+    height: 20px;
 }
 
 table {
@@ -125,23 +133,41 @@ input[type="number"].property-input {
   }
 }
 
-.amenities select.property-input {
-  max-width: 130px;
+.image-edit-mobile {
+  display: block;
+  margin: none;
+  padding: none;
+  cursor: pointer;
+  -webkit-filter: grayscale(100%) blur(2px) brightness(70%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%) blur(2px) brightness(70%);
+}
+
+.amenities select, .policies select{
+  max-width: 120px;
 }
 
 .amenities .property-input, .policies .property-input {
-  margin-left: .75rem;
+  margin-left:  1.5em;
   margin-right: .75em;
+  &:not([type="checkbox"]) {
+    float: right;
+  }
+}
+
+.pets {
+  margin-left: 10px;
+  margin-right:  -15px;
 }
 
 .pets td:first-of-type {
-  width: 5%;
+  width: 7%;
   padding-bottom: .25rem;
 }
 
 .pets td:last-of-type {
   width: 10%;
   padding-bottom: .25rem;
+
 }
 
 .pet-notes {
@@ -173,6 +199,12 @@ input[type="number"].property-input {
 
 .booking-scroll {
   height: 200px;
+  border: white 1px solid;
+  overflow-y: scroll;
+}
+
+.booking-scroll-mobile {
+  height: 250px;
   border: white 1px solid;
   overflow-y: scroll;
 }
