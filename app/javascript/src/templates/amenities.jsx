@@ -122,7 +122,7 @@ class Pets extends React.Component {
 
 const Amenities = (props) => {
 
-  const {property, start_date, end_date, booking_id, guest} = props;
+  const {property, start_date, end_date, booking_id, guest, paid} = props;
 
   const initiateStripeCheckout = () => {
    return fetch(`/api/charges?booking_id=${booking_id}&cancel_url=${window.location.pathname}`, safeCredentials({
@@ -180,7 +180,6 @@ const Amenities = (props) => {
     hair_dryer,
     notes,
     host,
-    paid,
   } = property
 
   const kitchenOptions = () => {
@@ -229,7 +228,7 @@ const Amenities = (props) => {
         <p><span className="mr-1">Depart:</span>
           <strong>{new Date(end_date + 'T00:00:00').toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}</strong>
         </p>
-        {paid ? <button className="btn btn-light w-100 text-black-50" disabled>Paid</button> : <button className="btn btn-light text-primary w-100" onClick={() => {initiateStripeCheckout()}}>Pay Now</button> }
+        {paid ? <button className="btn btn-light text-success w-100" disabled>Paid</button> : <button className="btn btn-light text-primary w-100" onClick={() => {initiateStripeCheckout()}}>Pay Now</button> }
       </div>
       </React.Fragment>}
       <hr />

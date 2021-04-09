@@ -1,7 +1,7 @@
 import React from 'react';
 import Amenities from '@src/templates/amenities'
 import BookingsCalendar from './bookingsCalendar'
-
+import { ImageViewer } from '@src/templates/imageViewer';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import placeholder from '@utils/placeholder.png';
 
@@ -76,21 +76,17 @@ class GuestWidget extends React.Component {
           {property && <React.Fragment>
           <div className="guest-view text-white d-none d-lg-inline-block col-lg-6 my-auto py-3">
             <div className="row justify-content-around">
-              <div className="mb-2 image-container rounded">
-                <img src={property.image_url} className="property-image"/>
-              </div>
+              <ImageViewer images={property.images} image_url={property.image_url}/>
             </div>
             <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
           </div>
           <div className="guest-view bg-danger text-white d-lg-none col-11 d-inline-block my-auto py-3">
             <div className="row justify-content-around">
-              <div className="mb-2 image-container rounded">
-                <img src={property.image_url} className="property-image"/>
-              </div>
+              <ImageViewer images={property.images} image_url={property.image_url}/>
             </div>
             <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
           </div>
-          <button className="btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
+          <button className="d-block d-lg-none btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
           </React.Fragment>}
         </div>
       </div>

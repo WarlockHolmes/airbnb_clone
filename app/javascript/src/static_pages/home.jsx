@@ -2,9 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Layout from '@src/templates/layout';
+import { ImageViewer } from '@src/templates/imageViewer';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
-
-import './home.scss';
+import {random} from '@utils/utils';
 
 class Home extends React.Component {
   state = {
@@ -81,11 +81,11 @@ class Home extends React.Component {
             {properties.map(property => {
               let url = property.image_url;
 
-              if (property.image !== undefined) {url = property.image}
+              if (property.images !== null && property.images !== undefined) {url = property.images[random(property.images.length)].image_url}
               return (
                 <div key={property.id} className="col-6 col-lg-4 mb-4 property">
                   <a href={`/property/${property.id}`} className="text-body text-decoration-none">
-                    <div className="property-image mb-1 rounded" style={{ backgroundImage: `url(${url})` }} />
+                    <ImageViewer image_url={url}/>
                     <p className="text-uppercase mb-0 text-secondary"><small><b>{property.city}</b></small></p>
                     <h6 className="mb-0">{property.title}</h6>
                     <p className="mb-0"><small>${property.price_per_night} USD/night</small></p>

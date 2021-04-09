@@ -98,12 +98,15 @@ class SuccessPage extends React.Component {
     const {booking_id} = this.props;
     const {booking, property, loading, authenticated, point_of_interest} = this.state;
 
+    let image = property.image_url;
+    if (property.images !== null && property.images !== undefined) {image = property.images[random(property.images.length - 1)]}
+
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div id="background-container">
           {!loading &&
           <div className="image-container">
-            <div className="image-div" style={{backgroundImage: ` url(${property.image_url})`}}></div>
+            <div className="image-div" style={{backgroundImage: ` url(${image})`}}></div>
           </div>}
           <div className="container h-100">
             <div className="row h-100 justify-content-center align-content-center">
@@ -127,10 +130,10 @@ class SuccessPage extends React.Component {
                     </div>
                   </div>
                   <div className="d-none col-md-7 d-md-inline-block info">
-                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id}/>
+                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id} paid={booking.paid}/>
                   </div>
                   <div className="d-inline-block col-12 d-md-none">
-                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id}/>
+                    <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id} paid={booking.paid}/>
                   </div>
                 </div>
               </div>) : <p className="text-center text-danger">loading...</p>}

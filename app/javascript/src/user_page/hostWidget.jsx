@@ -1,8 +1,9 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
-import { phraseCaps, varToString } from '@utils/utils';
-import Amenities from '@src/templates/amenities'
-import BookingsCalendar from './bookingsCalendar'
+import { phraseCaps } from '@utils/utils';
+import { ImageViewer } from '@src/templates/imageViewer';
+import Amenities from '@src/templates/amenities';
+import BookingsCalendar from './bookingsCalendar';
 import placeholder from '@utils/placeholder.png';
 
 //View of Bookings w/ Calendar
@@ -534,39 +535,6 @@ class PropertyEditor extends React.Component {
       </React.Fragment>)
     }
 
-    const ImageViewer = () => {
-      return(<React.Fragment>
-        {images !== null && images !== undefined ?
-          <React.Fragment>
-          <div className="carousel slide" id="image-preview" data-ride="carousel">
-            <div className="carousel-inner" role="listbox">
-              {images.map((image, index) => {
-                let url = image;
-                if (image.image_url) {url = image.image_url}
-                let carouselClass = "carousel-item"
-                if (index == 0) {carouselClass += " active"}
-                return <div className={carouselClass} key={index}>
-                  <img className="d-block h-100 rounded" src={url}/>
-                </div>
-              })}
-            </div>
-            <a className="carousel-control-prev" href="#image-preview" role="button" data-slide="prev">
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="sr-only">Previous</span>
-            </a>
-            <a className="carousel-control-next" href="#image-preview" role="button" data-slide="next">
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="sr-only">Next</span>
-            </a>
-          </div>
-        </React.Fragment>
-        :
-        <div className="image-container rounded">
-          <img src={image_url} className="property-image rounded"/>
-        </div>}
-      </React.Fragment>)
-    }
-
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     let toggleEdit = this.editProperty.bind(this);
@@ -608,7 +576,7 @@ class PropertyEditor extends React.Component {
                 <li><a className="dropdown-item" onClick={save}><strong className="text-primary">Save Changes</strong></a></li>
               </ul>
             </div>
-            <ImageViewer/>
+            <ImageViewer images={images} image_url={image_url}/>
             <div className="row col-12 mx-0">
               <label className="btn btn-light text-primary mx-auto my-5">Change Images
                 <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
@@ -649,14 +617,14 @@ class PropertyEditor extends React.Component {
               <li><a className="dropdown-item" onClick={delete_property}><span className="font-weight-bold text-danger">Delete</span> Property</a></li>
             </ul>
           </div>
-          <ImageViewer/>
+          <ImageViewer images={images} image_url={image_url}/>
           <button className="btn btn-danger border-white d-none d-lg-block mb-2 my-lg-5 mx-auto" onClick={current}>Current Bookings</button>
         </div>
         <div className="d-lg-none col-12 text-white">
-          <Amenities property={this.props.property} />
+          <Amenities property={this.props.property}/>
         </div>
         <div className="d-none d-lg-block col-lg-7 editor-scroll py-2 text-white">
-          <Amenities property={this.props.property} />
+          <Amenities property={this.props.property}/>
         </div>
         <div className="d-none d-lg-block col-lg-1 edit-buttons">
           <button className="btn btn-light text-primary font-weight-bold mb-2" href="" id={id} onClick={toggleEdit}>Edit</button>

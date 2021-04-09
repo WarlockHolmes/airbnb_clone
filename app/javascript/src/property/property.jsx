@@ -3,6 +3,7 @@ import React from 'react';
 import Layout from '@src/templates/layout';
 import BookingWidget from './bookingWidget';
 import Amenities from '@src/templates/amenities';
+import { ImageViewer } from '@src/templates/imageViewer';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import { random } from '@utils/utils';
 import './property.scss';
@@ -98,6 +99,8 @@ class Property extends React.Component {
             <div className="row">
               <div className="col-12 col-lg-7">
                 <Amenities property={property}/>
+                <hr/>
+                {property.images !== null && <ImageViewer images={property.images}/>}
               </div>
               <div className="col-12 col-lg-5">
                 <BookingWidget property_id={property.id} price_per_night={property.price_per_night} checkAuthenticated={this.checkAuthenticated} authenticated={authenticated}/>
