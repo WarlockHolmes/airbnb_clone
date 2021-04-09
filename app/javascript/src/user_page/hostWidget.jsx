@@ -64,7 +64,240 @@ const BookingsViewer = (props) => {
   </React.Fragment>)
 }
 
-//1 Editor per Property
+//1 Per Editor:
+const PropertyInputs = (props) => {
+  const {title, property_type, change, description, price_per_night, max_guests, city, country, beds, baths, bedrooms, tv, internet, kitchen, parties, pets, smoking, dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, petForm, notes, hair_dryer, parking, laundry, enhanced_clean, addAmenity, save}= props;
+
+  const addAmenityOptions = () => {
+    let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
+    let options = [
+     <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
+     <option key="tv" value="tv">Television</option>,
+     <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
+     <option key="parties" value="parties">Parties</option>,
+     <option key="smoking" value="smoking">Smoking</option>,
+     <option key="internet" value="internet">Internet</option>,
+     <option key="parking" value="parking">Parking</option>,
+     <option key="laundry" value="laundry">Laundry</option>,
+     <option key="kitchen" value="kitchen">Kitchen</option>,
+     <option key="pets" value="pets">Pets</option>,
+     <option key="notes" value="notes">Additional Notes</option>
+   ];
+     let list = options.map((opt, i) => {
+       if (amenities[i] == null) {
+         return opt
+       }
+     })
+     return list;
+  }
+
+  return(<React.Fragment>
+    <table>
+    <tbody>
+        <tr>
+          <td>Title:</td>
+          <td>
+            <input type="text" name="title" className="w-100 property-input" value={title} onChange={change}/>
+          </td>
+        </tr>
+        <tr>
+          <td>Type:</td>
+          <td>
+          <select className="property-input w-100" name="property_type" value={property_type} onChange={change}>
+            <optgroup label="Apartment">
+              <option value="entire apartment">Entire Apartment</option>
+              <option value="private room in apartment">Private Room in Apartment</option>
+              <option value="studio">Private Studio Apartment</option>
+            </optgroup>
+            <optgroup label="Condominium">
+              <option value="entire condominium">Entire Condo</option>
+              <option value="private room in condominium">Private Room in Condo</option>
+            </optgroup>
+            <optgroup label="House">
+              <option value="entire house">Entire House</option>
+              <option value="private room in house">Private Room in House</option>
+            </optgroup>
+          </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Description:</td>
+          <td>
+            <textarea name="description" className="w-100 property-input" value={description} onChange={change}/>
+          </td>
+        </tr>
+        <tr>
+          <td>Price:</td>
+          <td>
+            $  <input type="number" name="price_per_night" className="property-input" value={price_per_night} onChange={change}></input>  {country.toUpperCase()}D / night
+          </td>
+        </tr>
+        <tr>
+          <td>Location:</td>
+          <td>
+            <input type="text" name="city" className="property-input" value={city} onChange={change}></input>
+            <select className="ml-2 property-input" value={country} name="country" onChange={change}>
+              <option value="us">U.S.A</option>
+              <option value="ca">Canada</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr/>
+    <div className="amenities row">
+      <div className="col-6 mb-2">Beds:
+        <input type="number" name="beds" className="property-input" min="0" value={beds} onChange={change}/>
+      </div>
+      <div className="col-6 mb-2">Baths:
+        <input type="number" name="baths" className="property-input" min="0" value={baths} onChange={change}/>
+      </div>
+      <div className="col-6 mb-2">Bedrooms:
+        <input type="number" name="bedrooms" className="property-input" min="0" value={bedrooms} onChange={change}/>
+      </div>
+      {parking !==null &&
+      <div className="col-6 mb-2">
+      Parking Spots:
+        <input type="number" name="parking" className="property-input" min="0" value={parking} onChange={change}/>
+      </div>}
+      {tv !== null &&
+      <div className="col-6 mb-2">TV:
+        <input name="tv" type="checkbox" className="property-input" checked={tv} onChange={change}/>
+      </div>}
+      {hair_dryer !== null &&
+      <div className="col-6 mb-2">Hair Dryer:
+        <input type="checkbox" name="hair_dryer" className="property-input" checked={hair_dryer} onChange={change}/>
+      </div>}
+      {laundry !== null &&
+      <div className="col-6 mb-2">Laundry:
+        <select name="laundry" className="property-input" value={laundry} onChange={change}>
+          <option value="washer only">Washer Only</option>
+          <option value="dryer only">Dryer Only</option>
+          <option value="washer and dryer">Washer & Dryer</option>
+          <option value="coin op">Coin Operated</option>
+          <option value="laundromat">Laundromat</option>
+          <option value="none">None</option>
+        </select>
+      </div>}
+      {internet !== null &&
+      <div className="col-6 mb-2">Internet:
+        <select name="internet" className="property-input" value={internet} onChange={change}>
+          <option value="wifi">Wifi</option>
+          <option value="dial-up">Dial-Up</option>
+          <option value="ethernet">Ethernet</option>
+          <option value="none">None</option>
+        </select>
+      </div>}
+      {kitchen !== null &&
+      <div className="col-6 mb-2">Kitchen:
+        <select name="kitchen" className="property-input" value={kitchen} onChange={change}>
+          <option value="kitchen">Kitchen</option>
+          <optgroup label="Only">
+            <option value="fridge only">Refrig. Only</option>
+            <option value="stove only">Stove Only</option>
+            <option value="oven only">Oven Only</option>
+          </optgroup>
+          <optgroup label="Omit">
+            <option value="no fridge">No Refrig.</option>
+            <option value="no stove">No Stove</option>
+            <option value="no oven">No Oven</option>
+          </optgroup>
+          <option value="none">None</option>
+        </select>
+      </div>}
+    </div>
+    <hr/>
+    <div className="policies row">
+      <div className="col-6 mb-2">Max Guests
+        <input type="number" name="max_guests" className="property-input" min="0" value={max_guests} onChange={change}/>
+      </div>
+      {enhanced_clean !== null &&
+      <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean</a>:
+        <input type="checkbox" name="enhanced_clean" className="property-input" checked={enhanced_clean} onChange={change}/><br/>
+      </div>}
+      {parties !== null &&
+      <div className="col-6 mb-2">Parties:
+        <select name="parties" className="property-input" value={parties} onChange={change}>
+          <option value={true}>Allowed</option>
+          <option value={false}>Not Allowed</option>
+        </select>
+      </div>}
+      {smoking !== null &&
+      <div className="col-6 mb-2">Smoking:
+        <select name="smoking" className="property-input" value={smoking} onChange={change}>
+          <option value={true}>Allowed</option>
+          <option value={false}>Not Allowed</option>
+        </select>
+      </div>}
+    </div>
+    { pets !== null &&
+    <form name="pets" className="pl-0 row ml-0" ref={this.petRef}>
+      <div className="col-1 pl-0 pr-1 d-inline-block">Pets:</div>
+      <table className="col-6 pets">
+        <tbody>
+          <tr>
+            <td>
+              <label>
+                <input className="property-input" name="dogs" type="checkbox" checked={dogs} onChange={petForm}/>
+                <small>Dogs</small>
+              </label>
+            </td>
+            <td>
+              <label>
+                <input className="property-input" name="small" type="checkbox" checked={small} onChange={petForm}/>
+                <small>Small Only</small>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>
+                <input className="property-input" name="cats" type="checkbox" checked={cats} onChange={petForm}/>
+                <small>Cats</small>
+              </label>
+            </td>
+            <td>
+              <label>
+                <input className="property-input" name="hypoallergenic" type="checkbox" checked={hypoallergenic} onChange={petForm}/>
+                <small>Hypoallergenic</small>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>
+                <input className="property-input" name="other" type="checkbox" checked={other} onChange={petForm}/>
+                <small>Other</small>
+              </label>
+            </td>
+            <td>
+              <label>
+                <input className="property-input" name="outdoor" type="checkbox" checked={outdoor} onChange={petForm}/>
+                <small>Outdoor Only</small>
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="col-5 pr-0 pl-lg-0 d-inline-block">
+        <textarea placeholder="Notes..." className="property-input pet-notes" value={pet_notes} onChange={petForm}/>
+      </div>
+    </form>}
+    { notes !== null &&  <React.Fragment>
+      <hr/>
+      <p className="mb-2">Additional Notes:</p>
+      <textarea name="notes" className="property-input w-100" value={notes} onChange={change}/>
+    </React.Fragment>}
+    { [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes].includes(null) &&
+    <select className="add-amenity property-input mt-2" name="add-amenity" onChange={addAmenity}>
+      <option value="">--Add Amenity or Policy--</option>
+      {addAmenityOptions()}
+    </select>}
+    <button className="d-block d-lg-none btn btn-primary w-100 mt-3 font-weight-bold " onClick={save}>Save Changes</button>
+  </React.Fragment>)
+}
+
+//1 Editor per Property:
 class PropertyEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -152,6 +385,7 @@ class PropertyEditor extends React.Component {
   }
 
   handlePetForm () {
+    console.log(event.target)
     let animal, rule, notes;
     let delimiter = ";";
     let current = this.readPetRules()
@@ -304,237 +538,6 @@ class PropertyEditor extends React.Component {
 
     let {selected, existingBookings, id, image_url, images, title, description, price_per_night, property_type, city, country, edit, image_text, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes} = this.state;
 
-    const addAmenityOptions = () => {
-      let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
-      let options = [
-       <option key="enhanced_clean" value="enhanced_clean">Enhanced Clean</option>,
-       <option key="tv" value="tv">Television</option>,
-       <option key="hair_dryer" value="hair_dryer">Hair Dryer</option>,
-       <option key="parties" value="parties">Parties</option>,
-       <option key="smoking" value="smoking">Smoking</option>,
-       <option key="internet" value="internet">Internet</option>,
-       <option key="parking" value="parking">Parking</option>,
-       <option key="laundry" value="laundry">Laundry</option>,
-       <option key="kitchen" value="kitchen">Kitchen</option>,
-       <option key="pets" value="pets">Pets</option>,
-       <option key="notes" value="notes">Additional Notes</option>
-     ];
-       let list = options.map((opt, i) => {
-         if (amenities[i] == null) {
-           return opt
-         }
-       })
-       return list;
-    }
-
-    const PropertyInputs = () => {
-
-      return(<React.Fragment>
-        <table>
-        <tbody>
-            <tr>
-              <td>Title:</td>
-              <td>
-                <input type="text" name="title" className="w-100 property-input" value={title} onChange={change}/>
-              </td>
-            </tr>
-            <tr>
-              <td>Type:</td>
-              <td>
-              <select className="property-input w-100" name="property_type" value={property_type} onChange={change}>
-                <optgroup label="Apartment">
-                  <option value="entire apartment">Entire Apartment</option>
-                  <option value="private room in apartment">Private Room in Apartment</option>
-                  <option value="studio">Private Studio Apartment</option>
-                </optgroup>
-                <optgroup label="Condominium">
-                  <option value="entire condominium">Entire Condo</option>
-                  <option value="private room in condominium">Private Room in Condo</option>
-                </optgroup>
-                <optgroup label="House">
-                  <option value="entire house">Entire House</option>
-                  <option value="private room in house">Private Room in House</option>
-                </optgroup>
-              </select>
-              </td>
-            </tr>
-            <tr>
-              <td>Description:</td>
-              <td>
-                <textarea name="description" className="w-100 property-input" value={description} onChange={change}/>
-              </td>
-            </tr>
-            <tr>
-              <td>Price:</td>
-              <td>
-                $  <input type="number" name="price_per_night" className="property-input" value={price_per_night} onChange={change}></input>  {country.toUpperCase()}D / night
-              </td>
-            </tr>
-            <tr>
-              <td>Location:</td>
-              <td>
-                <input type="text" name="city" className="property-input" value={city} onChange={change}></input>
-                <select className="ml-2 property-input" value={country} name="country" onChange={change}>
-                  <option value="us">U.S.A</option>
-                  <option value="ca">Canada</option>
-                </select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <hr/>
-        <div className="amenities row">
-          <div className="col-6 mb-2">Beds:
-            <input type="number" name="beds" className="property-input" min="0" value={beds} onChange={change}/>
-          </div>
-          <div className="col-6 mb-2">Baths:
-            <input type="number" name="baths" className="property-input" min="0" value={baths} onChange={change}/>
-          </div>
-          <div className="col-6 mb-2">Bedrooms:
-            <input type="number" name="bedrooms" className="property-input" min="0" value={bedrooms} onChange={change}/>
-          </div>
-          {parking !==null &&
-          <div className="col-6 mb-2">
-          Parking Spots:
-            <input type="number" name="parking" className="property-input" min="0" value={parking} onChange={change}/>
-          </div>}
-          {tv !== null &&
-          <div className="col-6 mb-2">TV:
-            <input name="tv" type="checkbox" className="property-input" checked={tv} onChange={change}/>
-          </div>}
-          {hair_dryer !== null &&
-          <div className="col-6 mb-2">Hair Dryer:
-            <input type="checkbox" name="hair_dryer" className="property-input" checked={hair_dryer} onChange={change}/>
-          </div>}
-          {laundry !== null &&
-          <div className="col-6 mb-2">Laundry:
-            <select name="laundry" className="property-input" value={laundry} onChange={change}>
-              <option value="washer only">Washer Only</option>
-              <option value="dryer only">Dryer Only</option>
-              <option value="washer and dryer">Washer & Dryer</option>
-              <option value="coin op">Coin Operated</option>
-              <option value="laundromat">Laundromat</option>
-              <option value="none">None</option>
-            </select>
-          </div>}
-          {internet !== null &&
-          <div className="col-6 mb-2">Internet:
-            <select name="internet" className="property-input" value={internet} onChange={change}>
-              <option value="wifi">Wifi</option>
-              <option value="dial-up">Dial-Up</option>
-              <option value="ethernet">Ethernet</option>
-              <option value="none">None</option>
-            </select>
-          </div>}
-          {kitchen !== null &&
-          <div className="col-6 mb-2">Kitchen:
-            <select name="kitchen" className="property-input" value={kitchen} onChange={change}>
-              <option value="kitchen">Kitchen</option>
-              <optgroup label="Only">
-                <option value="fridge only">Refrig. Only</option>
-                <option value="stove only">Stove Only</option>
-                <option value="oven only">Oven Only</option>
-              </optgroup>
-              <optgroup label="Omit">
-                <option value="no fridge">No Refrig.</option>
-                <option value="no stove">No Stove</option>
-                <option value="no oven">No Oven</option>
-              </optgroup>
-              <option value="none">None</option>
-            </select>
-          </div>}
-        </div>
-        <hr/>
-        <div className="policies row">
-          <div className="col-6 mb-2">Max Guests
-            <input type="number" name="max_guests" className="property-input" min="0" value={max_guests} onChange={change}/>
-          </div>
-          {enhanced_clean !== null &&
-          <div className="col-6 mb-2"><a href="https://www.airbnb.ca/d/enhancedclean" className="text-white" target="_blank">*Enhanced Clean</a>:
-            <input type="checkbox" name="enhanced_clean" className="property-input" checked={enhanced_clean} onChange={change}/><br/>
-          </div>}
-          {parties !== null &&
-          <div className="col-6 mb-2">Parties:
-            <select name="parties" className="property-input" value={parties} onChange={change}>
-              <option value={true}>Allowed</option>
-              <option value={false}>Not Allowed</option>
-            </select>
-          </div>}
-          {smoking !== null &&
-          <div className="col-6 mb-2">Smoking:
-            <select name="smoking" className="property-input" value={smoking} onChange={change}>
-              <option value={true}>Allowed</option>
-              <option value={false}>Not Allowed</option>
-            </select>
-          </div>}
-        </div>
-        { pets !== null &&
-        <form name="pets" className="pl-0 row ml-0" ref={this.petRef}>
-          <div className="col-1 pl-0 pr-1 d-inline-block">Pets:</div>
-          <table className="col-6 pets">
-            <tbody>
-              <tr>
-                <td>
-                  <label>
-                    <input className="property-input" name="dogs" type="checkbox" checked={dogs} onChange={petForm}/>
-                    <small>Dogs</small>
-                  </label>
-                </td>
-                <td>
-                  <label>
-                    <input className="property-input" name="small" type="checkbox" checked={small} onChange={petForm}/>
-                    <small>Small Only</small>
-                  </label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>
-                    <input className="property-input" name="cats" type="checkbox" checked={cats} onChange={petForm}/>
-                    <small>Cats</small>
-                  </label>
-                </td>
-                <td>
-                  <label>
-                    <input className="property-input" name="hypoallergenic" type="checkbox" checked={hypoallergenic} onChange={petForm}/>
-                    <small>Hypoallergenic</small>
-                  </label>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>
-                    <input className="property-input" name="other" type="checkbox" checked={other} onChange={petForm}/>
-                    <small>Other</small>
-                  </label>
-                </td>
-                <td>
-                  <label>
-                    <input className="property-input" name="outdoor" type="checkbox" checked={outdoor} onChange={petForm}/>
-                    <small>Outdoor Only</small>
-                  </label>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="col-5 pr-0 pl-lg-0 d-inline-block">
-            <textarea placeholder="Notes..." className="property-input pet-notes" value={pet_notes} onChange={petForm}/>
-          </div>
-        </form>}
-        { notes !== null &&  <React.Fragment>
-          <hr/>
-          <p className="mb-2">Additional Notes:</p>
-          <textarea name="notes" className="property-input w-100" value={notes} onChange={change}/>
-        </React.Fragment>}
-        { [parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes].includes(null) &&
-        <select className="add-amenity property-input mt-2" name="add-amenity" onChange={addAmenity}>
-          <option value="">--Add Amenity or Policy--</option>
-          {addAmenityOptions()}
-        </select>}
-        <button className="d-block d-lg-none btn btn-primary w-100 mt-3 font-weight-bold " onClick={save}>Save Changes</button>
-      </React.Fragment>)
-    }
-
     let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
 
     let toggleEdit = this.editProperty.bind(this);
@@ -584,10 +587,10 @@ class PropertyEditor extends React.Component {
             </div>
           </div>
           <div className="d-lg-none d-inline-block text-white py-2">
-            <PropertyInputs/>
+            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change}/>
           </div>
           <div className="d-none d-lg-inline-block col-lg-7 text-white py-2 editor-scroll">
-            <PropertyInputs/>
+            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change}/>
           </div>
           <div className="d-none d-lg-inline-block col-lg-1 edit-buttons">
             <button className="btn btn-primary font-weight-bold mb-2" href="" onClick={save}>Save</button>
