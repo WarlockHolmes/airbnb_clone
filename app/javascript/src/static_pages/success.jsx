@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Layout from '@src/templates/layout';
-import Amenities from '@src/templates/amenities';
+import Layout from '@templates/layout';
+import Amenities from '@templates/amenities';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import { random } from '@utils/utils';
 import './success.scss';

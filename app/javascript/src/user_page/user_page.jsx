@@ -1,7 +1,7 @@
 // user_page.jsx
 import React from 'react';
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
-import Layout from "@src/templates/layout";
+import Layout from "@templates/layout";
 import GuestWidget from "./guestWidget"
 import HostWidget from "./hostWidget"
 

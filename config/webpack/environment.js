@@ -7,6 +7,7 @@ const customConfig = {
     alias: {
       '@src': path.resolve(__dirname, '..', '..', 'app/javascript/src'),
       '@utils': path.resolve(__dirname, '..', '..', 'app/javascript/src/utils'),
+      '@templates': path.resolve(__dirname, '..', '..', 'app/javascript/src/templates'),
     }
   }
 }

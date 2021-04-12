@@ -1,10 +1,11 @@
 // home.jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Layout from '@src/templates/layout';
-import { ImageViewer } from '@src/templates/imageViewer';
+import Layout from '@templates/layout';
+import { ImageViewer } from '@templates/imageViewer';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import {random} from '@utils/utils';
+import './home.scss';
 
 class Home extends React.Component {
   state = {

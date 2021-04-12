@@ -1,8 +1,8 @@
 import React from 'react';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import { phraseCaps } from '@utils/utils';
-import { ImageViewer } from '@src/templates/imageViewer';
-import Amenities from '@src/templates/amenities';
+import { ImageViewer } from '@templates/imageViewer';
+import Amenities from '@templates/amenities';
 import BookingsCalendar from './bookingsCalendar';
 import placeholder from '@utils/placeholder.png';
 

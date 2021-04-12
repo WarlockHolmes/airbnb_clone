@@ -1,7 +1,7 @@
 import React from 'react';
-import Amenities from '@src/templates/amenities'
+import Amenities from '@templates/amenities'
 import BookingsCalendar from './bookingsCalendar'
-import { ImageViewer } from '@src/templates/imageViewer';
+import { ImageViewer } from '@templates/imageViewer';
 import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import placeholder from '@utils/placeholder.png';
 
