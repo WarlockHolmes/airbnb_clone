@@ -2,16 +2,17 @@
 
 .page-tab {
   border-radius: 10px 10px 0px 0px!important;
-  border-bottom: none!important;
+  border-bottom: none;
+  border-style: solid;
 }
 
-.page-tap.btn-outline-danger:hover {
-  background-color: #c82333!important;
+.page-tab.btn-outline-danger:hover {
+  background-color: #c82333;
 }
 
 .page-tab.btn-danger:hover {
-  background-color: #dc3545!important;
-  border-color: #dc3545!important;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 
 .content {

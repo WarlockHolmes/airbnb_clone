@@ -581,7 +581,10 @@ class PropertyEditor extends React.Component {
             </div>
             <ImageViewer images={images} image_url={image_url}/>
             <div className="row col-12 mx-0">
-              <label className="btn btn-light text-primary mx-auto my-5">Change Images
+              <label className="btn btn-light text-primary mx-auto my-5 d-none d-lg-block">Change Images
+                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
+              </label>
+              <label className="btn btn-light text-primary d-block d-lg-none w-100">Change Images
                 <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
               </label>
             </div>
