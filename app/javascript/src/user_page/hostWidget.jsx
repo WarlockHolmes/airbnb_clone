@@ -378,7 +378,12 @@ class PropertyEditor extends React.Component {
   }
 
   handleChange () {
-    this.setState({[event.target.name]: event.target.value})
+    if (event.target.type == 'checkbox') {
+      this.setState({[event.target.name]: event.target.checked})
+    } else {
+      this.setState({[event.target.name]: event.target.value})
+    }
+
   }
 
   handleImage() {
