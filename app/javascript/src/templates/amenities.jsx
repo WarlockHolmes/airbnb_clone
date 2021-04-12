@@ -104,7 +104,7 @@ class Pets extends React.Component {
               </div>
               {!bottom && scrollable &&
                 <div className="position-absolute"
-                style={{maxWidth: 200,
+                style={{width: 200,
                   right: 0,
                   bottom: 0,
                   height: 20,
