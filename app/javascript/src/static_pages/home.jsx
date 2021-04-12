@@ -6,6 +6,7 @@ import { ImageViewer } from '@templates/imageViewer';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import {random} from '@utils/utils';
 import './home.scss';
+import '@utils/animation.scss';
 
 class Home extends React.Component {
   state = {
@@ -75,10 +76,10 @@ class Home extends React.Component {
     const { authenticated, properties, next_page, loading } = this.state;
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
-        <div className="container pt-4">
+        {!loading ? <div className="container pt-4 fade-in">
           <h4 className="mb-1">Top-rated places to stay</h4>
           <p className="text-secondary mb-3">Explore some of the best-reviewed stays in the world</p>
-          <div className="row">
+          <div className="row h-100">
             {properties.map(property => {
               let url = property.image_url;
 
@@ -95,16 +96,19 @@ class Home extends React.Component {
               )
             })}
           </div>
-          {loading && <p className="w-100 text-danger text-center">loading...</p>}
-          {(loading || next_page === null) ||
+          {(next_page === null) ||
             <div className="text-center">
               <button
                 className="btn btn-light mb-4"
                 onClick={this.loadMore}
               >load more</button>
-            </div>
-          }
-        </div>
+            </div>}
+        </div> :
+        <div className="container">
+          <div className="row content">
+            <h5 className="d-block mx-auto my-auto text-center text-danger fade-cycle">loading...</h5>
+          </div>
+        </div>}
       </Layout>
     )
   }

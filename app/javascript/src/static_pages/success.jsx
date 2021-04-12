@@ -4,7 +4,9 @@ import Layout from '@templates/layout';
 import Amenities from '@templates/amenities';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import { random } from '@utils/utils';
+import placeholder from '@utils/placeholder.png';
 import './success.scss';
+import '@utils/animation.scss';
 
 const map_key = process.env.MAP_KEY;
 
@@ -105,14 +107,14 @@ class SuccessPage extends React.Component {
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
         <div id="background-container">
           {!loading &&
-          <div className="image-container">
+          <div className="image-container fade-in">
             <div className="image-div" style={{backgroundImage: ` url(${image})`}}></div>
           </div>}
           <div className="container h-100">
             <div className="row h-100 justify-content-center align-content-center">
               {!loading ? (authenticated &&
-              <div className="content mh-100 row justify-content-around col-12 col-lg-11 mx-auto">
-                <h1 className="mx-auto row w-100 justify-content-center font-weight-bold mb-4">You're All Set!</h1>
+              <div className="fade-in quick content row justify-content-around col-12 col-lg-11">
+                <h1 className="w-100 text-center mb-4 become-bold">You're All Set!</h1>
                 <div className="content-main row justify-content-around align-content-top">
                   <div className="col-12 col-md-5 h-100 d-inline-block">
                       <h5 className="text-center w-100 font-italic">Booking #{booking_id} has been made.</h5>
@@ -136,7 +138,7 @@ class SuccessPage extends React.Component {
                     <Amenities property={property} start_date={booking.start_date} end_date={booking.end_date} booking_id={booking_id} paid={booking.paid}/>
                   </div>
                 </div>
-              </div>) : <p className="text-center text-danger">loading...</p>}
+              </div>) : <p className="text-center text-danger fade-cycle">loading...</p>}
             </div>
           </div>
         </div>

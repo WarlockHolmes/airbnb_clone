@@ -48,7 +48,7 @@ const BookingsViewer = (props) => {
   }
 
   return (<React.Fragment>
-    <div className="col-12 col-lg-7 text-white">
+    <div className="col-12 col-lg-7 text-white fade-in">
       <h5 className="font-weight-bold w-100 mb-3 mt-2 text-center">{title || 'All Bookings:'}</h5>
       <div className="booking-scroll d-none d-lg-block">
         {bookings}
@@ -59,7 +59,7 @@ const BookingsViewer = (props) => {
       {!all && <button className="btn btn-light text-danger mt-3 d-block mx-auto" onClick={props.return}>Return to Property</button>}
     </div>
     <div className="d-none d-lg-block">
-      <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
+      <BookingsCalendar selected={selected} bookings={existingBookings} passSelected={passSelected}/>
     </div>
   </React.Fragment>)
 }
@@ -565,7 +565,7 @@ class PropertyEditor extends React.Component {
 
     if (edit) {
       return (
-        <div className="py-4 px-4 property row" key={id}>
+        <div className="py-4 px-4 property row fade-in quick" key={id}>
           <div className="col-12 col-lg-4">
             <div className="d-lg-none col-12 text-white mb-3">
               <button className="btn btn-danger border-white col-12 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options for "<b>{title.slice(0,20)}...</b>"</button>
@@ -605,7 +605,7 @@ class PropertyEditor extends React.Component {
     }
 
     return (
-      <div className="py-4 px-4 property justify-content-around row">
+      <div className="py-4 px-4 property justify-content-around row fade-in quick">
       { existingBookings ?
         <React.Fragment>
           <BookingsViewer existingBookings={existingBookings} selected={selected} all={false} scrollRef={null} return
@@ -762,30 +762,30 @@ class HostWidget extends React.Component {
           </button>
         </div>
         <div className="row bg-danger content px-4 py-3">
-          <div className={(loading || properties.length == 0) ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
+          <div className={(loading || properties.length == 0) ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12 fade-in" }>
             {!loading && (properties.length > 0 && (existingBookings ?
-              <div className="justify-content-around row h-100 align-content-center">
+              <div className="justify-content-around row h-100 align-content-center fade-in">
                 <BookingsViewer return={() => {this.setState({existingBookings: false})}} existingBookings={existingBookings} selected={selected} all={true} scrollRef={this.scrollRef} passSelected={this.passSelected} title={false}/>
               </div>
             : editors))}
           </div>
 
-          {loading ? <p className="mx-auto my-auto text-center text-white">loading...</p> : (properties.length > 0 ?
+          {loading ? <p className="mx-auto my-auto text-center text-white fade-cycle">loading...</p> : (properties.length > 0 ?
           <React.Fragment>
-            <div className="mx-auto mb-auto">
             {existingBookings ?
-              <button className="btn btn-light text-danger mx-auto" onClick={() => this.setState({existingBookings: false})}>Return to Properties</button>
+              <div className="mx-auto my-auto fade-in">
+                <button className="btn btn-light text-danger fade-in" onClick={() => this.setState({existingBookings: false})}>Return to Properties</button>
+              </div>
               :
-              <React.Fragment>
-                <button className="btn btn-primary mr-2" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
-                <button className="btn btn-light text-danger ml-2" onClick={this.getHostBookings}>See All Bookings</button>
-              </React.Fragment>
+              <div className="mx-auto fade-in">
+                <button className="btn btn-primary mr-2 fade-in" onClick={this.addProperty}>Add <strong>New</strong> Property</button>
+                <button className="btn btn-light text-danger ml-2 fade-in" onClick={this.getHostBookings}>See All Bookings</button>
+              </div>
             }
-            </div>
           </React.Fragment> :
           <React.Fragment>
-            <h3 className="w-100 text-center text-white-50 mt-auto">You aren't hosting any properties right now!</h3>
-            <div className="my-auto mx-auto">
+            <h3 className="w-100 text-center text-white-50 mt-auto fade-in">You aren't hosting any properties right now!</h3>
+            <div className="my-auto mx-auto fade-in">
               <button className="btn btn-light text-danger" onClick={this.addProperty}>Become a <strong>Host!</strong></button>
             </div>
           </React.Fragment>)

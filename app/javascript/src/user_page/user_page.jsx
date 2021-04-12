@@ -4,12 +4,12 @@ import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 import Layout from "@templates/layout";
 import GuestWidget from "./guestWidget"
 import HostWidget from "./hostWidget"
-
+import '@utils/animation.scss';
 import './user_page.scss';
 
 const UserContent = (props) => {
   return(
-    <React.Fragment>
+    <div className="fade-in">
     { props.host ?
       <HostWidget
         authenticated={props.authenticated}
@@ -21,7 +21,7 @@ const UserContent = (props) => {
         toggle={props.toggle}
       />
     }
-    </React.Fragment>
+    </div>
   )
 }
 
@@ -86,7 +86,7 @@ class UserPage extends React.Component {
             /> :
             <div className="container">
               <div className="row content">
-                <h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5>
+                <h5 className="d-block mx-auto my-auto text-center text-danger fade-cycle">loading...</h5>
               </div>
             </div>}
         </Layout>

@@ -41,11 +41,15 @@ class GuestWidget extends React.Component {
 
     const load_text = <div className="container h-100">
       <div className="row h-100">
-        <p className="d-block mx-auto my-auto text-center text-white">loading...</p>
+        <p className="d-block mx-auto my-auto text-center text-white fade-cycle">loading...</p>
       </div></div>;
 
+    let calendarClass = "fade-in";
+
+    if (selected) {calendarClass = "slide-left"}
+
     return (
-      <div className="container py-3">
+      <div className="container py-3 text-white">
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-outline-danger" onClick={this.props.toggle}>
             <h4 className="text-center mb-1">Your Properties</h4>
@@ -55,32 +59,32 @@ class GuestWidget extends React.Component {
           </button>
         </div>
         <div className="row justify-content-around content bg-danger py-3">
-          <div className="d-none d-lg-block my-auto">
+          <div className="d-none d-lg-block my-auto mx-auto">
             {loading ? load_text :
-            <React.Fragment>
-              <h5 className="text-white text-center mb-3">Select Booking:</h5>
+            <div className={calendarClass}>
+              <h5 className="text-center mb-3">Select Booking:</h5>
               <div className="mb-5">
-                <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
+                <BookingsCalendar selected={selected} bookings={existingBookings} passSelected={passSelected}/>
               </div>
-            </React.Fragment>}
+            </div>}
           </div>
           {!selected && <div className="d-block d-lg-none my-auto mx-auto">
             {loading ? load_text :
-              <React.Fragment>
-                <h5 className="text-white text-center mb-3">Select Booking:</h5>
+              <div className="fade-in">
+                <h5 className="text-center mb-3">Select Booking:</h5>
                 <div className="mb-5">
                   <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
                 </div>
-              </React.Fragment>}
+              </div>}
           </div>}
           {property && <React.Fragment>
-          <div className="guest-view text-white d-none d-lg-inline-block col-lg-6 my-auto py-3">
+          <div className="guest-view d-none d-lg-inline-block col-lg-6 my-auto mr-auto py-3 fade-in">
             <div className="row justify-content-around">
               <ImageViewer images={property.images} image_url={property.image_url}/>
             </div>
             <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
           </div>
-          <div className="guest-view bg-danger text-white d-lg-none col-11 d-inline-block my-auto py-3">
+          <div className="guest-view bg-danger d-lg-none col-11 d-inline-block my-auto py-3">
             <div className="row justify-content-around">
               <ImageViewer images={property.images} image_url={property.image_url}/>
             </div>

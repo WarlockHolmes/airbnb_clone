@@ -8,14 +8,12 @@ import moment from 'moment';
 class BookingsCalendar extends React.Component {
 
   state = {
-      selected: false,
       date: moment(),
       focused: true,
     }
 
   readBookings(date) {
-    let {bookings} = this.props
-    let selected;
+    let {bookings, selected} = this.props
 
     bookings.forEach(booking => {
       if (date.isBetween(booking.start_date, moment(booking.end_date).add(1, 'days'))) {
@@ -23,12 +21,10 @@ class BookingsCalendar extends React.Component {
       }
     });
     if (selected) {
-      this.setState({selected: selected})
       if(this.props.passSelected != undefined) {
         this.props.passSelected(selected)
       }
     }
-    else {this.setState({selected: false})}
   }
 
   onDateChange = (date) => {

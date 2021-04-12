@@ -7,6 +7,7 @@ import { ImageViewer } from '@src/templates/imageViewer';
 import { handleErrors, safeCredentials } from '@utils/fetchHelper';
 import { random } from '@utils/utils';
 import './property.scss';
+import '@utils/animation.scss';
 
 class Property extends React.Component {
   state = {
@@ -86,14 +87,14 @@ class Property extends React.Component {
     if (loading) {
       return <div className="container">
         <div className="row loading">
-          <h5 className="d-block mx-auto my-auto text-center text-danger">loading...</h5>
+          <h5 className="d-block mx-auto my-auto text-center text-danger fade-cycle">loading...</h5>
         </div>
       </div>;
     };
 
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
-        <div className="property-view">
+        <div className="property-view fade-in">
           <div className="property-image mb-3" style={{ backgroundImage: `url(${image})` }} />
           <div className="container">
             <div className="row">

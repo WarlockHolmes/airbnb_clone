@@ -3,7 +3,7 @@ import './imageViewer.scss'
 
 export const ImageViewer = (props) => {
       let {images, image_url} = props;
-      return(<React.Fragment>
+      return(<div className="fade-in">
         {images !== null && images !== undefined ?
           <React.Fragment>
           <div className="carousel slide" id="image-preview" data-ride="carousel">
@@ -33,5 +33,5 @@ export const ImageViewer = (props) => {
             <div className="image-container rounded">
               <img src={image_url} className="property-image rounded"/>
             </div>)}
-      </React.Fragment>)
+      </div>)
     }

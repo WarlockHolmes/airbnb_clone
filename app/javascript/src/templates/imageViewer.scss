@@ -28,7 +28,17 @@
 }
 
 .property-image {
-  width: 100%;
+  max-width: 120%;
   margin-top: -10%;
   margin-bottom: -10%;
+}
+
+img {
+  /* transition */
+  transition-property: transform;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 }

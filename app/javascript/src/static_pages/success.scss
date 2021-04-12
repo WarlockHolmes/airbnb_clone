@@ -41,7 +41,6 @@
   padding-right: 10px;
 }
 
-
 .info {
   padding-top: 10px;
   position: relative;
@@ -94,4 +93,11 @@ hr {
 .point_of_interest img {
   margin: 0 auto auto auto;
   border-radius: 10px;
+  /* transition */
+  transition-property: transform;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 }
