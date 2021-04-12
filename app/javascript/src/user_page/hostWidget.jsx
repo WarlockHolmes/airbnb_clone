@@ -66,7 +66,7 @@ const BookingsViewer = (props) => {
 
 //1 Per Editor:
 const PropertyInputs = (props) => {
-  const {title, property_type, change, description, price_per_night, max_guests, city, country, beds, baths, bedrooms, tv, internet, kitchen, parties, pets, smoking, dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, petForm, notes, hair_dryer, parking, laundry, enhanced_clean, addAmenity, save}= props;
+  const {title, property_type, change, description, price_per_night, max_guests, city, country, beds, baths, bedrooms, tv, internet, kitchen, parties, pets, smoking, dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, petForm, notes, hair_dryer, parking, laundry, enhanced_clean, addAmenity, save, petRef}= props;
 
   const addAmenityOptions = () => {
     let amenities = [enhanced_clean, tv, hair_dryer, parties, smoking, internet, parking, laundry, kitchen, pets, notes]
@@ -231,7 +231,7 @@ const PropertyInputs = (props) => {
       </div>}
     </div>
     { pets !== null &&
-    <form name="pets" className="pl-0 row ml-0" ref={this.petRef}>
+    <form name="pets" className="pl-0 row ml-0" ref={petRef}>
       <div className="col-1 pl-0 pr-1 d-inline-block">Pets:</div>
       <table className="col-6 pets">
         <tbody>
@@ -590,10 +590,10 @@ class PropertyEditor extends React.Component {
             </div>
           </div>
           <div className="d-lg-none d-inline-block text-white py-2">
-            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change}/>
+            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change} petRef={this.petRef}/>
           </div>
           <div className="d-none d-lg-inline-block col-lg-7 text-white py-2 editor-scroll">
-            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change}/>
+            <PropertyInputs title={title} description={description} price_per_night={price_per_night} property_type={property_type} city={city} country={country} baths={baths} bedrooms={bedrooms} beds={beds} max_guests={max_guests} parking={parking} enhanced_clean={enhanced_clean} parties={parties} smoking={smoking} pets={pets} laundry={laundry} internet={internet} tv={tv} kitchen={kitchen} hair_dryer={hair_dryer} notes={notes} dogs={dogs} cats={cats} other={other} small={small} hypoallergenic={hypoallergenic} outdoor={outdoor} pet_notes={pet_notes} addAmenity={addAmenity} petForm={petForm} save={save} change={change} petRef={this.petRef}/>
           </div>
           <div className="d-none d-lg-inline-block col-lg-1 edit-buttons">
             <button className="btn btn-primary font-weight-bold mb-2" href="" onClick={save}>Save</button>
