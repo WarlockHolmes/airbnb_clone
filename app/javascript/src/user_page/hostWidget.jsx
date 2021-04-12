@@ -682,7 +682,9 @@ class HostWidget extends React.Component {
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
-        console.log(data.properties)
+        if(data.properties.length != this.state.properties.length) {
+          console.log('Not updating')
+        }
         this.setState({
           properties: data.properties,
           loading: false,
@@ -691,7 +693,7 @@ class HostWidget extends React.Component {
       .catch(error => {console.log(error)})
   }
 
-  addProperty = () => {
+  addProperty() {
     let {properties} = this.state;
     fetch(`/api/properties`, safeCredentials({
       method: 'POST',
