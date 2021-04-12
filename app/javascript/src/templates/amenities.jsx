@@ -22,7 +22,7 @@ class Pets extends React.Component {
 
       const overflowYStyle = window.getComputedStyle(element).overflowY;
       const isOverflowHidden = overflowYStyle.indexOf('hidden') !== -1;
-      //console.log(hasScrollableContent, isOverflowHidden)
+
       if (hasScrollableContent && !isOverflowHidden) {
         this.setState({scrollable: true})
       };
@@ -104,7 +104,7 @@ class Pets extends React.Component {
               </div>
               {!bottom && scrollable &&
                 <div className="position-absolute"
-                style={{width: 120,
+                style={{maxWidth: 200,
                   right: 0,
                   bottom: 0,
                   height: 20,

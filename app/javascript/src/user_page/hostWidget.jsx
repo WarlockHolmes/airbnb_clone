@@ -386,7 +386,7 @@ class PropertyEditor extends React.Component {
   }
 
   handlePetForm () {
-    console.log(event.target)
+
     let animal, rule, notes;
     let delimiter = ";";
     let current = this.readPetRules()
@@ -449,6 +449,8 @@ class PropertyEditor extends React.Component {
       title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes
     }
 
+    let {loading, refresh} = this.props;
+
     let formData = new FormData();
 
     let images = this.imageRef.current.files;
@@ -474,12 +476,8 @@ class PropertyEditor extends React.Component {
       headers: authenticityHeader()
     })
     .then(handleErrors)
-    .then(res => {
-      console.log(res)
-    }).then(this.editProperty())
-    .then(this.props.loading())
-    .then(this.props.refresh())
-    .then(this.loadProperty())
+    .then(loading)
+    .then(refresh)
     .catch((error) => {
       console.log(error);
     })
@@ -684,6 +682,7 @@ class HostWidget extends React.Component {
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
+        console.log(data.properties)
         this.setState({
           properties: data.properties,
           loading: false,
