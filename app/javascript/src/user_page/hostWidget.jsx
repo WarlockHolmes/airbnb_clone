@@ -682,6 +682,7 @@ class HostWidget extends React.Component {
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
+        console.log(data.properties)
         this.setState({
           properties: data.properties,
           loading: false,
@@ -692,6 +693,7 @@ class HostWidget extends React.Component {
 
   addProperty() {
     let {properties} = this.state;
+    let refresh = this.getUserProperties;
     fetch(`/api/properties`, safeCredentials({
       method: 'POST',
       body: JSON.stringify({
@@ -714,7 +716,11 @@ class HostWidget extends React.Component {
           this.startLoading();
         }
       })
-      .then(setTimeout(this.getUserProperties(), 1000))
+      .then(() => {
+        return new Promise(function(resolve, reject) {
+                    setTimeout(() => {resolve(refresh());}, 1000)
+                });
+      })
       .catch((error) => {
         console.log(error);
       })
