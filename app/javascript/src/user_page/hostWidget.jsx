@@ -9,7 +9,7 @@ import placeholder from '@utils/placeholder.png';
 //View of Bookings w/ Calendar
 const BookingsViewer = (props) => {
 
-  let {scrollRef, existingBookings, selected} = props;
+  let {scrollRef, existingBookings, selected, passSelected, title, all} = props;
   let bookings = <div className="row justify-content-center align-content-center h-100"><h4 className="text-white-50 text-center font-italic">No bookings!</h4></div>;
 
   if (existingBookings.length > 0) {
@@ -49,17 +49,17 @@ const BookingsViewer = (props) => {
 
   return (<React.Fragment>
     <div className="col-12 col-lg-7 text-white">
-      <h5 className="font-weight-bold w-100 mb-3 mt-2 text-center">{props.title || 'All Bookings:'}</h5>
+      <h5 className="font-weight-bold w-100 mb-3 mt-2 text-center">{title || 'All Bookings:'}</h5>
       <div className="booking-scroll d-none d-lg-block">
         {bookings}
       </div>
       <div className="booking-scroll-mobile d-block d-lg-none">
         {bookings}
       </div>
-      {!props.all && <button className="btn btn-light text-danger mt-3 d-block mx-auto" onClick={props.return}>Return to Property</button>}
+      {!all && <button className="btn btn-light text-danger mt-3 d-block mx-auto" onClick={props.return}>Return to Property</button>}
     </div>
     <div className="d-none d-lg-block">
-      <BookingsCalendar bookings={existingBookings} passSelected={props.passSelected}/>
+      <BookingsCalendar bookings={existingBookings} passSelected={passSelected}/>
     </div>
   </React.Fragment>)
 }
@@ -335,6 +335,7 @@ class PropertyEditor extends React.Component {
     this.carouselRef = React.createRef();
     this.readPetRules = this.readPetRules.bind(this);
     this.loadProperty = this.loadProperty.bind(this);
+    this.passSelected = this.passSelected.bind(this);
   }
 
   componentDidMount() {
@@ -546,7 +547,6 @@ class PropertyEditor extends React.Component {
     let image_change = this.handleImage.bind(this);
     let delete_property = this.deleteProperty.bind(this);
     let current = this.getPropertyBookings.bind(this);
-    let passSelected = this.passSelected.bind(this);
     let addAmenity = this.addAmenity.bind(this);
     let petForm = this.handlePetForm.bind(this);
 
@@ -605,7 +605,8 @@ class PropertyEditor extends React.Component {
       <div className="py-4 px-4 property justify-content-around row">
       { existingBookings ?
         <React.Fragment>
-          <BookingsViewer existingBookings={existingBookings} selected={selected} all={false} scrollRef={null} reset={() => this.setState({existingBookings: false})} passSelected={this.passSelected} title={title}/>
+          <BookingsViewer existingBookings={existingBookings} selected={selected} all={false} scrollRef={null} return
+          ={() => this.setState({existingBookings: false})} passSelected={this.passSelected} title={title}/>
         </React.Fragment>
         :
         <React.Fragment>
@@ -760,7 +761,9 @@ class HostWidget extends React.Component {
         <div className="row bg-danger content px-4 py-3">
           <div className={(loading || properties.length == 0) ? "" : (existingBookings ? "bookings-all" : "property-scroll") + " col-12" }>
             {!loading && (properties.length > 0 && (existingBookings ?
-              <BookingsViewer return={() => {this.setState({existingBookings: false})}} existingBookings={existingBookings} selected={selected} all={true} scrollRef={this.scrollRef} passSelected={this.passSelected} title={false}/>
+              <div className="justify-content-around row h-100 align-content-center">
+                <BookingsViewer return={() => {this.setState({existingBookings: false})}} existingBookings={existingBookings} selected={selected} all={true} scrollRef={this.scrollRef} passSelected={this.passSelected} title={false}/>
+              </div>
             : editors))}
           </div>
 
