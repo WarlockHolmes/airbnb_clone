@@ -100,8 +100,7 @@ class Property extends React.Component {
             <div className="row">
               <div className="col-12 col-lg-7">
                 <Amenities property={property}/>
-                <hr/>
-                {property.images !== null && <ImageViewer images={property.images}/>}
+                {(property.images !== null && property.images !== undefined) && <React.Fragment><hr/><ImageViewer images={property.images}/></React.Fragment>}
               </div>
               <div className="col-12 col-lg-5">
                 <BookingWidget property_id={property.id} price_per_night={property.price_per_night} checkAuthenticated={this.checkAuthenticated} authenticated={authenticated}/>

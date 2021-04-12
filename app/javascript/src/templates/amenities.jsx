@@ -42,7 +42,7 @@ class Pets extends React.Component {
   render() {
     const {pets} = this.props;
     const {bottom, scrollable} = this.state;
-    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes;
+    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, pets_allowed;
 
     if (pets !== null) {
       let animals = []
@@ -74,6 +74,7 @@ class Pets extends React.Component {
       hypoallergenic = current_pets.rules.includes('hypoallergenic');
       outdoor = current_pets.rules.includes('outdoor');
       pet_notes = current_pets.notes;
+      pets_allowed = current_pets.animals.length > 0;
     }
 
     return(
@@ -81,6 +82,7 @@ class Pets extends React.Component {
       {pets !== null &&
       <div className="row justify-content-between mb-3 pl-3 pets">
         <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
+        {pets_allowed ? <React.Fragment>
         {(dogs || cats || other) && <div className="col-2 d-inline-block">
           {dogs && <React.Fragment><small>Dogs</small>{(cats || other) && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
           {cats && <React.Fragment><small>Cats</small>{other && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
@@ -113,6 +115,7 @@ class Pets extends React.Component {
             </div>
           </div>
         </div></React.Fragment>}
+        </React.Fragment> : <div className="col-10 d-inline-block ban"><p>Pets <strong>Not</strong> Allowed</p></div>}
       </div>}
       </React.Fragment>
     )

@@ -15,6 +15,7 @@ class Home extends React.Component {
     total_pages: null,
     next_page: null,
     loading: true,
+    load_more: false,
   }
 
   componentDidMount() {
@@ -59,7 +60,7 @@ class Home extends React.Component {
     if (this.state.next_page === null) {
       return;
     }
-    this.setState({ loading: true });
+    this.setState({ load_more: true });
     fetch(`/api/properties?page=${this.state.next_page}`)
       .then(handleErrors)
       .then(data => {
@@ -67,13 +68,13 @@ class Home extends React.Component {
           properties: this.state.properties.concat(data.properties),
           total_pages: data.total_pages,
           next_page: data.next_page,
-          loading: false,
+          load_more: false,
         })
       })
   }
 
   render () {
-    const { authenticated, properties, next_page, loading } = this.state;
+    const { authenticated, properties, next_page, loading, load_more } = this.state;
     return (
       <Layout authenticated={authenticated} logout={this.handleLogOut}>
         {!loading ? <div className="container pt-4 fade-in">
@@ -96,13 +97,16 @@ class Home extends React.Component {
               )
             })}
           </div>
-          {(next_page === null) ||
-            <div className="text-center">
+          {(next_page === null) || <React.Fragment>
+            {!load_more ? <div className="text-center">
               <button
                 className="btn btn-light mb-4"
                 onClick={this.loadMore}
               >load more</button>
-            </div>}
+            </div>
+            :
+            <h5 className="d-block mx-auto my-auto text-center text-danger fade-cycle">loading...</h5>}
+          </React.Fragment>}
         </div> :
         <div className="container">
           <div className="row content">
