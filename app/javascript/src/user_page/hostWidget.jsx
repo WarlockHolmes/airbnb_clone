@@ -682,9 +682,6 @@ class HostWidget extends React.Component {
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
-        if(data.properties.length != this.state.properties.length) {
-          console.log('Not updating')
-        }
         this.setState({
           properties: data.properties,
           loading: false,
@@ -717,7 +714,7 @@ class HostWidget extends React.Component {
           this.startLoading();
         }
       })
-      .then(this.getUserProperties())
+      .then(setTimeout(this.getUserProperties(), 1000))
       .catch((error) => {
         console.log(error);
       })
@@ -728,7 +725,6 @@ class HostWidget extends React.Component {
     fetch(`/api/bookings/host`)
       .then(handleErrors)
       .then(data => {
-        console.log(data);
         this.setState({
           existingBookings: data.bookings,
         })
