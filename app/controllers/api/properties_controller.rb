@@ -60,6 +60,17 @@ module Api
       end
     end
 
+    def delete_images
+      token = cookies.signed[:airbnb_session_token]
+      session = Session.find_by(token: token)
+      user = session.user
+      property = user.properties.find_by(id: params[:id])
+
+      if property.images_attachments and property.images_attachments.purge
+        render json: { success: true }, status: :ok
+      end
+    end
+
     private
 
     def property_params

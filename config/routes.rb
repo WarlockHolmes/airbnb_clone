@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   namespace :api do
     # properties (other)
     get '/properties/user' => 'properties#index_by_user'
+    delete '/properties/images/:id' => 'properties#delete_images'
     # bookings (other)
     get '/bookings/guest' => 'bookings#get_guest_bookings'
     get '/bookings/host' => 'bookings#get_host_bookings'

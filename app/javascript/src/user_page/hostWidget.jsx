@@ -344,6 +344,7 @@ class PropertyEditor extends React.Component {
   loadProperty() {
     let {property} = this.props;
     let url = property.image_url;
+  
     this.setState({
       id: property.id,
       title: property.title,
@@ -385,7 +386,7 @@ class PropertyEditor extends React.Component {
 
   }
 
-  handleImage() {
+  handleImages() {
     this.setState({images: Array.from(event.target.files)})
   }
 
@@ -447,7 +448,7 @@ class PropertyEditor extends React.Component {
   }
 
   saveChanges () {
-    let { id, title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes } = this.state;
+    let { id, title, image_url, images, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes } = this.state;
 
     let edits = {
       title, image_url, description, price_per_night, property_type, city, country, baths, bedrooms, beds, max_guests, parking, enhanced_clean, parties, smoking, pets, laundry, internet, tv, kitchen, hair_dryer, notes
@@ -457,11 +458,9 @@ class PropertyEditor extends React.Component {
 
     let formData = new FormData();
 
-    let images = this.imageRef.current.files;
-
     if (images != null) {
       for (let i = 0; i < images.length; i++) {
-        formData.append('property[images][]', images[i]);
+        formData.append('property[images][]', images[i], images[i].name);
       }
     }
 
@@ -480,12 +479,29 @@ class PropertyEditor extends React.Component {
       headers: authenticityHeader()
     })
     .then(handleErrors)
+    .then(data => console.log(data))
     .then(loading)
     .then(refresh)
     .catch((error) => {
       console.log(error);
     })
 
+  }
+
+  deleteImages () {
+    let {id} = this.state;
+    let {loading, refresh} = this.props;
+
+    fetch(`/api/properties/images/${id}`, safeCredentials({
+      method: 'DELETE',
+    }))
+    .then(handleErrors)
+    .then(data => console.log(data))
+    .then(loading)
+    .then(refresh)
+    .catch((error) => {
+      console.log(error);
+    })
   }
 
   deleteProperty () {
@@ -546,7 +562,8 @@ class PropertyEditor extends React.Component {
     let toggleEdit = this.editProperty.bind(this);
     let save = this.saveChanges.bind(this);
     let change = this.handleChange.bind(this);
-    let image_change = this.handleImage.bind(this);
+    let image_add = this.handleImages.bind(this);
+    let image_delete = this.deleteImages.bind(this);
     let delete_property = this.deleteProperty.bind(this);
     let current = this.getPropertyBookings.bind(this);
     let addAmenity = this.addAmenity.bind(this);
@@ -583,12 +600,13 @@ class PropertyEditor extends React.Component {
             </div>
             <ImageViewer images={images} image_url={image_url}/>
             <div className="row col-12 mx-0">
-              <label className="btn btn-light text-primary mx-auto my-5 d-none d-lg-block">Change Images
-                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
+              <label className="btn btn-light text-primary mx-auto mt-2 mb-1 d-none d-lg-block"><strong>Add</strong> Images
+                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_add} multiple/>
               </label>
-              <label className="btn btn-light text-primary d-block d-lg-none w-100">Change Images
-                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_change} multiple/>
+              <label className="btn btn-light text-primary d-block d-lg-none w-100"><strong>Add</strong>
+                <input type="file" className="btn image-select" name="images" accept="image/*" ref={this.imageRef} onChange={image_add} multiple/>
               </label>
+              <button className="btn btn-light text-danger mx-auto mb-2 mt-1" onClick={image_delete}><strong>Remove</strong> Current Images</button>
             </div>
           </div>
           <div className="d-lg-none d-inline-block text-white py-2">
@@ -686,7 +704,6 @@ class HostWidget extends React.Component {
     fetch(`/api/properties/user`)
       .then(handleErrors)
       .then(data => {
-        console.log(data.properties)
         this.setState({
           properties: data.properties,
           loading: false,

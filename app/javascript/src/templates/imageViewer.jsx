@@ -10,7 +10,8 @@ export const ImageViewer = (props) => {
           <div className="carousel slide" id="image-preview" data-ride="carousel">
             <div className="carousel-inner" role="listbox">
               {images.map((image, index) => {
-                let url = URL.createObjectURL(image);
+                let url = image;
+                if (image instanceof File) {url = URL.createObjectURL(image)}
                 if (image.image_url) {url = image.image_url}
                 let carouselClass = "carousel-item"
                 if (index == 0) {carouselClass += " active"}
