@@ -40,9 +40,9 @@ class Pets extends React.Component {
   }
 
   render() {
-    const {pets} = this.props;
+    const {pets, property_page} = this.props;
     const {bottom, scrollable} = this.state;
-    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, pets_allowed;
+    let dogs, cats, other, small, hypoallergenic, outdoor, pet_notes, pets_allowed, bg;
 
     if (pets !== null) {
       let animals = []
@@ -77,47 +77,52 @@ class Pets extends React.Component {
       pets_allowed = current_pets.animals.length > 0;
     }
 
+    if (property_page) {bg = 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))'}
+    else {bg = 'linear-gradient(to top, rgba(220,53,69,1), rgba(220,53,69,0))'}
+
     return(
       <React.Fragment>
       {pets !== null &&
-      <div className="row justify-content-between mb-3 pl-3 pets">
+      <div className="row mb-3 pl-3 pets">
         <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
+        <div className="col-10 d-flex flex-row">
         {pets_allowed ? <React.Fragment>
-        {(dogs || cats || other) && <div className="col-2 d-inline-block">
+        {(dogs || cats || other) && <div>
           {dogs && <React.Fragment><small>Dogs</small>{(cats || other) && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
           {cats && <React.Fragment><small>Cats</small>{other && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
           {other && <React.Fragment><small>Other</small></React.Fragment>}
         </div>}
         {(hypoallergenic || outdoor || small) && <React.Fragment>
         <hr className="vr"/>
-        <div className="col-3 px-auto d-inline-block">
+        <div className="flex-grow-1 px-0" >
           {small && <React.Fragment><small>Small Only</small>{(hypoallergenic || outdoor) && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
           {hypoallergenic && <React.Fragment><small>Hypoallergenic</small>{outdoor && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
           {outdoor && <React.Fragment><small>Outdoor Only</small></React.Fragment>}
         </div></React.Fragment>}
         {pet_notes && <React.Fragment>
         <hr className="vr"/>
-        <div className="col-4 d-inline-block">
+        <div className="flex-shrink-1">
           <div className="row">
-            <div className="col-3 px-0 d-inline-block"><small className="font-weight-bold">Notes: </small></div>
-            <div className="col-9 pr-0 d-inline-block position-relative">
+            <div className="col-3 d-inline-block"><small className="font-weight-bold">Notes: </small></div>
+            <div className="col-9 d-inline-block position-relative">
               <div style={{maxHeight: '75px', overflow: 'scroll'}} ref={this.petScrollRef} onScroll={this.handleScroll}>
                 <small>{pet_notes}{![".", "!", "?", "..."].includes(pet_notes.slice(-1)) && "."}</small>
               </div>
               {!bottom && scrollable &&
                 <div className="position-absolute"
-                style={{width: 200,
+                style={{width: 300,
                   right: 0,
                   bottom: 0,
                   height: 20,
-                  background: 'linear-gradient(to top, rgba(220,53,69,1), rgba(220,53,69,0))'}}>
+                  background: bg}}>
                 </div>}
             </div>
           </div>
         </div></React.Fragment>}
         </React.Fragment> : <div className="col-10 d-inline-block ban"><p>Pets <strong>Not</strong> Allowed</p></div>}
-      </div>}
-      </React.Fragment>
+      </div>
+    </div>}
+    </React.Fragment>
     )
   }
 
@@ -125,7 +130,7 @@ class Pets extends React.Component {
 
 const Amenities = (props) => {
 
-  const {property, start_date, end_date, booking_id, guest, paid} = props;
+  const {property, start_date, end_date, booking_id, property_page, paid} = props;
 
   const initiateStripeCheckout = () => {
    return fetch(`/api/charges?booking_id=${booking_id}&cancel_url=${window.location.pathname}`, safeCredentials({
@@ -250,7 +255,7 @@ const Amenities = (props) => {
       {enhanced_clean !== null && (enhanced_clean ? <p className="col-6 d-inline-block">*<a href="https://www.airbnb.ca/d/enhancedclean" className="font-weight-bold link-text" target="_blank">Enhanced Clean</a></p> : <p className="col-6 d-inline-block link-text-muted"><strong>No</strong> *<a href="https://www.airbnb.ca/d/enhancedclean" className="link-text-muted" target="_blank">Enhanced Clean</a></p>)}
       {parties !== null && <p className="col-6 d-inline-block">{parties ? <i className="fas fa-users mr-2"></i> : <React.Fragment><i className="fas fa-users-slash mr-2 ban"></i><strong className="ban">No </strong></React.Fragment>}Parties Allowed</p>}
       {smoking !== null && <p className="col-6 d-inline-block">{smoking ? <i className="fas fa-smoking mr-2"></i> : <React.Fragment><i className="fas fa-smoking-ban mr-2 ban"></i><strong className="ban">Non</strong>-</React.Fragment>}Smoking</p>}
-      <Pets pets={pets}/>
+      <Pets pets={pets} property_page={property_page}/>
       <hr/>
       <div className="row col-12">
         <div className="col-5 pr-0 d-inline-block">

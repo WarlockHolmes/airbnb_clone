@@ -99,7 +99,7 @@ class Property extends React.Component {
           <div className="container">
             <div className="row">
               <div className="col-12 col-lg-7">
-                <Amenities property={property}/>
+                <Amenities property={property} property_page={true}/>
                 {(property.images !== null && property.images !== undefined) && <React.Fragment><hr/><ImageViewer images={property.images}/></React.Fragment>}
               </div>
               <div className="col-12 col-lg-5">
