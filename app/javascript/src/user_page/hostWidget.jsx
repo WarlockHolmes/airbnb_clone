@@ -312,7 +312,6 @@ class PropertyEditor extends React.Component {
       property_type: '',
       city: '',
       country: '',
-      image_text: false,
       baths: 0,
       bedrooms: 1,
       beds: 1,

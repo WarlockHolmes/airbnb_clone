@@ -1,5 +1,6 @@
-import React from 'react'
-import './imageViewer.scss'
+import React from 'react';
+import './imageViewer.scss';
+import placeholder from '@utils/placeholder.png';
 
 export const ImageViewer = (props) => {
       let {images, image_url} = props;
@@ -9,7 +10,7 @@ export const ImageViewer = (props) => {
           <div className="carousel slide" id="image-preview" data-ride="carousel">
             <div className="carousel-inner" role="listbox">
               {images.map((image, index) => {
-                let url = image;
+                let url = URL.createObjectURL(image);
                 if (image.image_url) {url = image.image_url}
                 let carouselClass = "carousel-item"
                 if (index == 0) {carouselClass += " active"}
