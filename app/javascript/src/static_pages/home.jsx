@@ -105,7 +105,7 @@ class Home extends React.Component {
               >load more</button>
             </div>
             :
-            <h5 className="d-block my-5 text-center text-danger fade-cycle">loading...</h5>}
+            <h5 className="d-block mt-3 mb-4 text-center text-danger fade-cycle">loading...</h5>}
           </React.Fragment>}
         </div> :
         <div className="container">
