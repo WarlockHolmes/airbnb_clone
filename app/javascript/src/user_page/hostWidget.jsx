@@ -344,7 +344,7 @@ class PropertyEditor extends React.Component {
   loadProperty() {
     let {property} = this.props;
     let url = property.image_url;
-  
+
     this.setState({
       id: property.id,
       title: property.title,
@@ -456,6 +456,8 @@ class PropertyEditor extends React.Component {
 
     let {loading, refresh} = this.props;
 
+    loading()
+
     let formData = new FormData();
 
     if (images != null) {
@@ -480,7 +482,6 @@ class PropertyEditor extends React.Component {
     })
     .then(handleErrors)
     .then(data => console.log(data))
-    .then(loading)
     .then(refresh)
     .catch((error) => {
       console.log(error);
@@ -491,13 +492,12 @@ class PropertyEditor extends React.Component {
   deleteImages () {
     let {id} = this.state;
     let {loading, refresh} = this.props;
-
+    loading()
     fetch(`/api/properties/images/${id}`, safeCredentials({
       method: 'DELETE',
     }))
     .then(handleErrors)
     .then(data => console.log(data))
-    .then(loading)
     .then(refresh)
     .catch((error) => {
       console.log(error);
@@ -506,12 +506,12 @@ class PropertyEditor extends React.Component {
 
   deleteProperty () {
     let {loading, refresh} = this.props;
+    loading()
     if (confirm("Are you sure you want to delete this property?")) {
       fetch(`/api/properties/${this.state.id}`, safeCredentials({
         method: 'DELETE',
       }))
         .then(handleErrors)
-        .then(loading)
         .then(refresh)
         .catch((error) => {
           console.log(error);
