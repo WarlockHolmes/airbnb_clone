@@ -193,9 +193,6 @@ const Amenities = (props) => {
   const kitchenOptions = () => {
     let options = [];
     if (kitchen != "none") {
-      if (kitchen == "kitchen" || kitchen == "no stove" || kitchen == "no fridge" || kitchen == "oven only") {
-        options.push("Oven")
-      }
       if (kitchen == "kitchen" || kitchen == "no oven" || kitchen == "no fridge" || kitchen == "stove only") {
         options.push("Stove")
       }
