@@ -91,7 +91,7 @@ class Home extends React.Component {
                     <ImageViewer image_url={url}/>
                     <p className="text-uppercase mb-0 text-secondary"><small><b>{property.city}</b></small></p>
                     <h6 className="mb-0">{property.title}</h6>
-                    <p className="mb-0"><small>${property.price_per_night} USD/night</small></p>
+                    <p className="mb-0"><small>${property.price_per_night} <span className="text-uppercase">{property.country}</span>D/night</small></p>
                   </a>
                 </div>
               )

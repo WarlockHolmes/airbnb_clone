@@ -212,9 +212,10 @@ const Amenities = (props) => {
       <div className="col-12">
         <h3 className="mb-1">{title}</h3>
         <small className="link-text-muted">
-          <p className="col-8 d-inline-block mb-0 px-0">{phraseCaps(property_type)}</p>
-          <p className="col-4 d-inline-block mb-0 px-0 text-uppercase "><strong>{city}</strong>, {phraseCaps(country)}</p>
-          <p className="mb-3 link-text-muted">Hosted by <b>{host.name}</b></p>
+          <p className="mb-0 col-8 px-0 d-inline-block">{phraseCaps(property_type)}</p>
+          <p className="mb-0 col-4 px-0 d-inline-block text-uppercase "><strong>{city}</strong>, {phraseCaps(country)}</p>
+          <p className="mb-3 col-8 px-0 d-inline-block link-text-muted">Hosted by <b>{host.name}</b></p>
+          {!property_page && <p className="col-4 px-0 d-inline-block font-italic">${price_per_night} / night</p>}
         </small>
         <p>{description}</p>
       </div>
@@ -226,7 +227,6 @@ const Amenities = (props) => {
         </p>
         <p><span className="mr-1">Total:</span>
           $<strong className="mr-1">{(price_per_night * days).toLocaleString()}</strong>
-          (<small className="font-italic">${price_per_night}/night</small>)
         </p>
       </div>
       <div className="col-6 d-inline-block">
