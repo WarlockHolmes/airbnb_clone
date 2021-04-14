@@ -1,4 +1,5 @@
 import React from 'react';
+import { safeCredentials, handleErrors, authenticityHeader } from '@utils/fetchHelper';
 import { ImageViewer } from '@templates/imageViewer';
 import Amenities from '@templates/amenities';
 import BookingsCalendar from './bookingsCalendar';
