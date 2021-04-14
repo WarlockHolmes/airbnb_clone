@@ -4,6 +4,13 @@ import placeholder from '@utils/placeholder.png';
 
 export const ImageViewer = (props) => {
       let {images, image_url} = props;
+      if (images !== null && images !== undefined) {
+        let imgFromUrl = {
+          image_url: image_url,
+          name: 'Image from url',
+        }
+        images.push(imgFromUrl)
+      }
       return(<div className="fade-in">
         {images !== null && images !== undefined ?
           <React.Fragment>
@@ -11,8 +18,8 @@ export const ImageViewer = (props) => {
             <div className="carousel-inner" role="listbox">
               {images.map((image, index) => {
                 let url = image;
-                if (image instanceof File) {url = URL.createObjectURL(image)}
                 if (image.image_url) {url = image.image_url}
+                if (image instanceof File) {url = URL.createObjectURL(image)}
                 let carouselClass = "carousel-item"
                 if (index == 0) {carouselClass += " active"}
                 return <div className={carouselClass} key={index}>

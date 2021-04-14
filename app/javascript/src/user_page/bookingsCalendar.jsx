@@ -6,7 +6,6 @@ import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
 
 class BookingsCalendar extends React.Component {
-
   state = {
       date: moment(),
       focused: true,

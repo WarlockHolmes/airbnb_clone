@@ -92,9 +92,14 @@ td {
   padding-bottom: 0.5rem;
 }
 
-input[type="number"].property-input {
+[type="number"].property-input {
   width: 50px;
+  &[name="price_per_night"] {
+    width: 70px;
+  }
 }
+
+
 
 .image-select {
   opacity: 0;

@@ -48,8 +48,8 @@ class GuestWidget extends React.Component {
 
     if (selected) {calendarClass = "slide-left"}
 
-    return (
-      <div className="container py-3 text-white">
+    const WidgetTabs = () => {
+      return(
         <div className="row justify-content-around">
           <button className="page-tab col-6 btn btn-outline-danger" onClick={this.props.toggle}>
             <h4 className="text-center mb-1">Your Properties</h4>
@@ -58,6 +58,32 @@ class GuestWidget extends React.Component {
             <h4 className="text-center mb-1">Your Trips</h4>
           </button>
         </div>
+      )
+    }
+
+    const PropertyViewer = () => {
+      return (<React.Fragment>
+        {property && <React.Fragment>
+        <div className="guest-view d-none d-lg-inline-block col-lg-6 my-auto mr-auto py-3 fade-in">
+          <div className="row justify-content-around">
+            <ImageViewer images={property.images} image_url={property.image_url}/>
+          </div>
+          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
+        </div>
+        <div className="guest-view bg-danger d-lg-none col-11 d-inline-block my-auto py-3">
+          <div className="row justify-content-around">
+            <ImageViewer images={property.images} image_url={property.image_url}/>
+          </div>
+          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
+        </div>
+        <button className="d-block d-lg-none btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
+        </React.Fragment>}
+      </React.Fragment>)
+    }
+
+    return (
+      <div className="container py-3 text-white">
+        <WidgetTabs/>
         <div className="row justify-content-around content bg-danger py-3">
           <div className="d-none d-lg-block my-auto mx-auto">
             {loading ? load_text :
@@ -65,6 +91,7 @@ class GuestWidget extends React.Component {
               <h5 className="text-center mb-3">Select Booking:</h5>
               <div className="mb-5">
                 <BookingsCalendar selected={selected} bookings={existingBookings} passSelected={passSelected}/>
+                {existingBookings.length == 0 && <h6 className="mt-3 text-center text-white-50">(You haven't made any bookings yet!)</h6>}
               </div>
             </div>}
           </div>
@@ -77,21 +104,7 @@ class GuestWidget extends React.Component {
                 </div>
               </div>}
           </div>}
-          {property && <React.Fragment>
-          <div className="guest-view d-none d-lg-inline-block col-lg-6 my-auto mr-auto py-3 fade-in">
-            <div className="row justify-content-around">
-              <ImageViewer images={property.images} image_url={property.image_url}/>
-            </div>
-            <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
-          </div>
-          <div className="guest-view bg-danger d-lg-none col-11 d-inline-block my-auto py-3">
-            <div className="row justify-content-around">
-              <ImageViewer images={property.images} image_url={property.image_url}/>
-            </div>
-            <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
-          </div>
-          <button className="d-block d-lg-none btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
-          </React.Fragment>}
+          <PropertyViewer/>
         </div>
       </div>
     );

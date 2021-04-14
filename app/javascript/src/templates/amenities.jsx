@@ -80,25 +80,43 @@ class Pets extends React.Component {
     if (property_page) {bg = 'linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))'}
     else {bg = 'linear-gradient(to top, rgba(220,53,69,1), rgba(220,53,69,0))'}
 
-    return(
-      <React.Fragment>
-      {pets !== null &&
-      <div className="row mb-3 pl-3 pets">
-        <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
-        <div className="col-10 d-flex flex-row">
-        {pets_allowed ? <React.Fragment>
+    const AnimalOptions = () => {
+      return (<React.Fragment>
         {(dogs || cats || other) && <div>
-          {dogs && <React.Fragment><small>Dogs</small>{(cats || other) && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
-          {cats && <React.Fragment><small>Cats</small>{other && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
-          {other && <React.Fragment><small>Other</small></React.Fragment>}
+          {dogs && <React.Fragment>
+            <small>Dogs</small>
+            {(cats || other) && <React.Fragment>, <br/></React.Fragment>}
+          </React.Fragment>}
+          {cats && <React.Fragment>
+            <small>Cats</small>
+            {other && <React.Fragment>, <br/></React.Fragment>}
+          </React.Fragment>}
+          {other && <React.Fragment>
+            <small>Other</small>
+          </React.Fragment>}
         </div>}
+      </React.Fragment>)
+    }
+
+    const PetRules = () => {
+      return (<React.Fragment>
         {(hypoallergenic || outdoor || small) && <React.Fragment>
         <hr className="vr"/>
         <div className="flex-grow-1 px-0" >
-          {small && <React.Fragment><small>Small Only</small>{(hypoallergenic || outdoor) && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
-          {hypoallergenic && <React.Fragment><small>Hypoallergenic</small>{outdoor && <React.Fragment>, <br/></React.Fragment>}</React.Fragment>}
-          {outdoor && <React.Fragment><small>Outdoor Only</small></React.Fragment>}
+          {small && <React.Fragment>
+            <small>Small Only</small>{(hypoallergenic || outdoor) && <React.Fragment>, <br/></React.Fragment>}
+          </React.Fragment>}
+          {hypoallergenic && <React.Fragment>
+            <small>Hypoallergenic</small>
+            {outdoor && <React.Fragment>, <br/></React.Fragment>}
+          </React.Fragment>}
+          {outdoor && <small>Outdoor Only</small>}
         </div></React.Fragment>}
+      </React.Fragment>)
+    }
+
+    const PetNotes = () => {
+      return (<React.Fragment>
         {pet_notes && <React.Fragment>
         <hr className="vr"/>
         <div className="flex-shrink-1">
@@ -119,11 +137,27 @@ class Pets extends React.Component {
             </div>
           </div>
         </div></React.Fragment>}
-        </React.Fragment> : <div className="col-10 d-inline-block ban"><p>Pets <strong>Not</strong> Allowed</p></div>}
-      </div>
-    </div>}
-    </React.Fragment>
-    )
+      </React.Fragment>)
+    }
+
+    return (
+      <React.Fragment>
+        {pets !== null &&
+        <div className="row mb-3 pl-3 pets">
+          <p className="col-2 pr-0 d-inline-block"><i className="fas fa-paw"></i> Pets:</p>
+          <div className="col-10 d-flex flex-row">
+            {pets_allowed ?
+            <React.Fragment>
+              <AnimalOptions/>
+              <PetRules/>
+              <PetNotes/>
+            </React.Fragment> :
+            <div className="col-10 d-inline-block ban">
+              <p>Pets <strong>Not</strong> Allowed</p>
+            </div>}
+          </div>
+        </div>}
+      </React.Fragment>)
   }
 
 }
