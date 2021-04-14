@@ -4,7 +4,7 @@ import placeholder from '@utils/placeholder.png';
 
 export const ImageViewer = (props) => {
       let {images, image_url} = props;
-      if (images !== null && images !== undefined) {
+      if (images !== null && images !== undefined && image_url !== placeholder) {
         let imgFromUrl = {
           image_url: image_url,
           name: 'Image from url',
