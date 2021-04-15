@@ -68,13 +68,13 @@ class GuestWidget extends React.Component {
           <div className="row justify-content-around">
             <ImageViewer images={property.images} image_url={property.image_url}/>
           </div>
-          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
+          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id} paid={selected.paid}/>
         </div>
         <div className="guest-view bg-danger d-lg-none col-11 d-inline-block my-auto py-3">
           <div className="row justify-content-around">
             <ImageViewer images={property.images} image_url={property.image_url}/>
           </div>
-          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id}/>
+          <Amenities property={property} start_date={start_date} end_date={end_date} booking_id={selected.id} paid={selected.paid}/>
         </div>
         <button className="d-block d-lg-none btn btn-danger border-white" onClick={() => {this.setState({selected: false})}}>Return to Calendar</button>
         </React.Fragment>}
